@@ -24,6 +24,11 @@ public class LoadingLayout extends FrameLayout implements ILoadingLayout {
     }
 
     @Override
+    public void setLabel(String label) {
+
+    }
+
+    @Override
     public void onPull(State state, int distance) {
 
     }

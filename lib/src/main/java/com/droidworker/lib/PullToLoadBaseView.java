@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 
 import com.droidworker.lib.constant.Direction;
 import com.droidworker.lib.constant.LoadMode;
@@ -17,7 +17,7 @@ import com.droidworker.lib.constant.State;
 /**
  * @author https://github.com/DroidWorkerLYF
  */
-public abstract class PullToLoadBaseView<T extends View> extends LinearLayout implements IPullToLoad<T> {
+public abstract class PullToLoadBaseView<T extends View> extends FrameLayout implements IPullToLoad<T> {
     private LoadingLayout mHeader;
     private LoadingLayout mFooter;
     private T mContentView;
@@ -48,15 +48,6 @@ public abstract class PullToLoadBaseView<T extends View> extends LinearLayout im
     }
 
     private void initView() {
-        switch (getScrollOrientation()) {
-            case VERTICAL:
-                setOrientation(LinearLayout.VERTICAL);
-                break;
-            case HORIZONTAL:
-                setOrientation(LinearLayout.HORIZONTAL);
-                break;
-        }
-
         mContentView = createContentView();
         addContentView(mContentView);
         mHeader = createHeader();
@@ -74,7 +65,7 @@ public abstract class PullToLoadBaseView<T extends View> extends LinearLayout im
     protected abstract T createContentView();
 
     private void addContentView(T contentView) {
-        addViewInternal(contentView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+        addViewInternal(contentView, new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT));
     }
 
@@ -86,15 +77,17 @@ public abstract class PullToLoadBaseView<T extends View> extends LinearLayout im
         this.addViewInternal(child, -1, params);
     }
 
-    protected abstract void addHeader(LoadingLayout loadingLayout, boolean isUnderBar);
+    protected void addHeader(LoadingLayout loadingLayout, boolean isUnderBar){
 
-    private LinearLayout.LayoutParams getLoadingLayoutLayoutParams() {
+    }
+
+    private FrameLayout.LayoutParams getLoadingLayoutLayoutParams() {
         switch (getScrollOrientation()) {
             case VERTICAL:
             default:
-                return new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                return new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
             case HORIZONTAL:
-                return new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+                return new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         }
     }
 
@@ -126,12 +119,14 @@ public abstract class PullToLoadBaseView<T extends View> extends LinearLayout im
 
     @Override
     public boolean isLoading() {
-        return false;
+        return mState == State.LOADING || mState == State.MANUAL_LOAD;
     }
 
     @Override
     public void setLoading() {
-
+        if (!isLoading()) {
+            setState(State.MANUAL_LOAD);
+        }
     }
 
     @Override
@@ -148,7 +143,24 @@ public abstract class PullToLoadBaseView<T extends View> extends LinearLayout im
 
     @Override
     public void onPull(State state, int distance) {
+        switch (mState) {
+            case PULL_FROM_START:
+                mHeader.onPull(state, distance);
+                break;
+            case PULL_FROM_END:
+                mFooter.onPull(state, distance);
+                break;
+        }
+    }
 
+    @Override
+    public LoadingLayout getHeader() {
+        return mHeader;
+    }
+
+    @Override
+    public LoadingLayout getFooter() {
+        return mFooter;
     }
 
     @Override
@@ -236,7 +248,7 @@ public abstract class PullToLoadBaseView<T extends View> extends LinearLayout im
             }
             break;
             case MotionEvent.ACTION_MOVE: {
-                if(mIsIntercepted){
+                if (mIsIntercepted) {
                     mLastX = event.getX();
                     mLastY = event.getY();
                     handlePull();
@@ -299,7 +311,7 @@ public abstract class PullToLoadBaseView<T extends View> extends LinearLayout im
 
     }
 
-    private void handlePull(){
+    private void handlePull() {
 
     }
 }

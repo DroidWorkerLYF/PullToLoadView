@@ -30,4 +30,8 @@ public interface IPullToLoad<T extends View> {
     void setOnRefreshListener();
 
     void onPull(State state, int distance);
+
+    ILoadingLayout getHeader();
+
+    ILoadingLayout getFooter();
 }

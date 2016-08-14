@@ -9,5 +9,7 @@ public interface ILoadingLayout {
 
     int getSize();
 
+    void setLabel(String label);
+
     void onPull(State state, int distance);
 }
