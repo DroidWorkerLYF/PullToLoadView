@@ -2,6 +2,10 @@ package com.droidworker.lib;
 
 import android.view.View;
 
+import com.droidworker.lib.constant.Direction;
+import com.droidworker.lib.constant.LoadMode;
+import com.droidworker.lib.constant.State;
+
 /**
  * @author https://github.com/DroidWorkerLYF
  */
@@ -13,13 +17,9 @@ public interface IPullToLoad<T extends View> {
 
     T getContentView();
 
-    boolean canScrollVertical();
+    boolean canScrollVertical(Direction direction);
 
-    boolean canScrollHorizontal();
-
-    int getHeaderSize();
-
-    int getFooterSize();
+    boolean canScrollHorizontal(Direction direction);
 
     boolean isLoading();
 

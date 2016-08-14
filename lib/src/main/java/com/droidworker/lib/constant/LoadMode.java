@@ -1,4 +1,4 @@
-package com.droidworker.lib;
+package com.droidworker.lib.constant;
 
 /**
  * @author https://github.com/DroidWorkerLYF
@@ -9,4 +9,8 @@ public enum LoadMode {
     BOTH,
     DISABLED,
     MANUAL_ONLY;
+
+    public boolean isPullToLoad(){
+        return !(this == DISABLED || this == MANUAL_ONLY);
+    }
 }

@@ -1,4 +1,4 @@
-package com.droidworker.lib;
+package com.droidworker.lib.constant;
 
 /**
  * 代表方向的枚举

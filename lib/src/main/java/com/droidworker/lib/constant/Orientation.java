@@ -1,4 +1,4 @@
-package com.droidworker.lib;
+package com.droidworker.lib.constant;
 
 /**
  * 内容视图的滚动方向
