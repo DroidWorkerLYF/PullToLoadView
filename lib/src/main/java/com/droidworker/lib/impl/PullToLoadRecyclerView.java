@@ -10,12 +10,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 
 /**
- * @author luoyanfeng@le.com
+ * @author https://github.com/DroidWorkerLYF
  */
 public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
     private static final String TAG = "PullToLoadRecyclerView";
+
     public PullToLoadRecyclerView(Context context) {
         super(context);
     }
@@ -66,8 +68,12 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
         if (layoutId == 0) {
             recyclerView = new RecyclerView(getContext());
         } else {
-            recyclerView = (RecyclerView) LayoutInflater.from(getContext()).inflate(layoutId, this,
-                    false);
+            View view = LayoutInflater.from(getContext()).inflate(layoutId, this, false);
+            if (view instanceof RecyclerView) {
+                recyclerView = (RecyclerView) view;
+            } else {
+                throw new UnsupportedOperationException("View should be a RecyclerView");
+            }
         }
         recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
         return recyclerView;
@@ -75,6 +81,6 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
 
     @Override
     protected void updateContentUI(boolean isUnderBar) {
-        getContentView().scrollToPosition(0);
+        mContentView.scrollToPosition(0);
     }
 }

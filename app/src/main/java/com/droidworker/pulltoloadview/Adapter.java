@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- * @author luoyanfeng@le.com
+ * @author https://github.com/DroidWorkerLYF
  */
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
@@ -25,7 +25,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 100;
+        return 30;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

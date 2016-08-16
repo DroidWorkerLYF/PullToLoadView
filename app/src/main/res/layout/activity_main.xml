@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.droidworker.pulltoloadview.MainActivity"
-    >
+    android:background="@color/loading_layout_background">
 
     <com.droidworker.lib.impl.PullToLoadRecyclerView
         android:id="@+id/recycler_view"
@@ -21,7 +21,6 @@
         android:id="@+id/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:alpha="0.8"
         android:background="@color/colorPrimary"/>
 
 </FrameLayout>

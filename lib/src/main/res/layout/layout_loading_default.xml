@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/ll_loading_container"
               android:layout_width="match_parent"
-              android:layout_height="?actionBarSize"
+              android:layout_height="80dp"
               android:background="@color/loading_layout_background"
               android:gravity="center"
               android:orientation="vertical">

@@ -5,6 +5,7 @@ package com.droidworker.lib.constant;
  */
 public enum LoadMode {
     PULL_FROM_START,
+    PULL_FROM_START_AUTO_LOAD,
     PULL_FROM_END,
     BOTH,
     DISABLED,
@@ -15,7 +16,7 @@ public enum LoadMode {
     }
 
     public boolean isPullFromStart(){
-        return this == PULL_FROM_START || this == BOTH;
+        return this == PULL_FROM_START || this == BOTH || this == PULL_FROM_START_AUTO_LOAD;
     }
 
     public boolean isPullFromEnd(){

@@ -10,5 +10,5 @@ public enum State {
     LOADING,
     PULL_FROM_END,
     MANUAL_LOAD,
-    OVERSCROLL;
+    OVER_SCROLL;
 }
