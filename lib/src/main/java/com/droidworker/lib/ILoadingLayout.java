@@ -9,5 +9,5 @@ public interface ILoadingLayout {
 
     int getSize();
 
-    void onPull(State state, int distance);
+    void onPull(State state, float distance);
 }

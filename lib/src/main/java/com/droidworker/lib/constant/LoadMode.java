@@ -13,4 +13,12 @@ public enum LoadMode {
     public boolean isPullToLoad(){
         return !(this == DISABLED || this == MANUAL_ONLY);
     }
+
+    public boolean isPullFromStart(){
+        return this == PULL_FROM_START || this == BOTH;
+    }
+
+    public boolean isPullFromEnd(){
+        return this == PULL_FROM_END || this == BOTH;
+    }
 }

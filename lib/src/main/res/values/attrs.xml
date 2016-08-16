@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="PullToLoadView">
+        <!-- 是否在ToolBar(导航栏)下方(Z轴) -->
         <attr name="underBar" format="boolean"/>
+        <!-- 指定此id对应的layout inflate成刷新视图的内容view -->
+        <attr name="content_view_id" format="reference"/>
     </declare-styleable>
 </resources>

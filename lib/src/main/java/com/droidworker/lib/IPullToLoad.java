@@ -27,7 +27,7 @@ public interface IPullToLoad<T extends View> {
 
     void onLoadComplete();
 
-    void setOnRefreshListener();
+    void setOnPullToLoadListener(PullToLoadListener pullToLoadListener);
 
-    void onPull(State state, int distance);
+    void onPull(State state, float distance);
 }
