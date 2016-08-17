@@ -4,6 +4,7 @@ import com.droidworker.lib.PullToLoadListener;
 import com.droidworker.lib.constant.LoadMode;
 import com.droidworker.lib.impl.PullToLoadRecyclerView;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -58,11 +59,17 @@ public class MainActivity extends AppCompatActivity implements PullToLoadListene
         setSupportActionBar(mToolbar);
 
         mPullToLoadRecyclerView = (PullToLoadRecyclerView) findViewById(R.id.recycler_view);
-        mAdapter = new Adapter();
+
+        mAdapter = new Adapter(getResources().getStringArray(R.array.title),
+                getResources().getStringArray(R.array.content));
         if (mPullToLoadRecyclerView != null) {
             mPullToLoadRecyclerView.setMode(LoadMode.BOTH);
             mPullToLoadRecyclerView.setOnPullToLoadListener(this);
             mPullToLoadRecyclerView.setAdapter(mAdapter);
+            mPullToLoadRecyclerView.getContentView()
+                    .addItemDecoration(new DividerItemDecoration(
+                            DividerItemDecoration.VERTICAL_LIST, Color.TRANSPARENT,
+                            getResources().getDimensionPixelSize(R.dimen.item_divider)));
 
             mPullToLoadRecyclerView.getContentView()
                     .addOnScrollListener(new RecyclerView.OnScrollListener() {
