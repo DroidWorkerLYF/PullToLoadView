@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 /**
+ * 效果测试页面
  * @author https://github.com/DroidWorkerLYF
  */
 public class MainActivity extends AppCompatActivity implements PullToLoadListener {
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements PullToLoadListene
             @Override
             public void run() {
                 mPullToLoadRecyclerView.onLoadComplete();
+                mAdapter.restoreCount();
+                mPullToLoadRecyclerView.getAdapter().notifyDataSetChanged();
             }
         }, 2000);
     }
@@ -36,7 +39,12 @@ public class MainActivity extends AppCompatActivity implements PullToLoadListene
             @Override
             public void run() {
                 mPullToLoadRecyclerView.onLoadComplete();
-                mPullToLoadRecyclerView.onAllLoaded();
+                if (mAdapter.getItemCount() >= 60) {
+                    mPullToLoadRecyclerView.onAllLoaded();
+                } else {
+                    mAdapter.updateCount();
+                    mPullToLoadRecyclerView.getAdapter().notifyDataSetChanged();
+                }
             }
         }, 2000);
     }
@@ -54,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements PullToLoadListene
         if (mPullToLoadRecyclerView != null) {
             mPullToLoadRecyclerView.setMode(LoadMode.BOTH);
             mPullToLoadRecyclerView.setOnPullToLoadListener(this);
-            mPullToLoadRecyclerView.getContentView().setAdapter(mAdapter);
+            mPullToLoadRecyclerView.setAdapter(mAdapter);
 
             mPullToLoadRecyclerView.getContentView()
                     .addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -91,7 +99,31 @@ public class MainActivity extends AppCompatActivity implements PullToLoadListene
         case R.id.refresh: {
             mPullToLoadRecyclerView.setLoading();
         }
-
+            break;
+        case R.id.pull_from_start: {
+            mPullToLoadRecyclerView.setMode(LoadMode.PULL_FROM_START);
+        }
+            break;
+        case R.id.pull_from_start_auto_load_more: {
+            mPullToLoadRecyclerView.setMode(LoadMode.PULL_FROM_START_AUTO_LOAD_MORE);
+        }
+            break;
+        case R.id.pull_from_end: {
+            mPullToLoadRecyclerView.setMode(LoadMode.PULL_FROM_END);
+        }
+            break;
+        case R.id.both: {
+            mPullToLoadRecyclerView.setMode(LoadMode.BOTH);
+        }
+            break;
+        case R.id.disabled: {
+            mPullToLoadRecyclerView.setMode(LoadMode.DISABLED);
+        }
+            break;
+        case R.id.manual_only: {
+            mPullToLoadRecyclerView.setMode(LoadMode.MANUAL_ONLY);
+        }
+            break;
         }
         return super.onOptionsItemSelected(item);
     }

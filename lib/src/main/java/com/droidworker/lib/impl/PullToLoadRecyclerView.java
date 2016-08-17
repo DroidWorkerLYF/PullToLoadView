@@ -1,8 +1,13 @@
 package com.droidworker.lib.impl;
 
+import com.droidworker.lib.ILoadingLayout;
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.Direction;
+import com.droidworker.lib.constant.LoadMode;
 import com.droidworker.lib.constant.Orientation;
+import com.droidworker.lib.constant.State;
+import com.droidworker.lib.recyclerview.BaseRecyclerViewAdapter;
+import com.droidworker.lib.recyclerview.HeaderAndFooterWrapper;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
@@ -13,10 +18,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 /**
+ * 支持加载更新,加载更多的RecyclerView
  * @author https://github.com/DroidWorkerLYF
  */
 public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
-    private static final String TAG = "PullToLoadRecyclerView";
+    private LoadingLayout mAutoLoadFooter;
+    private boolean loadMore;
 
     public PullToLoadRecyclerView(Context context) {
         super(context);
@@ -28,17 +35,19 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
 
     @Override
     public boolean canScrollVertical(Direction direction) {
-        return ViewCompat.canScrollVertically(getContentView(), direction.getIntValue());
+        // 使用ViewCompat中的方法
+        return ViewCompat.canScrollVertically(mContentView, direction.getIntValue());
     }
 
     @Override
     public boolean canScrollHorizontal(Direction direction) {
-        return ViewCompat.canScrollHorizontally(getContentView(), direction.getIntValue());
+        // 使用ViewCompat中的方法
+        return ViewCompat.canScrollHorizontally(mContentView, direction.getIntValue());
     }
 
     @Override
     protected Orientation getScrollOrientation() {
-        RecyclerView.LayoutManager layoutManager = getContentView().getLayoutManager();
+        RecyclerView.LayoutManager layoutManager = mContentView.getLayoutManager();
         if (layoutManager instanceof LinearLayoutManager) {
             switch (((LinearLayoutManager) layoutManager).getOrientation()) {
             case LinearLayoutManager.HORIZONTAL:
@@ -53,12 +62,12 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
     }
 
     @Override
-    protected LoadingLayout createHeader() {
+    protected ILoadingLayout createHeader() {
         return new LoadingLayout(getContext(), getScrollOrientation());
     }
 
     @Override
-    protected LoadingLayout createFooter() {
+    protected ILoadingLayout createFooter() {
         return new LoadingLayout(getContext(), getScrollOrientation());
     }
 
@@ -76,11 +85,94 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
             }
         }
         recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && loadMore && !isAllLoaded()) {
+                    HeaderAndFooterWrapper wrapper = (HeaderAndFooterWrapper) mContentView
+                            .getAdapter();
+                    if (wrapper != null) {
+                        recyclerView.scrollToPosition(wrapper.getItemCount());
+                        if (!wrapper.containsFooter(mAutoLoadFooter)) {
+                            wrapper.addFooter(mAutoLoadFooter);
+                            wrapper.notifyDataSetChanged();
+                        }
+                        mAutoLoadFooter.onPull(State.LOADING, 0);
+                        setCurLoadMode(LoadMode.PULL_FROM_END);
+                        setState(State.LOADING);
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                loadMore = !canScrollVertical(Direction.END)
+                        && getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE;
+            }
+        });
         return recyclerView;
     }
 
     @Override
     protected void updateContentUI(boolean isUnderBar) {
         mContentView.scrollToPosition(0);
+        if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
+            mAutoLoadFooter = new LoadingLayout(getContext(), getScrollOrientation());
+            RecyclerView.LayoutParams layoutParams;
+            switch (getScrollOrientation()) {
+            case VERTICAL:
+            default: {
+                layoutParams = new RecyclerView.LayoutParams(LayoutParams.MATCH_PARENT,
+                        LayoutParams.WRAP_CONTENT);
+            }
+                break;
+            case HORIZONTAL: {
+                layoutParams = new RecyclerView.LayoutParams(LayoutParams.WRAP_CONTENT,
+                        LayoutParams.MATCH_PARENT);
+            }
+                break;
+            }
+            mAutoLoadFooter.setLayoutParams(layoutParams);
+        }
+    }
+
+    @Override
+    protected void onLoading() {
+        if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
+            if (getCurLoadMode() == LoadMode.PULL_FROM_END) {
+                if (getPullToLoadListener() != null) {
+                    getPullToLoadListener().onLoadMore();
+                }
+            } else {
+                super.onLoading();
+            }
+        } else {
+            super.onLoading();
+        }
+    }
+
+    @Override
+    protected void reset() {
+        super.reset();
+        loadMore = false;
+        HeaderAndFooterWrapper wrapper = (HeaderAndFooterWrapper) mContentView.getAdapter();
+        if (wrapper != null) {
+            wrapper.removeFooter(mAutoLoadFooter);
+            wrapper.notifyDataSetChanged();
+        }
+    }
+
+    public void setAdapter(BaseRecyclerViewAdapter baseRecyclerViewAdapter) {
+        final HeaderAndFooterWrapper wrapper = new HeaderAndFooterWrapper(baseRecyclerViewAdapter);
+        mContentView.setAdapter(wrapper);
+    }
+
+    public BaseRecyclerViewAdapter getAdapter() {
+        return (BaseRecyclerViewAdapter) mContentView.getAdapter();
     }
 }

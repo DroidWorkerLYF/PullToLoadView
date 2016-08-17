@@ -1,5 +1,6 @@
 package com.droidworker.lib.impl;
 
+import com.droidworker.lib.ILoadingLayout;
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.Direction;
 import com.droidworker.lib.constant.LoadMode;
@@ -52,18 +53,18 @@ public abstract class PullToLoadAbsListView extends PullToLoadBaseView<AbsListVi
     }
 
     @Override
-    protected LoadingLayout createHeader() {
+    protected ILoadingLayout createHeader() {
         return new LoadingLayout(getContext(), getScrollOrientation());
     }
 
     @Override
-    protected LoadingLayout createFooter() {
+    protected ILoadingLayout createFooter() {
         return new LoadingLayout(getContext(), getScrollOrientation());
     }
 
     @Override
     protected void updateContentUI(boolean isUnderBar) {
-        if(getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD){
+        if(getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE){
 
         }
     }
@@ -71,7 +72,6 @@ public abstract class PullToLoadAbsListView extends PullToLoadBaseView<AbsListVi
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && mLastItemVisible) {
-
         }
         if (mOnScrollListener != null) {
             mOnScrollListener.onScrollStateChanged(view, scrollState);

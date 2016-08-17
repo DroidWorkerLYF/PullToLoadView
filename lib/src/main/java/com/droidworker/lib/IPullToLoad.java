@@ -17,6 +17,10 @@ public interface IPullToLoad<T extends View> {
 
     T getContentView();
 
+    ILoadingLayout getHeader();
+
+    ILoadingLayout getFooter();
+
     boolean canScrollVertical(Direction direction);
 
     boolean canScrollHorizontal(Direction direction);

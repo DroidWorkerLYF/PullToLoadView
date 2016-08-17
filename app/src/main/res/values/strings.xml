@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">PullToLoadView</string>
     <string name="refresh">Refresh</string>
+    <string name="pull_from_start">Pull from start</string>
+    <string name="pull_from_start_auto_load_more">Pull from start auto load more</string>
+    <string name="pull_from_end">Pull from end</string>
+    <string name="both">Both</string>
+    <string name="disabled">Disabled</string>
+    <string name="manual_only">Manual only</string>
 </resources>

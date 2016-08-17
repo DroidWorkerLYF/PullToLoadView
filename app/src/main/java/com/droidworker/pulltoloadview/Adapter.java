@@ -1,40 +1,37 @@
 package com.droidworker.pulltoloadview;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import com.droidworker.lib.recyclerview.BaseRecyclerViewAdapter;
+import com.droidworker.lib.recyclerview.UniversalViewHolder;
+
 import android.widget.TextView;
 
 /**
  * @author https://github.com/DroidWorkerLYF
  */
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+public class Adapter extends BaseRecyclerViewAdapter {
+    private int mCount = 30;
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item, parent,
-                false);
-        return new ViewHolder(view);
+    public Adapter() {
+        setLayoutId(R.layout.layout_item);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.title.setText(String.valueOf(position));
+    protected void bindData(UniversalViewHolder universalViewHolder, int position) {
+        TextView textView = universalViewHolder.findViewById(R.id.text);
+        textView.setText(String.valueOf(position + 1));
     }
 
     @Override
     public int getItemCount() {
-        return 30;
+        return mCount;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView title;
+    public void updateCount() {
+        mCount += 15;
+        notifyDataSetChanged();
+    }
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            title = (TextView) itemView.findViewById(R.id.text);
-        }
+    public void restoreCount(){
+        mCount = 30;
     }
 }

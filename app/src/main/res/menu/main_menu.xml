@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/refresh"
         android:icon="@drawable/ic_autorenew_white_24dp"
+        app:showAsAction="always"
         android:title="@string/refresh"/>
+
+    <item android:id="@+id/pull_from_start"
+          android:title="@string/pull_from_start"/>
+
+    <item android:id="@+id/pull_from_start_auto_load_more"
+          android:title="@string/pull_from_start_auto_load_more"/>
+
+    <item android:id="@+id/pull_from_end"
+          android:title="@string/pull_from_end"/>
+
+    <item android:id="@+id/both"
+          android:title="@string/both"/>
+
+    <item android:id="@+id/disabled"
+          android:title="@string/disabled"/>
+
+    <item android:id="@+id/manual_only"
+          android:title="@string/manual_only"/>
 </menu>
