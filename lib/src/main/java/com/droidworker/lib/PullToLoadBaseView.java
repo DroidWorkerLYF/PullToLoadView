@@ -88,6 +88,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     private boolean mOverScrollStart;
     private boolean mOverScrollEnd;
     private boolean mIsAllLoaded;
+    private boolean mModeChanged;
 
     public PullToLoadBaseView(Context context) {
         this(context, null);
@@ -219,10 +220,17 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         switch (getScrollOrientation()) {
         case VERTICAL:
         default: {
-            mContentView.setPadding(0, mActionBarSize + mContentView.getPaddingTop(), 0, 0);
-            mHeaderView.setTranslationY(mActionBarSize - headerSize);
-            ((LayoutParams) mFooterView.getLayoutParams()).gravity = Gravity.BOTTOM;
-            mFooterView.setTranslationY(mFooter.getSize());
+            if (!mModeChanged) {
+                if (isUnderBar) {
+                    mContentView.setPadding(0, mActionBarSize + mContentView.getPaddingTop(), 0, 0);
+                    mHeaderView.setTranslationY(mActionBarSize - headerSize);
+                } else {
+                    mContentView.setPadding(0, mContentView.getPaddingTop(), 0, 0);
+                    mHeaderView.setTranslationY(-headerSize);
+                }
+                ((LayoutParams) mFooterView.getLayoutParams()).gravity = Gravity.BOTTOM;
+                mFooterView.setTranslationY(mFooter.getSize());
+            }
         }
             break;
         case HORIZONTAL: {
@@ -263,11 +271,13 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
     @Override
     public void setMode(LoadMode loadMode) {
-        if(mCurLoadMode == loadMode){
+        if (mCurLoadMode == loadMode) {
             return;
         }
+        mModeChanged = true;
         mLoadMode = loadMode;
         adjustForMode(mLoadMode);
+        mModeChanged = false;
     }
 
     /**
@@ -320,7 +330,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
             break;
         }
-//        updateUI(mIsUnderBar);
+        updateUI(mIsUnderBar);
     }
 
     @Override
