@@ -6,14 +6,14 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AbsListView;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 /**
  * 扩展ListView
  * @author https://github.com/DroidWorkerLYF
  */
-public class PullToLoadListView extends PullToLoadAbsListView {
+public class PullToLoadListView extends PullToLoadAbsListView<ListView> {
 
     public PullToLoadListView(Context context) {
         super(context);
@@ -29,18 +29,23 @@ public class PullToLoadListView extends PullToLoadAbsListView {
     }
 
     @Override
-    protected AbsListView createContentView(int layoutId) {
+    protected ListView createContentView(int layoutId) {
         ListView listView;
-        if(layoutId == 0){
+        if (layoutId == 0) {
             listView = new ListView(getContext());
         } else {
             View view = LayoutInflater.from(getContext()).inflate(layoutId, this, false);
-            if(view instanceof ListView){
+            if (view instanceof ListView) {
                 listView = (ListView) view;
             } else {
                 throw new UnsupportedOperationException("View should be a ListView");
             }
         }
+        listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         return listView;
+    }
+
+    public void setAdapter(BaseAdapter adapter) {
+        mContentView.setAdapter(adapter);
     }
 }

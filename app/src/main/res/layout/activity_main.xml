@@ -1,26 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.droidworker.pulltoloadview.MainActivity"
-    android:background="@color/page_background">
+    android:orientation="vertical"
+    tools:context="com.droidworker.pulltoloadview.MainActivity">
 
-    <com.droidworker.lib.impl.PullToLoadRecyclerView
-        android:id="@+id/recycler_view"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <include layout="@layout/toolbar"/>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:underBar="true"
-        app:content_view_id="@layout/layout_my_recycler_view">
+        android:layout_height="match_parent">
 
-    </com.droidworker.lib.impl.PullToLoadRecyclerView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/tool_bar"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@color/colorPrimary"/>
+            <Button
+                android:id="@+id/demo1"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:onClick="onClick"
+                android:text="@string/demo_1"/>
 
-</FrameLayout>
+            <Button
+                android:id="@+id/demo2"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:onClick="onClick"
+                android:text="@string/demo_2"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

@@ -1,7 +1,8 @@
-package com.droidworker.pulltoloadview;
+package com.droidworker.pulltoloadview.recyclerview;
 
 import com.droidworker.lib.recyclerview.BaseRecyclerViewAdapter;
 import com.droidworker.lib.recyclerview.UniversalViewHolder;
+import com.droidworker.pulltoloadview.R;
 
 import android.widget.TextView;
 
@@ -9,7 +10,7 @@ import android.widget.TextView;
  * @author https://github.com/DroidWorkerLYF
  */
 public class Adapter extends BaseRecyclerViewAdapter {
-    private int mCount = 30;
+    private int mCount = 10;
     private String[] mTitle;
     private String[] mContent;
 
@@ -22,10 +23,10 @@ public class Adapter extends BaseRecyclerViewAdapter {
     @Override
     protected void bindData(UniversalViewHolder universalViewHolder, int position) {
         TextView titleView = universalViewHolder.findViewById(R.id.title);
-        TextView subtitleView = universalViewHolder.findViewById(R.id.subtitle);
+        TextView subTitleView = universalViewHolder.findViewById(R.id.subtitle);
 
         titleView.setText(mTitle[position % 3]);
-        subtitleView.setText(mContent[position % 3]);
+        subTitleView.setText(mContent[position % 3]);
     }
 
     @Override
@@ -34,11 +35,11 @@ public class Adapter extends BaseRecyclerViewAdapter {
     }
 
     public void updateCount() {
-        mCount += 15;
+        mCount += 10;
         notifyDataSetChanged();
     }
 
-    public void restoreCount(){
-        mCount = 30;
+    public void restoreCount() {
+        mCount = 10;
     }
 }

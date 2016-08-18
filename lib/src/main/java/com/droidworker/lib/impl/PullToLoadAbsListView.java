@@ -15,7 +15,7 @@ import android.widget.Adapter;
  * 扩展AbsListView.
  * @author https://github.com/DroidWorkerLYF
  */
-public abstract class PullToLoadAbsListView extends PullToLoadBaseView<AbsListView>
+public abstract class PullToLoadAbsListView<T extends AbsListView> extends PullToLoadBaseView<T>
         implements AbsListView.OnScrollListener {
     private boolean mLastItemVisible;
     private AbsListView.OnScrollListener mOnScrollListener;
@@ -40,10 +40,10 @@ public abstract class PullToLoadAbsListView extends PullToLoadBaseView<AbsListVi
         switch (direction) {
         case START:
         default: {
-            return isFirstItemVisible();
+            return !isFirstItemVisible();
         }
         case END: {
-            return isLastItemVisible();
+            return !isLastItemVisible();
         }
         }
     }
@@ -65,6 +65,7 @@ public abstract class PullToLoadAbsListView extends PullToLoadBaseView<AbsListVi
 
     @Override
     protected void updateContentUI(boolean isUnderBar) {
+        mContentView.scrollTo(0, -getActionBarHeight());
         if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
 
         }
@@ -91,7 +92,6 @@ public abstract class PullToLoadAbsListView extends PullToLoadBaseView<AbsListVi
 
     private boolean isFirstItemVisible() {
         final Adapter adapter = mContentView.getAdapter();
-
         if (adapter == null || adapter.isEmpty()) {
             return true;
         } else {
@@ -111,10 +111,10 @@ public abstract class PullToLoadAbsListView extends PullToLoadBaseView<AbsListVi
         if (null == adapter || adapter.isEmpty()) {
             return true;
         } else {
-            final int lastItemPosition = mContentView.getCount() - 1;
+            final int lastItemPosition = mContentView.getAdapter().getCount() - 1;
             final int lastVisiblePosition = mContentView.getLastVisiblePosition();
 
-            if (lastVisiblePosition >= lastItemPosition - 1) {
+            if (lastVisiblePosition >= lastItemPosition) {
                 final int childIndex = lastVisiblePosition - mContentView.getFirstVisiblePosition();
                 final View lastVisibleChild = mContentView.getChildAt(childIndex);
                 if (lastVisibleChild != null) {

@@ -743,7 +743,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
             break;
         }
-        Log.i(TAG, "handlePull " + (startValue - endValue));
         final float scrollValue;
         final int size;
         switch (mCurLoadMode) {

@@ -201,4 +201,8 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
     public void setOnScrollListener(RecyclerView.OnScrollListener onScrollListener) {
         mOnScrollListener = onScrollListener;
     }
+
+    public void addItemDecoration(RecyclerView.ItemDecoration decor){
+        mContentView.addItemDecoration(decor);
+    }
 }

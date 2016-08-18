@@ -7,6 +7,11 @@
     <string name="both">Both</string>
     <string name="disabled">Disabled</string>
     <string name="manual_only">Manual only</string>
+    <string name="demo_1">RecyclerView demo</string>
+    <string name="demo_1_title">PullToLoadRecyclerView</string>
+    <string name="demo_2">ListView demo</string>
+    <string name="demo_2_title">PullToLoadListView</string>
+
     <string-array name="title">
         <item>概述</item>
         <item>目标</item>
