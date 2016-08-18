@@ -6,7 +6,6 @@ import com.droidworker.lib.constant.Orientation;
 import com.droidworker.lib.constant.State;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -18,21 +17,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
+ * 实现ILoadingLayout接口,用于header和footer的默认视图
  * @author https://github.com/DroidWorkerLYF
  */
 public class LoadingLayout extends FrameLayout implements ILoadingLayout {
-    private static final String TAG = "LoadingLayout";
-    private Orientation mOrientation;
     private LinearLayout mContainer;
     private ImageView mImageView;
     private TextView mTextView;
     private RotateAnimation mRotateAnimation;
 
+    public LoadingLayout(Context context) {
+        this(context, Orientation.VERTICAL);
+    }
+
     public LoadingLayout(Context context, Orientation orientation) {
         super(context);
 
-        mOrientation = orientation;
-        switch (mOrientation) {
+        switch (orientation) {
         case VERTICAL:
         default:
             LayoutInflater.from(context).inflate(R.layout.layout_loading_default, this, true);
@@ -60,11 +61,24 @@ public class LoadingLayout extends FrameLayout implements ILoadingLayout {
     @Override
     public void onPull(State state, float distance) {
         mTextView.setText(String.valueOf(distance));
-        if (state == State.LOADING || state == State.MANUAL_LOAD) {
+        if (state == State.UPDATING || state == State.MANUAL_UPDATE) {
             mImageView.startAnimation(mRotateAnimation);
+            mTextView.setText(R.string.updating);
+        } else if (state == State.LOADING) {
+            mImageView.startAnimation(mRotateAnimation);
+            mTextView.setText(R.string.loading);
         } else if (state == State.RESET) {
             mImageView.clearAnimation();
         } else {
+            if (state == State.PULL_FROM_START) {
+                mTextView.setText(R.string.pull_to_update);
+            } else if (state == State.PULL_FROM_END) {
+                mTextView.setText(R.string.pull_to_load);
+            } else if (state == State.RELEASE_TO_UPDATE) {
+                mTextView.setText(R.string.release_to_update);
+            } else if (state == State.RELEASE_TO_LOAD) {
+                mTextView.setText(R.string.release_to_load);
+            }
             if (distance != 0) {
                 mImageView.setRotation(Math.abs(distance) % getSize() / 100 * 360f);
             }

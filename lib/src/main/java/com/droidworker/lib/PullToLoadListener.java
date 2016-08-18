@@ -5,7 +5,7 @@ package com.droidworker.lib;
  */
 public interface PullToLoadListener {
     /**
-     * 刷新
+     * 加载更新
      */
     void onLoadNew();
 

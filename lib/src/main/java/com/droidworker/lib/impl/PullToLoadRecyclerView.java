@@ -22,8 +22,18 @@ import android.view.View;
  * @author https://github.com/DroidWorkerLYF
  */
 public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
+    /**
+     * 自动加载更多时添加到最后的footer
+     */
     private LoadingLayout mAutoLoadFooter;
+    /**
+     * 是否要加载更多
+     */
     private boolean loadMore;
+    /**
+     * 滚动的监听
+     */
+    private RecyclerView.OnScrollListener mOnScrollListener;
 
     public PullToLoadRecyclerView(Context context) {
         super(context);
@@ -84,16 +94,16 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
                 throw new UnsupportedOperationException("View should be a RecyclerView");
             }
         }
-        recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
 
+        recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
+        // 设置滚动监听
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && loadMore && !isAllLoaded()) {
-                    HeaderAndFooterWrapper wrapper = (HeaderAndFooterWrapper) mContentView
-                            .getAdapter();
+                    HeaderAndFooterWrapper wrapper = getAdapter();
                     if (wrapper != null) {
                         recyclerView.scrollToPosition(wrapper.getItemCount());
                         if (!wrapper.containsFooter(mAutoLoadFooter)) {
@@ -105,6 +115,10 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
                         setState(State.LOADING);
                     }
                 }
+
+                if (mOnScrollListener != null) {
+                    mOnScrollListener.onScrollStateChanged(recyclerView, newState);
+                }
             }
 
             @Override
@@ -113,6 +127,10 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
 
                 loadMore = !canScrollVertical(Direction.END)
                         && getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE;
+
+                if (mOnScrollListener != null) {
+                    mOnScrollListener.onScrolled(recyclerView, dx, dy);
+                }
             }
         });
         return recyclerView;
@@ -172,7 +190,15 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
         mContentView.setAdapter(wrapper);
     }
 
-    public BaseRecyclerViewAdapter getAdapter() {
-        return (BaseRecyclerViewAdapter) mContentView.getAdapter();
+    public HeaderAndFooterWrapper getAdapter() {
+        return (HeaderAndFooterWrapper) mContentView.getAdapter();
+    }
+
+    public BaseRecyclerViewAdapter getWrappedAdapter() {
+        return ((HeaderAndFooterWrapper) mContentView.getAdapter()).getWrappedAdapter();
+    }
+
+    public void setOnScrollListener(RecyclerView.OnScrollListener onScrollListener) {
+        mOnScrollListener = onScrollListener;
     }
 }

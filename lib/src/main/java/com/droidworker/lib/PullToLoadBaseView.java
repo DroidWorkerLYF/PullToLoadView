@@ -99,12 +99,12 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.PullToLoadView);
         mIsUnderBar = typedArray.getBoolean(R.styleable.PullToLoadView_underBar, false);
         mContentViewId = typedArray.getResourceId(R.styleable.PullToLoadView_content_view_id, 0);
+        mActionBarSize = typedArray.getDimensionPixelSize(R.styleable.PullToLoadView_bar_size,
+                getActionBarSize());
         typedArray.recycle();
 
         ViewConfiguration config = ViewConfiguration.get(context);
         mTouchSlop = config.getScaledTouchSlop();
-
-        mActionBarSize = getActionBarSize();
 
         initView();
     }
@@ -219,7 +219,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         switch (getScrollOrientation()) {
         case VERTICAL:
         default: {
-            mContentView.setPadding(0, mActionBarSize, 0, 0);
+            mContentView.setPadding(0, mActionBarSize + mContentView.getPaddingTop(), 0, 0);
             mHeaderView.setTranslationY(mActionBarSize - headerSize);
             ((LayoutParams) mFooterView.getLayoutParams()).gravity = Gravity.BOTTOM;
             mFooterView.setTranslationY(mFooter.getSize());
@@ -233,7 +233,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             break;
         }
         updateContentUI(isUnderBar);
-        setState(State.RESET);
     }
 
     /**
@@ -264,6 +263,9 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
     @Override
     public void setMode(LoadMode loadMode) {
+        if(mCurLoadMode == loadMode){
+            return;
+        }
         mLoadMode = loadMode;
         adjustForMode(mLoadMode);
     }
@@ -274,11 +276,17 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      */
     private void adjustForMode(LoadMode loadMode) {
         switch (loadMode) {
-        case PULL_FROM_START:
-        case MANUAL_ONLY: {
+        case PULL_FROM_START: {
             mOverScrollStart = false;
             mOverScrollEnd = true;
             mHeaderView.setVisibility(View.VISIBLE);
+            mFooterView.setVisibility(View.INVISIBLE);
+        }
+            break;
+        case MANUAL_ONLY: {
+            mOverScrollStart = true;
+            mOverScrollEnd = true;
+            mHeaderView.setVisibility(View.INVISIBLE);
             mFooterView.setVisibility(View.INVISIBLE);
         }
             break;
@@ -312,7 +320,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
             break;
         }
-        updateUI(mIsUnderBar);
+//        updateUI(mIsUnderBar);
     }
 
     @Override
@@ -320,11 +328,11 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         return mLoadMode;
     }
 
-    protected LoadMode getCurLoadMode(){
+    protected LoadMode getCurLoadMode() {
         return mCurLoadMode;
     }
 
-    protected void setCurLoadMode(LoadMode loadMode){
+    protected void setCurLoadMode(LoadMode loadMode) {
         mCurLoadMode = loadMode;
     }
 
@@ -345,13 +353,13 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
     @Override
     public boolean isLoading() {
-        return mState == State.LOADING || mState == State.MANUAL_LOAD;
+        return mState == State.UPDATING || mState == State.LOADING || mState == State.MANUAL_UPDATE;
     }
 
     @Override
     public void setLoading() {
         if (!isLoading()) {
-            setState(State.MANUAL_LOAD);
+            setState(State.MANUAL_UPDATE);
         }
     }
 
@@ -369,7 +377,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mFooterView.setVisibility(View.INVISIBLE);
     }
 
-    protected boolean isAllLoaded(){
+    protected boolean isAllLoaded() {
         return mIsAllLoaded;
     }
 
@@ -378,7 +386,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mPullToLoadListener = pullToLoadListener;
     }
 
-    protected PullToLoadListener getPullToLoadListener(){
+    protected PullToLoadListener getPullToLoadListener() {
         return mPullToLoadListener;
     }
 
@@ -521,7 +529,11 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                     return true;
                 }
 
-                if (mState == State.RELEASE_TO_LOAD) {
+                if (mState == State.RELEASE_TO_UPDATE) {
+                    Log.i(TAG, "touch up | cancel start updating");
+                    setState(State.UPDATING);
+                    return true;
+                } else if (mState == State.RELEASE_TO_LOAD) {
                     Log.i(TAG, "touch up | cancel start loading");
                     setState(State.LOADING);
                     return true;
@@ -548,12 +560,12 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     private boolean isOverScroll() {
         switch (mLoadMode) {
         case PULL_FROM_START:
-        case MANUAL_ONLY:
             return isReadyToPullEnd() && mOverScrollEnd;
         case PULL_FROM_START_AUTO_LOAD_MORE:
             return isReadyToPullEnd() && mOverScrollEnd;
         case PULL_FROM_END:
             return isReadyToPullStart() && mOverScrollStart;
+        case MANUAL_ONLY:
         case DISABLED:
             return (isReadyToPullStart() && mOverScrollStart)
                     || (isReadyToPullEnd() && mOverScrollEnd);
@@ -636,13 +648,15 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             }
             break;
         case LOADING:
+        case UPDATING:
             onPull(state, 0);
             onLoading();
             break;
         case RELEASE_TO_LOAD:
+        case RELEASE_TO_UPDATE:
             onPull(state, 0);
             break;
-        case MANUAL_LOAD:
+        case MANUAL_UPDATE:
             mHeader.show();
             onPull(state, 0);
             manualLoad();
@@ -695,7 +709,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         smoothScrollTo(0);
     }
 
-    protected State getState(){
+    protected State getState() {
         return mState;
     }
 
@@ -736,18 +750,24 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
         if (scrollValue != 0 && !isLoading()) {
             scroll(scrollValue);
-            if (Math.abs(scrollValue) > size) {
-                setState(State.RELEASE_TO_LOAD);
-            } else {
-                switch (mCurLoadMode) {
-                case PULL_FROM_START:
-                default: {
+            switch (mCurLoadMode) {
+            case PULL_FROM_START:
+            default: {
+                if (Math.abs(scrollValue) > size) {
+                    setState(State.RELEASE_TO_UPDATE);
+                } else {
                     setState(State.PULL_FROM_START);
                 }
-                case PULL_FROM_END: {
+            }
+                break;
+            case PULL_FROM_END: {
+                if (Math.abs(scrollValue) > size) {
+                    setState(State.RELEASE_TO_LOAD);
+                } else {
                     setState(State.PULL_FROM_END);
                 }
-                }
+            }
+                break;
             }
             onPull(mState, scrollValue);
         }

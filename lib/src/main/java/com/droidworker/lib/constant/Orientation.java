@@ -1,10 +1,16 @@
 package com.droidworker.lib.constant;
 
 /**
- * 内容视图的滚动方向
+ * 布局方向
  * @author https://github.com/DroidWorkerLYF
  */
 public enum Orientation {
+    /**
+     * 竖直
+     */
     VERTICAL,
-    HORIZONTAL;
+    /**
+     * 水平
+     */
+    HORIZONTAL
 }

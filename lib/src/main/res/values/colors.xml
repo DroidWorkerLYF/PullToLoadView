@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="loading_layout_background">#2C2B32</color>
+    <color name="rotate_loading_color">#F39C12</color>
 </resources>

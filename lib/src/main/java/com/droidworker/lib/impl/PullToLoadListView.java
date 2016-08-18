@@ -10,6 +10,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 /**
+ * 扩展ListView
  * @author https://github.com/DroidWorkerLYF
  */
 public class PullToLoadListView extends PullToLoadAbsListView {

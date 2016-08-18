@@ -21,7 +21,7 @@ public enum LoadMode {
      */
     BOTH,
     /**
-     * 进制拉动
+     * 禁止拉动
      */
     DISABLED,
     /**
@@ -29,15 +29,15 @@ public enum LoadMode {
      */
     MANUAL_ONLY;
 
-    public boolean isPullToLoad(){
+    public boolean isPullToLoad() {
         return !(this == DISABLED || this == MANUAL_ONLY);
     }
 
-    public boolean isPullFromStart(){
+    public boolean isPullFromStart() {
         return this == PULL_FROM_START || this == BOTH || this == PULL_FROM_START_AUTO_LOAD_MORE;
     }
 
-    public boolean isPullFromEnd(){
+    public boolean isPullFromEnd() {
         return this == PULL_FROM_END || this == BOTH || this == PULL_FROM_START_AUTO_LOAD_MORE;
     }
 }

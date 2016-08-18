@@ -12,6 +12,7 @@ import android.widget.AbsListView;
 import android.widget.Adapter;
 
 /**
+ * 扩展AbsListView.
  * @author https://github.com/DroidWorkerLYF
  */
 public abstract class PullToLoadAbsListView extends PullToLoadBaseView<AbsListView>
@@ -64,7 +65,7 @@ public abstract class PullToLoadAbsListView extends PullToLoadBaseView<AbsListVi
 
     @Override
     protected void updateContentUI(boolean isUnderBar) {
-        if(getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE){
+        if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
 
         }
     }
@@ -81,7 +82,8 @@ public abstract class PullToLoadAbsListView extends PullToLoadBaseView<AbsListVi
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
             int totalItemCount) {
-        mLastItemVisible = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount - 1);
+        mLastItemVisible = (totalItemCount > 0)
+                && (firstVisibleItem + visibleItemCount >= totalItemCount - 1);
         if (null != mOnScrollListener) {
             mOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
         }
@@ -112,13 +114,6 @@ public abstract class PullToLoadAbsListView extends PullToLoadBaseView<AbsListVi
             final int lastItemPosition = mContentView.getCount() - 1;
             final int lastVisiblePosition = mContentView.getLastVisiblePosition();
 
-            /**
-             * This check should really just be: lastVisiblePosition ==
-             * lastItemPosition, but PtRListView internally uses a FooterView
-             * which messes the positions up. For me we'll just subtract one to
-             * account for it and rely on the inner condition which checks
-             * getBottom().
-             */
             if (lastVisiblePosition >= lastItemPosition - 1) {
                 final int childIndex = lastVisiblePosition - mContentView.getFirstVisiblePosition();
                 final View lastVisibleChild = mContentView.getChildAt(childIndex);
