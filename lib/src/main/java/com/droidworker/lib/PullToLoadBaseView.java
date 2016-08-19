@@ -362,6 +362,21 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     }
 
     @Override
+    public void setPadding(int left, int top, int right, int bottom) {
+        switch (getScrollOrientation()) {
+        case VERTICAL:
+        default: {
+            mContentView.setPadding(left, top + mContentView.getPaddingTop(), right, bottom);
+        }
+            break;
+        case HORIZONTAL: {
+
+        }
+            break;
+        }
+    }
+
+    @Override
     public boolean isLoading() {
         return mState == State.UPDATING || mState == State.LOADING || mState == State.MANUAL_UPDATE;
     }

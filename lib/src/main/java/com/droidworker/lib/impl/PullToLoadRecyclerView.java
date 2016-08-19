@@ -156,6 +156,8 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
                 break;
             }
             mAutoLoadFooter.setLayoutParams(layoutParams);
+        } else {
+            mAutoLoadFooter = null;
         }
     }
 

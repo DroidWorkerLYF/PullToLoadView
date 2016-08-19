@@ -38,6 +38,11 @@ public interface IPullToLoad<T extends View> {
     ILoadingLayout getFooter();
 
     /**
+     * 因为效果的实现受到padding的影响,所以要提供此方法实现正确的行为
+     */
+    void setPadding(int left, int top, int right, int bottom);
+
+    /**
      * 竖直方向上是否还可以沿指定方向滚动
      * @param direction 方向
      * @return true则可以继续滚动

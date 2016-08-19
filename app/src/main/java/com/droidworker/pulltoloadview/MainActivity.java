@@ -1,6 +1,6 @@
 package com.droidworker.pulltoloadview;
 
-import com.droidworker.pulltoloadview.listview.ListViewActivity;
+import com.droidworker.pulltoloadview.abslistview.ListViewActivity;
 import com.droidworker.pulltoloadview.recyclerview.RecyclerViewActivity;
 
 import android.content.Intent;

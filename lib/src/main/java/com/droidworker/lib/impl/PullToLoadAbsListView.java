@@ -65,7 +65,12 @@ public abstract class PullToLoadAbsListView<T extends AbsListView> extends PullT
 
     @Override
     protected void updateContentUI(boolean isUnderBar) {
-        mContentView.scrollTo(0, -getActionBarHeight());
+        post(new Runnable() {
+            @Override
+            public void run() {
+                mContentView.setSelection(0);
+            }
+        });
         if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
 
         }

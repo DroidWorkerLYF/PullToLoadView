@@ -1,4 +1,4 @@
-package com.droidworker.pulltoloadview.listview;
+package com.droidworker.pulltoloadview.abslistview;
 
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.LoadMode;
@@ -70,6 +70,7 @@ public class ListViewActivity extends BaseActivity {
             mPullToLoadListView.setMode(LoadMode.BOTH);
             mPullToLoadListView.setOnPullToLoadListener(this);
             mPullToLoadListView.setAdapter(mAdapter);
+//            mPullToLoadListView.setPadding(0, getResources().getDimensionPixelOffset(R.dimen.item_divider), 0, 0);
 
             mPullToLoadListView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
