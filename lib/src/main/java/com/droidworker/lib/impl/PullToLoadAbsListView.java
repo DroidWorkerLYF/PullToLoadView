@@ -17,7 +17,11 @@ import android.widget.Adapter;
  */
 public abstract class PullToLoadAbsListView<T extends AbsListView> extends PullToLoadBaseView<T>
         implements AbsListView.OnScrollListener {
-    private boolean mLastItemVisible;
+    protected boolean mLastItemVisible;
+    /**
+     * 自动加载更多时添加到最后的footer
+     */
+    protected LoadingLayout mAutoLoadFooter;
     private AbsListView.OnScrollListener mOnScrollListener;
 
     public PullToLoadAbsListView(Context context) {
@@ -72,14 +76,27 @@ public abstract class PullToLoadAbsListView<T extends AbsListView> extends PullT
             }
         });
         if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
-
+            mAutoLoadFooter = new LoadingLayout(getContext(), getScrollOrientation());
+            AbsListView.LayoutParams layoutParams;
+            switch (getScrollOrientation()) {
+            case VERTICAL:
+            default: {
+                layoutParams = new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT,
+                        LayoutParams.WRAP_CONTENT);
+            }
+                break;
+            case HORIZONTAL: {
+                layoutParams = new AbsListView.LayoutParams(LayoutParams.WRAP_CONTENT,
+                        LayoutParams.MATCH_PARENT);
+            }
+                break;
+            }
+            mAutoLoadFooter.setLayoutParams(layoutParams);
         }
     }
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && mLastItemVisible) {
-        }
         if (mOnScrollListener != null) {
             mOnScrollListener.onScrollStateChanged(view, scrollState);
         }

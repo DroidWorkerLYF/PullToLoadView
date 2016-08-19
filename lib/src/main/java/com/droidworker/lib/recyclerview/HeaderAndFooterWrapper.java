@@ -66,10 +66,12 @@ public class HeaderAndFooterWrapper extends BaseRecyclerViewAdapter {
 
     public void addHeader(View header) {
         mHeaders.put(mHeaders.size() + TYPE_HEADER, header);
+        notifyDataSetChanged();
     }
 
     public void addFooter(View header) {
         mFooters.put(mFooters.size() + TYPE_FOOTER, header);
+        notifyDataSetChanged();
     }
 
     public void removeHeader(View header) {

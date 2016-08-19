@@ -9,16 +9,13 @@ import com.droidworker.pulltoloadview.R;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.widget.AbsListView;
 
 /**
  * @author https://github.com/DroidWorkerLYF
  */
 public class ListViewActivity extends BaseActivity {
-    private Toolbar mToolbar;
     private PullToLoadListView mPullToLoadListView;
     private Adapter mAdapter;
-    private int scrollY;
 
     @Override
     public void onLoadNew() {
@@ -38,7 +35,7 @@ public class ListViewActivity extends BaseActivity {
             @Override
             public void run() {
                 mPullToLoadListView.onLoadComplete();
-                if(mAdapter.getCount() >= 30){
+                if (mAdapter.getCount() >= 30) {
                     mPullToLoadListView.onAllLoaded();
                 } else {
                     mAdapter.updateCount();
@@ -58,7 +55,7 @@ public class ListViewActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listview);
 
-        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(mToolbar);
         setTitle(R.string.demo_2_title);
 
@@ -66,23 +63,10 @@ public class ListViewActivity extends BaseActivity {
 
         mAdapter = new Adapter(getResources().getStringArray(R.array.title),
                 getResources().getStringArray(R.array.content));
-        if(mPullToLoadListView != null){
-            mPullToLoadListView.setMode(LoadMode.BOTH);
+        if (mPullToLoadListView != null) {
+            mPullToLoadListView.setMode(LoadMode.PULL_FROM_START_AUTO_LOAD_MORE);
             mPullToLoadListView.setOnPullToLoadListener(this);
             mPullToLoadListView.setAdapter(mAdapter);
-//            mPullToLoadListView.setPadding(0, getResources().getDimensionPixelOffset(R.dimen.item_divider), 0, 0);
-
-            mPullToLoadListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-                }
-
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-                }
-            });
         }
     }
 }

@@ -1,11 +1,14 @@
 package com.droidworker.lib.impl;
 
+import com.droidworker.lib.constant.LoadMode;
 import com.droidworker.lib.constant.Orientation;
+import com.droidworker.lib.constant.State;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
@@ -41,8 +44,46 @@ public class PullToLoadListView extends PullToLoadAbsListView<ListView> {
                 throw new UnsupportedOperationException("View should be a ListView");
             }
         }
-        listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         return listView;
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && mLastItemVisible
+                && !isAllLoaded() && getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
+            if (mContentView.getFooterViewsCount() == 0) {
+                mContentView.addFooterView(mAutoLoadFooter);
+            }
+            mContentView.smoothScrollToPosition(mContentView.getAdapter().getCount());
+            mAutoLoadFooter.onPull(State.LOADING, 0);
+            setCurLoadMode(LoadMode.PULL_FROM_END);
+            setState(State.LOADING);
+        }
+
+        super.onScrollStateChanged(view, scrollState);
+    }
+
+    @Override
+    protected void onLoading() {
+        if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
+            if (getCurLoadMode() == LoadMode.PULL_FROM_END) {
+                if (getPullToLoadListener() != null) {
+                    getPullToLoadListener().onLoadMore();
+                }
+            } else {
+                super.onLoading();
+            }
+        } else {
+            super.onLoading();
+        }
+    }
+
+    @Override
+    protected void reset() {
+        super.reset();
+        mLastItemVisible = false;
+        mContentView.removeFooterView(mAutoLoadFooter);
     }
 
     public void setAdapter(BaseAdapter adapter) {

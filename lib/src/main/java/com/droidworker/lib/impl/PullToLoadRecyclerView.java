@@ -95,7 +95,6 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
             }
         }
 
-        recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
         // 设置滚动监听
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -108,7 +107,6 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
                         recyclerView.scrollToPosition(wrapper.getItemCount());
                         if (!wrapper.containsFooter(mAutoLoadFooter)) {
                             wrapper.addFooter(mAutoLoadFooter);
-                            wrapper.notifyDataSetChanged();
                         }
                         mAutoLoadFooter.onPull(State.LOADING, 0);
                         setCurLoadMode(LoadMode.PULL_FROM_END);

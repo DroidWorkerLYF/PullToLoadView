@@ -240,6 +240,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
             break;
         }
+        mContentView.setOverScrollMode(OVER_SCROLL_NEVER);
         updateContentUI(isUnderBar);
     }
 
