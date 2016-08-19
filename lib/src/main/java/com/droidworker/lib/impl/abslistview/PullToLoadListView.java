@@ -1,4 +1,4 @@
-package com.droidworker.lib.impl;
+package com.droidworker.lib.impl.abslistview;
 
 import com.droidworker.lib.constant.LoadMode;
 import com.droidworker.lib.constant.Orientation;
@@ -50,7 +50,7 @@ public class PullToLoadListView extends PullToLoadAbsListView<ListView> {
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && mLastItemVisible
+        if (scrollState == SCROLL_STATE_IDLE && mLastItemVisible
                 && !isAllLoaded() && getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
             if (mContentView.getFooterViewsCount() == 0) {
                 mContentView.addFooterView(mAutoLoadFooter);

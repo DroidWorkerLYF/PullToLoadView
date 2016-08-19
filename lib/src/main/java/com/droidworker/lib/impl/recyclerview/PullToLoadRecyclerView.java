@@ -1,10 +1,11 @@
-package com.droidworker.lib.impl;
+package com.droidworker.lib.impl.recyclerview;
 
 import com.droidworker.lib.ILoadingLayout;
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.Direction;
 import com.droidworker.lib.constant.LoadMode;
 import com.droidworker.lib.constant.State;
+import com.droidworker.lib.impl.LoadingLayout;
 import com.droidworker.lib.recyclerview.BaseRecyclerViewAdapter;
 import com.droidworker.lib.recyclerview.HeaderAndFooterWrapper;
 

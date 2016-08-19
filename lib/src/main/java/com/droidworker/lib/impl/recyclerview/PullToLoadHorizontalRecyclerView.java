@@ -1,4 +1,4 @@
-package com.droidworker.lib.impl;
+package com.droidworker.lib.impl.recyclerview;
 
 import com.droidworker.lib.constant.Orientation;
 

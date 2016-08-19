@@ -2,7 +2,7 @@ package com.droidworker.pulltoloadview.recyclerview;
 
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.LoadMode;
-import com.droidworker.lib.impl.PullToLoadVerticalRecyclerView;
+import com.droidworker.lib.impl.recyclerview.PullToLoadVerticalRecyclerView;
 import com.droidworker.pulltoloadview.BaseActivity;
 import com.droidworker.pulltoloadview.DividerItemDecoration;
 import com.droidworker.pulltoloadview.R;
