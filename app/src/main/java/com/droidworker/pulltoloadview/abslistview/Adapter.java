@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 /**
- * @author luoyanfeng@le.com
+ * @author https://github.com/DroidWorkerLYF
  */
 public class Adapter extends BaseAdapter {
     private int mCount = 10;
@@ -41,7 +41,7 @@ public class Adapter extends BaseAdapter {
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item,
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item_v,
                     parent, false);
             viewHolder.titleView = (TextView) convertView.findViewById(R.id.title);
             viewHolder.subTitleView = (TextView) convertView.findViewById(R.id.subtitle);

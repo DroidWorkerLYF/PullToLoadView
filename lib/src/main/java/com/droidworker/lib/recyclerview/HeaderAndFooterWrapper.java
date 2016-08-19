@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 /**
  * 为BaseRecyclerViewAdapter增加Header和Footer相关的方法.
- * @author luoyanfeng@le.com
+ * @author https://github.com/DroidWorkerLYF
  */
 public class HeaderAndFooterWrapper extends BaseRecyclerViewAdapter {
     private static final int TYPE_HEADER = 10000;

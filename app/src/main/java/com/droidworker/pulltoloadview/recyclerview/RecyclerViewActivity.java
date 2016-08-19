@@ -2,7 +2,7 @@ package com.droidworker.pulltoloadview.recyclerview;
 
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.LoadMode;
-import com.droidworker.lib.impl.PullToLoadRecyclerView;
+import com.droidworker.lib.impl.PullToLoadVerticalRecyclerView;
 import com.droidworker.pulltoloadview.BaseActivity;
 import com.droidworker.pulltoloadview.DividerItemDecoration;
 import com.droidworker.pulltoloadview.R;
@@ -17,33 +17,33 @@ import android.support.v7.widget.Toolbar;
  */
 public class RecyclerViewActivity extends BaseActivity {
     private Toolbar mToolbar;
-    private PullToLoadRecyclerView mPullToLoadRecyclerView;
+    private PullToLoadVerticalRecyclerView mPullToLoadVerticalRecyclerView;
     private Adapter mAdapter;
     private int scrollY;
 
     @Override
     public void onLoadNew() {
-        mPullToLoadRecyclerView.postDelayed(new Runnable() {
+        mPullToLoadVerticalRecyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mPullToLoadRecyclerView.onLoadComplete();
+                mPullToLoadVerticalRecyclerView.onLoadComplete();
                 mAdapter.restoreCount();
-                mPullToLoadRecyclerView.getAdapter().notifyDataSetChanged();
+                mPullToLoadVerticalRecyclerView.getAdapter().notifyDataSetChanged();
             }
         }, 2000);
     }
 
     @Override
     public void onLoadMore() {
-        mPullToLoadRecyclerView.postDelayed(new Runnable() {
+        mPullToLoadVerticalRecyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mPullToLoadRecyclerView.onLoadComplete();
+                mPullToLoadVerticalRecyclerView.onLoadComplete();
                 if (mAdapter.getItemCount() >= 30) {
-                    mPullToLoadRecyclerView.onAllLoaded();
+                    mPullToLoadVerticalRecyclerView.onAllLoaded();
                 } else {
                     mAdapter.updateCount();
-                    mPullToLoadRecyclerView.getAdapter().notifyDataSetChanged();
+                    mPullToLoadVerticalRecyclerView.getAdapter().notifyDataSetChanged();
                 }
             }
         }, 2000);
@@ -51,31 +51,31 @@ public class RecyclerViewActivity extends BaseActivity {
 
     @Override
     protected PullToLoadBaseView getPullToLoadView() {
-        return mPullToLoadRecyclerView;
+        return mPullToLoadVerticalRecyclerView;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recyclerview);
+        setContentView(R.layout.activity_recyclerview_v);
 
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(mToolbar);
         setTitle(R.string.demo_1_title);
 
-        mPullToLoadRecyclerView = (PullToLoadRecyclerView) findViewById(R.id.recycler_view);
+        mPullToLoadVerticalRecyclerView = (PullToLoadVerticalRecyclerView) findViewById(R.id.recycler_view);
 
         mAdapter = new Adapter(getResources().getStringArray(R.array.title),
-                getResources().getStringArray(R.array.content));
-        if (mPullToLoadRecyclerView != null) {
-            mPullToLoadRecyclerView.setMode(LoadMode.BOTH);
-            mPullToLoadRecyclerView.setOnPullToLoadListener(this);
-            mPullToLoadRecyclerView.setAdapter(mAdapter);
-            mPullToLoadRecyclerView.addItemDecoration(new DividerItemDecoration(
+                getResources().getStringArray(R.array.content), true);
+        if (mPullToLoadVerticalRecyclerView != null) {
+            mPullToLoadVerticalRecyclerView.setMode(LoadMode.BOTH);
+            mPullToLoadVerticalRecyclerView.setOnPullToLoadListener(this);
+            mPullToLoadVerticalRecyclerView.setAdapter(mAdapter);
+            mPullToLoadVerticalRecyclerView.addItemDecoration(new DividerItemDecoration(
                     DividerItemDecoration.VERTICAL_LIST, Color.TRANSPARENT,
                     getResources().getDimensionPixelSize(R.dimen.item_divider)));
 
-            mPullToLoadRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            mPullToLoadVerticalRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
@@ -85,7 +85,7 @@ public class RecyclerViewActivity extends BaseActivity {
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
 
-                    final int height = mPullToLoadRecyclerView.getActionBarHeight() * 2;
+                    final int height = mPullToLoadVerticalRecyclerView.getBarHeight() * 2;
                     scrollY += dy;
                     if (scrollY >= height) {
                         mToolbar.setAlpha(0.8f);

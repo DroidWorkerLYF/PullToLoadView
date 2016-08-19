@@ -2,6 +2,7 @@ package com.droidworker.pulltoloadview;
 
 import com.droidworker.pulltoloadview.abslistview.ListViewActivity;
 import com.droidworker.pulltoloadview.recyclerview.RecyclerViewActivity;
+import com.droidworker.pulltoloadview.recyclerview.RecyclerViewHorizontalActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +25,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             break;
         case R.id.demo2:
             startActivity(new Intent(MainActivity.this, ListViewActivity.class));
+            break;
+        case R.id.demo3:
+            startActivity(new Intent(MainActivity.this, RecyclerViewHorizontalActivity.class));
             break;
         }
     }

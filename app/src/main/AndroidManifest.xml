@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".recyclerview.RecyclerViewActivity"/>
         <activity android:name=".abslistview.ListViewActivity"/>
+        <activity android:name=".recyclerview.RecyclerViewHorizontalActivity"/>
     </application>
 
 </manifest>

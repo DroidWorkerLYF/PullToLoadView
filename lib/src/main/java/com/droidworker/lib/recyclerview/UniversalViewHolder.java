@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 /**
  * {@link RecyclerView}的通用ViewHolder
- * @author luoyanfeng@le.com
+ * @author https://github.com/DroidWorkerLYF
  */
 public class UniversalViewHolder extends RecyclerView.ViewHolder {
     /**

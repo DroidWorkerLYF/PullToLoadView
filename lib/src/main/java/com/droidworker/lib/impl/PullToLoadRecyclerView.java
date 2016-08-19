@@ -4,24 +4,21 @@ import com.droidworker.lib.ILoadingLayout;
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.Direction;
 import com.droidworker.lib.constant.LoadMode;
-import com.droidworker.lib.constant.Orientation;
 import com.droidworker.lib.constant.State;
 import com.droidworker.lib.recyclerview.BaseRecyclerViewAdapter;
 import com.droidworker.lib.recyclerview.HeaderAndFooterWrapper;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
 /**
- * 支持加载更新,加载更多的RecyclerView
  * @author https://github.com/DroidWorkerLYF
  */
-public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
+public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
     /**
      * 自动加载更多时添加到最后的footer
      */
@@ -53,22 +50,6 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
     public boolean canScrollHorizontal(Direction direction) {
         // 使用ViewCompat中的方法
         return ViewCompat.canScrollHorizontally(mContentView, direction.getIntValue());
-    }
-
-    @Override
-    protected Orientation getScrollOrientation() {
-        RecyclerView.LayoutManager layoutManager = mContentView.getLayoutManager();
-        if (layoutManager instanceof LinearLayoutManager) {
-            switch (((LinearLayoutManager) layoutManager).getOrientation()) {
-            case LinearLayoutManager.HORIZONTAL:
-                return Orientation.HORIZONTAL;
-            case LinearLayoutManager.VERTICAL:
-            default:
-                return Orientation.VERTICAL;
-            }
-        }
-        // 如果自己实现了一个LayoutManager,那么要另做处理
-        return Orientation.VERTICAL;
     }
 
     @Override
@@ -141,16 +122,16 @@ public class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
             mAutoLoadFooter = new LoadingLayout(getContext(), getScrollOrientation());
             RecyclerView.LayoutParams layoutParams;
             switch (getScrollOrientation()) {
-            case VERTICAL:
-            default: {
-                layoutParams = new RecyclerView.LayoutParams(LayoutParams.MATCH_PARENT,
-                        LayoutParams.WRAP_CONTENT);
-            }
+                case VERTICAL:
+                default: {
+                    layoutParams = new RecyclerView.LayoutParams(LayoutParams.MATCH_PARENT,
+                            LayoutParams.WRAP_CONTENT);
+                }
                 break;
-            case HORIZONTAL: {
-                layoutParams = new RecyclerView.LayoutParams(LayoutParams.WRAP_CONTENT,
-                        LayoutParams.MATCH_PARENT);
-            }
+                case HORIZONTAL: {
+                    layoutParams = new RecyclerView.LayoutParams(LayoutParams.WRAP_CONTENT,
+                            LayoutParams.MATCH_PARENT);
+                }
                 break;
             }
             mAutoLoadFooter.setLayoutParams(layoutParams);

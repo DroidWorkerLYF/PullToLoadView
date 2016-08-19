@@ -8,9 +8,11 @@
     <string name="disabled">Disabled</string>
     <string name="manual_only">Manual only</string>
     <string name="demo_1">RecyclerView demo</string>
-    <string name="demo_1_title">PullToLoadRecyclerView</string>
+    <string name="demo_1_title">PullToLoadRecyclerView V</string>
     <string name="demo_2">ListView demo</string>
     <string name="demo_2_title">PullToLoadListView</string>
+    <string name="demo_3">RecyclerView horizontal demo</string>
+    <string name="demo_3_title">PullToLoadRecyclerView H</string>
 
     <string-array name="title">
         <item>概述</item>

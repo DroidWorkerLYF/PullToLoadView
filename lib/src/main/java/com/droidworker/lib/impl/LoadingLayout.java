@@ -24,6 +24,7 @@ public class LoadingLayout extends FrameLayout implements ILoadingLayout {
     private LinearLayout mContainer;
     private ImageView mImageView;
     private TextView mTextView;
+    private Orientation mOrientation;
     private RotateAnimation mRotateAnimation;
 
     public LoadingLayout(Context context) {
@@ -32,13 +33,15 @@ public class LoadingLayout extends FrameLayout implements ILoadingLayout {
 
     public LoadingLayout(Context context, Orientation orientation) {
         super(context);
+        mOrientation = orientation;
 
         switch (orientation) {
         case VERTICAL:
         default:
-            LayoutInflater.from(context).inflate(R.layout.layout_loading_default, this, true);
+            LayoutInflater.from(context).inflate(R.layout.layout_loading_vertical, this, true);
             break;
         case HORIZONTAL:
+            LayoutInflater.from(context).inflate(R.layout.layout_loading_horizontal, this, true);
             break;
         }
         mContainer = (LinearLayout) findViewById(R.id.ll_loading_container);
@@ -55,7 +58,13 @@ public class LoadingLayout extends FrameLayout implements ILoadingLayout {
 
     @Override
     public int getSize() {
-        return mContainer.getHeight();
+        switch (mOrientation) {
+        case VERTICAL:
+        default:
+            return mContainer.getHeight();
+        case HORIZONTAL:
+            return mContainer.getWidth();
+        }
     }
 
     @Override

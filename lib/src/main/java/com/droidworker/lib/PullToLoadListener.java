@@ -1,7 +1,7 @@
 package com.droidworker.lib;
 
 /**
- * @author luoyanfeng@le.com
+ * @author https://github.com/DroidWorkerLYF
  */
 public interface PullToLoadListener {
     /**

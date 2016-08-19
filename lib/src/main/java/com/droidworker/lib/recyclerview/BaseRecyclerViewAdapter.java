@@ -10,7 +10,7 @@ import android.view.ViewGroup;
  * RecyclerView的通用基础Adapter,封装了onCreateViewHolder方法,子类只需要实现
  * {@link #bindViewHolder}方法即可,
  * 无需再重复创造视图的代码.
- * @author luoyanfeng@le.com
+ * @author https://github.com/DroidWorkerLYF
  */
 public abstract class BaseRecyclerViewAdapter
         extends RecyclerView.Adapter<UniversalViewHolder> {

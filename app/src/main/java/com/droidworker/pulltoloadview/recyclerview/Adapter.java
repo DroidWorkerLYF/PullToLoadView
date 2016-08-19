@@ -14,8 +14,12 @@ public class Adapter extends BaseRecyclerViewAdapter {
     private String[] mTitle;
     private String[] mContent;
 
-    public Adapter(String[] title, String[] content) {
-        setLayoutId(R.layout.layout_item);
+    public Adapter(String[] title, String[] content, boolean vertical) {
+        if(vertical){
+            setLayoutId(R.layout.layout_item_v);
+        } else {
+            setLayoutId(R.layout.layout_item_h);
+        }
         mTitle = title;
         mContent = content;
     }

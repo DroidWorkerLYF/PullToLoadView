@@ -61,9 +61,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      */
     private State mState = State.RESET;
     /**
-     * ActionBar高度,默认取系统的android.R.attr.actionBarSize
+     * 垂直方向ActionBar高度,默认取系统的android.R.attr.actionBarSize
+     * 水平方向,用户自定义的bar高度
      */
-    private int mActionBarSize;
+    private int mBarSize;
     /**
      * 是否intercept touch事件
      */
@@ -100,7 +101,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.PullToLoadView);
         mIsUnderBar = typedArray.getBoolean(R.styleable.PullToLoadView_underBar, false);
         mContentViewId = typedArray.getResourceId(R.styleable.PullToLoadView_content_view_id, 0);
-        mActionBarSize = typedArray.getDimensionPixelSize(R.styleable.PullToLoadView_bar_size,
+        mBarSize = typedArray.getDimensionPixelSize(R.styleable.PullToLoadView_bar_size,
                 getActionBarSize());
         typedArray.recycle();
 
@@ -222,8 +223,8 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         default: {
             if (!mModeChanged) {
                 if (isUnderBar) {
-                    mContentView.setPadding(0, mActionBarSize + mContentView.getPaddingTop(), 0, 0);
-                    mHeaderView.setTranslationY(mActionBarSize - headerSize);
+                    mContentView.setPadding(0, mBarSize + mContentView.getPaddingTop(), 0, 0);
+                    mHeaderView.setTranslationY(mBarSize - headerSize);
                 } else {
                     mContentView.setPadding(0, mContentView.getPaddingTop(), 0, 0);
                     mHeaderView.setTranslationY(-headerSize);
@@ -234,9 +235,18 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
             break;
         case HORIZONTAL: {
-            mContentView.setPadding(headerSize, 0, 0, 0);
-            ((LayoutParams) mFooterView.getLayoutParams()).gravity = Gravity.END;
-            mFooterView.setTranslationX(mFooter.getSize());
+            if (!mModeChanged) {
+                if (isUnderBar) {
+                    mContentView.setPadding(mBarSize + mContentView.getPaddingLeft() , 0, 0, 0);
+                    mHeaderView.setTranslationX(mBarSize - headerSize);
+                } else {
+                    mContentView.setPadding(mContentView.getPaddingLeft(), 0, 0, 0);
+                    mHeaderView.setTranslationX(-headerSize);
+                }
+                ((LayoutParams) mHeaderView.getLayoutParams()).gravity = Gravity.START;
+                ((LayoutParams) mFooterView.getLayoutParams()).gravity = Gravity.END;
+                mFooterView.setTranslationX(mFooter.getSize());
+            }
         }
             break;
         }
@@ -371,7 +381,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
             break;
         case HORIZONTAL: {
-
+            mContentView.setPadding(left + mContentView.getPaddingLeft(), top, right, bottom);
         }
             break;
         }
@@ -433,8 +443,8 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
     }
 
-    public int getActionBarHeight() {
-        return mActionBarSize;
+    public int getBarHeight() {
+        return mBarSize;
     }
 
     @Override
@@ -704,7 +714,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         case PULL_FROM_START:
         default:
             mIsAllLoaded = false;
-            smoothScrollTo(-mActionBarSize - (mFooter.getSize() - mActionBarSize));
+            smoothScrollTo(-mBarSize - (mFooter.getSize() - mBarSize));
             if (mPullToLoadListener != null) {
                 mPullToLoadListener.onLoadNew();
             }
