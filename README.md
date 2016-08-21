@@ -15,4 +15,4 @@
 * 上拉加载更多下拉加载更新
 * 禁止
 * 自动刷新
-![模式](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/art/Screenshot_2016-08-21-22-36-54.png?raw=true)
+![模式](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/art/loadmode.png?raw=true)
