@@ -4,7 +4,7 @@
 
 ##演示gif
 
-![下拉刷新](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/art/load_new.gif?raw=true)
+![下拉刷新](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/art/loadnew.gif?raw=true)
 
 ![underbar](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/art/underbar.gif?raw=true)
 
@@ -15,4 +15,5 @@
 * 上拉加载更多下拉加载更新
 * 禁止
 * 自动刷新
+
 ![模式](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/art/loadmode.png?raw=true)
