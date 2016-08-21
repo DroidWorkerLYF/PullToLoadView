@@ -1,6 +1,7 @@
 package com.droidworker.lib.constant;
 
 /**
+ * 加载模式
  * @author https://github.com/DroidWorkerLYF
  */
 public enum LoadMode {

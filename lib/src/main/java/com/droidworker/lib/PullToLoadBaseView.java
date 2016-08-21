@@ -1,10 +1,5 @@
 package com.droidworker.lib;
 
-import com.droidworker.lib.constant.Direction;
-import com.droidworker.lib.constant.LoadMode;
-import com.droidworker.lib.constant.Orientation;
-import com.droidworker.lib.constant.State;
-
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -16,6 +11,11 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import com.droidworker.lib.constant.Direction;
+import com.droidworker.lib.constant.LoadMode;
+import com.droidworker.lib.constant.Orientation;
+import com.droidworker.lib.constant.State;
 
 /**
  * 所有支持刷新和加载更多视图的父类,定义了touch事件的处理,和基本的方法.
@@ -90,6 +90,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     private boolean mOverScrollEnd;
     private boolean mIsAllLoaded;
     private boolean mModeChanged;
+    private int mPaddingTop;
+    private int mPaddingLeft;
+    private int mPaddingRight;
+    private int mPaddingBottom;
 
     public PullToLoadBaseView(Context context) {
         this(context, null);
@@ -101,9 +105,16 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.PullToLoadView);
         mIsUnderBar = typedArray.getBoolean(R.styleable.PullToLoadView_underBar, false);
         mContentViewId = typedArray.getResourceId(R.styleable.PullToLoadView_content_view_id, 0);
-        mBarSize = typedArray.getDimensionPixelSize(R.styleable.PullToLoadView_bar_size,
-                getActionBarSize());
+        mBarSize = typedArray.getDimensionPixelSize(R.styleable.PullToLoadView_bar_size, 0);
         typedArray.recycle();
+
+        //获取用户设定的padding,然后将容器的padding设置0,用户设定的padding将会设置到mContentView上,已保证
+        //underBar模式正确
+        mPaddingTop = super.getPaddingTop();
+        mPaddingLeft = super.getPaddingLeft();
+        mPaddingRight = super.getPaddingRight();
+        mPaddingBottom = super.getPaddingBottom();
+        super.setPadding(0, 0, 0, 0);
 
         ViewConfiguration config = ViewConfiguration.get(context);
         mTouchSlop = config.getScaledTouchSlop();
@@ -223,10 +234,14 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         default: {
             if (!mModeChanged) {
                 if (isUnderBar) {
-                    mContentView.setPadding(0, mBarSize + mContentView.getPaddingTop(), 0, 0);
+                    if(mBarSize == 0){
+                        mBarSize = getActionBarSize();
+                    }
+                    mContentView.setPadding(mPaddingLeft, mBarSize + mPaddingTop, mPaddingRight,
+                            mPaddingBottom);
                     mHeaderView.setTranslationY(mBarSize - headerSize);
                 } else {
-                    mContentView.setPadding(0, mContentView.getPaddingTop(), 0, 0);
+                    mContentView.setPadding(mPaddingLeft, mContentView.getPaddingTop(), mPaddingRight, mPaddingBottom);
                     mHeaderView.setTranslationY(-headerSize);
                 }
                 ((LayoutParams) mFooterView.getLayoutParams()).gravity = Gravity.BOTTOM;
@@ -237,10 +252,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         case HORIZONTAL: {
             if (!mModeChanged) {
                 if (isUnderBar) {
-                    mContentView.setPadding(mBarSize + mContentView.getPaddingLeft() , 0, 0, 0);
+                    mContentView.setPadding(mBarSize + mPaddingLeft , mPaddingTop, mPaddingRight, mPaddingBottom);
                     mHeaderView.setTranslationX(mBarSize - headerSize);
                 } else {
-                    mContentView.setPadding(mContentView.getPaddingLeft(), 0, 0, 0);
+                    mContentView.setPadding(mContentView.getPaddingLeft(), mPaddingTop, mPaddingRight, mPaddingBottom);
                     mHeaderView.setTranslationX(-headerSize);
                 }
                 ((LayoutParams) mHeaderView.getLayoutParams()).gravity = Gravity.START;
@@ -374,14 +389,18 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
     @Override
     public void setPadding(int left, int top, int right, int bottom) {
+        mPaddingTop = top;
+        mPaddingLeft = left;
+        mPaddingRight = right;
+        mPaddingBottom = bottom;
         switch (getScrollOrientation()) {
         case VERTICAL:
         default: {
-            mContentView.setPadding(left, top + mContentView.getPaddingTop(), right, bottom);
+            mContentView.setPadding(mPaddingLeft, mPaddingTop + mBarSize, mPaddingRight, mPaddingBottom);
         }
             break;
         case HORIZONTAL: {
-            mContentView.setPadding(left + mContentView.getPaddingLeft(), top, right, bottom);
+            mContentView.setPadding(mPaddingLeft + mBarSize, mPaddingTop, mPaddingRight, mPaddingBottom);
         }
             break;
         }

@@ -1,5 +1,12 @@
 package com.droidworker.lib.impl.recyclerview;
 
+import android.content.Context;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+
 import com.droidworker.lib.ILoadingLayout;
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.Direction;
@@ -9,14 +16,8 @@ import com.droidworker.lib.impl.LoadingLayout;
 import com.droidworker.lib.recyclerview.BaseRecyclerViewAdapter;
 import com.droidworker.lib.recyclerview.HeaderAndFooterWrapper;
 
-import android.content.Context;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.View;
-
 /**
+ * 因为RecyclerView方向的不确定性,所以目前还是拆分成独立的竖向和横向由子类去实现
  * @author https://github.com/DroidWorkerLYF
  */
 public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {

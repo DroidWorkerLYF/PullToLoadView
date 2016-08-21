@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:content_view_id="@layout/layout_my_recycler_view"
+        android:paddingTop="@dimen/item_divider"
         app:underBar="true"/>
 
     <include layout="@layout/toolbar"/>
