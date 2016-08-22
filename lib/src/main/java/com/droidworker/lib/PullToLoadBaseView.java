@@ -1,21 +1,22 @@
 package com.droidworker.lib;
 
+import com.droidworker.lib.constant.Direction;
+import com.droidworker.lib.constant.LoadMode;
+import com.droidworker.lib.constant.Orientation;
+import com.droidworker.lib.constant.State;
+
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-import com.droidworker.lib.constant.Direction;
-import com.droidworker.lib.constant.LoadMode;
-import com.droidworker.lib.constant.Orientation;
-import com.droidworker.lib.constant.State;
 
 /**
  * 所有支持刷新和加载更多视图的父类,定义了touch事件的处理,和基本的方法.
@@ -40,6 +41,8 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * 实际显示内容的view
      */
     protected T mContentView;
+    protected SparseArray<View> mConditionViews = new SparseArray<>(2);
+    protected View mCurConditionView;
     /**
      * 是否在Z轴上位于Toolbar或者自定义的导航栏下方.
      */
@@ -407,6 +410,40 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     }
 
     @Override
+    public void addConditionView(View conditionView, int conditionType) {
+        mConditionViews.put(conditionType, conditionView);
+        addConditionView(conditionView);
+    }
+
+    private void addConditionView(View view){
+        if(view == null){
+            return;
+        }
+        view.setVisibility(View.GONE);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        if(mIsUnderBar){
+            layoutParams.topMargin = mBarSize + mPaddingTop;
+        } else {
+            layoutParams.topMargin = mContentView.getPaddingTop();
+        }
+        addViewInternal(view, layoutParams);
+    }
+
+    @Override
+    public void showConditionView(int conditionType) {
+        View view = mConditionViews.get(conditionType, null);
+        if(view == null){
+            return;
+        }
+        if(mCurConditionView!=null){
+            mCurConditionView.setVisibility(View.GONE);
+        }
+        mCurConditionView = view;
+//        mContentView.setVisibility(View.GONE);
+        view.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public boolean isLoading() {
         return mState == State.UPDATING || mState == State.LOADING || mState == State.MANUAL_UPDATE;
     }
@@ -422,6 +459,13 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     public void onLoadComplete() {
         if (isLoading()) {
             setState(State.RESET);
+        }
+        if(mCurConditionView != null){
+            mCurConditionView.setVisibility(View.GONE);
+            mCurConditionView = null;
+        }
+        if(mContentView.getVisibility() != VISIBLE){
+            mCurConditionView.setVisibility(VISIBLE);
         }
     }
 
@@ -677,6 +721,14 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         switch (getScrollOrientation()) {
         case VERTICAL:
         default:
+            if (mCurConditionView != null) {
+                switch (direction) {
+                case START:
+                    return true;
+                case END:
+                    return false;
+                }
+            }
             return !canScrollVertical(direction);
         case HORIZONTAL:
             return !canScrollHorizontal(direction);

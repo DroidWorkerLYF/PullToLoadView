@@ -38,9 +38,17 @@ public interface IPullToLoad<T extends View> {
     ILoadingLayout getFooter();
 
     /**
-     * 因为效果的实现受到padding的影响,所以要提供此方法实现正确的行为
+     * 增加特殊情况的视图,例如空数据,错误页面
+     * @param conditionView 特殊视图
+     * @param conditionType 情况
      */
-    void setPadding(int left, int top, int right, int bottom);
+    void addConditionView(View conditionView, int conditionType);
+
+    /**
+     * 展示指定情况下的视图
+     * @param conditionType 指定情况
+     */
+    void showConditionView(int conditionType);
 
     /**
      * 竖直方向上是否还可以沿指定方向滚动

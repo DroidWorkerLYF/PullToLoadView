@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 
 /**
  * @author https://github.com/DroidWorkerLYF
@@ -74,6 +75,8 @@ public class RecyclerViewActivity extends BaseActivity {
             mPullToLoadVerticalRecyclerView.addItemDecoration(new DividerItemDecoration(
                     DividerItemDecoration.VERTICAL_LIST, Color.TRANSPARENT,
                     getResources().getDimensionPixelSize(R.dimen.item_divider)));
+            addEmptyView(LayoutInflater.from(this).inflate(R.layout.layout_empty, null, false));
+            addErrorView(LayoutInflater.from(this).inflate(R.layout.layout_error, null, false));
 
             mPullToLoadVerticalRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override

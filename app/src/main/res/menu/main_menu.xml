@@ -25,4 +25,10 @@
 
     <item android:id="@+id/manual_only"
           android:title="@string/manual_only"/>
+
+    <item android:id="@+id/show_empty"
+        android:title="@string/show_empty_view"/>
+
+    <item android:id="@+id/show_error"
+          android:title="@string/show_error_view"/>
 </menu>

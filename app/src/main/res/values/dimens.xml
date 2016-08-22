@@ -2,4 +2,5 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="item_divider">8dp</dimen>
     <dimen name="item_padding">8dp</dimen>
+    <dimen name="err_btn_height">48dp</dimen>
 </resources>
