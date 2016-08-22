@@ -1,10 +1,5 @@
 package com.droidworker.lib;
 
-import com.droidworker.lib.constant.Direction;
-import com.droidworker.lib.constant.LoadMode;
-import com.droidworker.lib.constant.Orientation;
-import com.droidworker.lib.constant.State;
-
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -17,6 +12,11 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import com.droidworker.lib.constant.Direction;
+import com.droidworker.lib.constant.LoadMode;
+import com.droidworker.lib.constant.Orientation;
+import com.droidworker.lib.constant.State;
 
 /**
  * 所有支持刷新和加载更多视图的父类,定义了touch事件的处理,和基本的方法.
@@ -318,44 +318,44 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         case PULL_FROM_START: {
             mOverScrollStart = false;
             mOverScrollEnd = true;
-            mHeaderView.setVisibility(View.VISIBLE);
-            mFooterView.setVisibility(View.INVISIBLE);
+            mHeaderView.setVisibility(VISIBLE);
+            mFooterView.setVisibility(INVISIBLE);
         }
             break;
         case MANUAL_ONLY: {
             mOverScrollStart = true;
             mOverScrollEnd = true;
-            mHeaderView.setVisibility(View.INVISIBLE);
-            mFooterView.setVisibility(View.INVISIBLE);
+            mHeaderView.setVisibility(INVISIBLE);
+            mFooterView.setVisibility(INVISIBLE);
         }
             break;
         case PULL_FROM_END: {
             mOverScrollStart = true;
             mOverScrollEnd = false;
-            mHeaderView.setVisibility(View.INVISIBLE);
-            mFooterView.setVisibility(View.VISIBLE);
+            mHeaderView.setVisibility(INVISIBLE);
+            mFooterView.setVisibility(VISIBLE);
         }
             break;
         case PULL_FROM_START_AUTO_LOAD_MORE: {
             mOverScrollStart = false;
             mOverScrollEnd = true;
-            mHeaderView.setVisibility(View.VISIBLE);
-            mFooterView.setVisibility(View.INVISIBLE);
+            mHeaderView.setVisibility(VISIBLE);
+            mFooterView.setVisibility(INVISIBLE);
         }
             break;
         case DISABLED: {
             mOverScrollStart = true;
             mOverScrollEnd = true;
-            mHeaderView.setVisibility(View.INVISIBLE);
-            mFooterView.setVisibility(View.INVISIBLE);
+            mHeaderView.setVisibility(INVISIBLE);
+            mFooterView.setVisibility(INVISIBLE);
         }
             break;
         default:
         case BOTH: {
             mOverScrollStart = false;
             mOverScrollEnd = false;
-            mHeaderView.setVisibility(View.VISIBLE);
-            mFooterView.setVisibility(View.VISIBLE);
+            mHeaderView.setVisibility(VISIBLE);
+            mFooterView.setVisibility(VISIBLE);
         }
             break;
         }
@@ -419,7 +419,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         if(view == null){
             return;
         }
-        view.setVisibility(View.GONE);
+        view.setVisibility(GONE);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         if(mIsUnderBar){
             layoutParams.topMargin = mBarSize + mPaddingTop;
@@ -436,11 +436,11 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             return;
         }
         if(mCurConditionView!=null){
-            mCurConditionView.setVisibility(View.GONE);
+            mCurConditionView.setVisibility(GONE);
         }
         mCurConditionView = view;
-//        mContentView.setVisibility(View.GONE);
-        view.setVisibility(View.VISIBLE);
+        mContentView.setAlpha(0);
+        view.setVisibility(VISIBLE);
     }
 
     @Override
@@ -461,11 +461,11 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             setState(State.RESET);
         }
         if(mCurConditionView != null){
-            mCurConditionView.setVisibility(View.GONE);
+            mCurConditionView.setVisibility(GONE);
             mCurConditionView = null;
         }
-        if(mContentView.getVisibility() != VISIBLE){
-            mCurConditionView.setVisibility(VISIBLE);
+        if(mContentView.getAlpha() != 1){
+            mContentView.setAlpha(1);
         }
     }
 
@@ -473,7 +473,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     public void onAllLoaded() {
         mIsAllLoaded = true;
         mOverScrollEnd = true;
-        mFooterView.setVisibility(View.INVISIBLE);
+        mFooterView.setVisibility(INVISIBLE);
     }
 
     protected boolean isAllLoaded() {
