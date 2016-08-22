@@ -1,10 +1,10 @@
 package com.droidworker.pulltoloadview.recyclerview;
 
+import android.widget.TextView;
+
 import com.droidworker.lib.recyclerview.BaseRecyclerViewAdapter;
 import com.droidworker.lib.recyclerview.UniversalViewHolder;
 import com.droidworker.pulltoloadview.R;
-
-import android.widget.TextView;
 
 /**
  * @author https://github.com/DroidWorkerLYF
@@ -45,5 +45,11 @@ public class Adapter extends BaseRecyclerViewAdapter {
 
     public void restoreCount() {
         mCount = 10;
+        notifyDataSetChanged();
+    }
+
+    public void clear(){
+        mCount = 0;
+        notifyDataSetChanged();
     }
 }

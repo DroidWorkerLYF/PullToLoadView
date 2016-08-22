@@ -1,17 +1,19 @@
 package com.droidworker.pulltoloadview.recyclerview;
 
-import com.droidworker.lib.PullToLoadBaseView;
-import com.droidworker.lib.constant.LoadMode;
-import com.droidworker.lib.impl.recyclerview.PullToLoadVerticalRecyclerView;
-import com.droidworker.pulltoloadview.BaseActivity;
-import com.droidworker.pulltoloadview.DividerItemDecoration;
-import com.droidworker.pulltoloadview.R;
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
+
+import com.droidworker.lib.PullToLoadBaseView;
+import com.droidworker.lib.constant.LoadMode;
+import com.droidworker.lib.impl.recyclerview.PullToLoadVerticalRecyclerView;
+import com.droidworker.pulltoloadview.BaseActivity;
+import com.droidworker.pulltoloadview.ConditionType;
+import com.droidworker.pulltoloadview.DividerItemDecoration;
+import com.droidworker.pulltoloadview.R;
 
 /**
  * @author https://github.com/DroidWorkerLYF
@@ -98,5 +100,22 @@ public class RecyclerViewActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.show_empty:
+                mPullToLoadVerticalRecyclerView.showConditionView(ConditionType.EMPTY);
+                break;
+            case R.id.show_error:
+                mPullToLoadVerticalRecyclerView.showConditionView(ConditionType.ERROR);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        mAdapter.clear();
+        mPullToLoadVerticalRecyclerView.getAdapter().notifyDataSetChanged();
+        return true;
     }
 }

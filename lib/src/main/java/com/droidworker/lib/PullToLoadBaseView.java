@@ -439,7 +439,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             mCurConditionView.setVisibility(GONE);
         }
         mCurConditionView = view;
-        mContentView.setAlpha(0);
         view.setVisibility(VISIBLE);
     }
 
@@ -463,9 +462,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         if(mCurConditionView != null){
             mCurConditionView.setVisibility(GONE);
             mCurConditionView = null;
-        }
-        if(mContentView.getAlpha() != 1){
-            mContentView.setAlpha(1);
         }
     }
 
