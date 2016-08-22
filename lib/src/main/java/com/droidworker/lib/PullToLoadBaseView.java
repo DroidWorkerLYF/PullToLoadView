@@ -107,6 +107,9 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mContentViewId = typedArray.getResourceId(R.styleable.PullToLoadView_content_view_id, 0);
         mBarSize = typedArray.getDimensionPixelSize(R.styleable.PullToLoadView_bar_size, 0);
         typedArray.recycle();
+        if(getScrollOrientation() == Orientation.VERTICAL && mBarSize == 0){
+            mBarSize = getActionBarSize();
+        }
 
         //获取用户设定的padding,然后将容器的padding设置0,用户设定的padding将会设置到mContentView上,已保证
         //underBar模式正确
@@ -234,9 +237,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         default: {
             if (!mModeChanged) {
                 if (isUnderBar) {
-                    if(mBarSize == 0){
-                        mBarSize = getActionBarSize();
-                    }
                     mContentView.setPadding(mPaddingLeft, mBarSize + mPaddingTop, mPaddingRight,
                             mPaddingBottom);
                     mHeaderView.setTranslationY(mBarSize - headerSize);
