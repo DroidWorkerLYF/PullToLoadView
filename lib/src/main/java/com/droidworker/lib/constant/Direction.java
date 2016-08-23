@@ -1,7 +1,7 @@
 package com.droidworker.lib.constant;
 
 /**
- * 代表方向的枚举
+ * 代表方向的枚举,枚举的取值和{@link android.support.v4.view.ViewCompat}中判断滚动时使用的一致
  * @author https://github.com/DroidWorkerLYF
  */
 public enum Direction {

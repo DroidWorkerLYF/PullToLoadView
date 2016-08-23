@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 /**
+ * 水平方向的RecyclerView,{@link #createContentView(int)}后一律设置为{@link LinearLayoutManager#HORIZONTAL}
  * @author https://github.com/DroidWorkerLYF
  */
 public class PullToLoadHorizontalRecyclerView extends PullToLoadRecyclerView {

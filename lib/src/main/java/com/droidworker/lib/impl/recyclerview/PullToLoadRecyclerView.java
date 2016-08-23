@@ -17,7 +17,9 @@ import com.droidworker.lib.recyclerview.BaseRecyclerViewAdapter;
 import com.droidworker.lib.recyclerview.HeaderAndFooterWrapper;
 
 /**
- * 因为RecyclerView方向的不确定性,所以目前还是拆分成独立的竖向和横向由子类去实现
+ * 支持加载更新,加载更多的RecyclerView扩展.
+ * 因为RecyclerView方向的不确定性,指定为{@link android.support.v7.widget.LinearLayoutManager}时,
+ * 默认是垂直的,无法指定水平方向,所以目前还是拆分成独立的竖向和横向由子类去实现
  * @author https://github.com/DroidWorkerLYF
  */
 public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
@@ -86,7 +88,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && loadMore && !isAllLoaded()) {
                     HeaderAndFooterWrapper wrapper = getAdapter();
-                    if (wrapper != null) {
+                    if (wrapper != null && mAutoLoadFooter != null) {
                         recyclerView.scrollToPosition(wrapper.getItemCount());
                         if (!wrapper.containsFooter(mAutoLoadFooter)) {
                             wrapper.addFooter(mAutoLoadFooter);
@@ -161,30 +163,50 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
     protected void reset() {
         super.reset();
         loadMore = false;
-        HeaderAndFooterWrapper wrapper = (HeaderAndFooterWrapper) mContentView.getAdapter();
-        if (wrapper != null) {
+        HeaderAndFooterWrapper wrapper = getAdapter();
+        if (wrapper != null && mAutoLoadFooter != null) {
             wrapper.removeFooter(mAutoLoadFooter);
             wrapper.notifyDataSetChanged();
         }
     }
 
+    /**
+     * 设置Adapter,将参数包装为HeaderAndFooterWrapper用于添加header和footer
+     * @param baseRecyclerViewAdapter adapter
+     */
     public void setAdapter(BaseRecyclerViewAdapter baseRecyclerViewAdapter) {
         final HeaderAndFooterWrapper wrapper = new HeaderAndFooterWrapper(baseRecyclerViewAdapter);
         mContentView.setAdapter(wrapper);
     }
 
+    /**
+     * 获取包装后的Adapter
+     * @return {@link HeaderAndFooterWrapper}
+     */
     public HeaderAndFooterWrapper getAdapter() {
         return (HeaderAndFooterWrapper) mContentView.getAdapter();
     }
 
+    /**
+     * 获取被包装的Adapter
+     * @return {@link BaseRecyclerViewAdapter}
+     */
     public BaseRecyclerViewAdapter getWrappedAdapter() {
         return ((HeaderAndFooterWrapper) mContentView.getAdapter()).getWrappedAdapter();
     }
 
+    /**
+     * 设置滚动监听
+     * @param onScrollListener listener
+     */
     public void setOnScrollListener(RecyclerView.OnScrollListener onScrollListener) {
         mOnScrollListener = onScrollListener;
     }
 
+    /**
+     * 添加{@link android.support.v7.widget.RecyclerView.ItemDecoration}
+     * @param decor item decoration
+     */
     public void addItemDecoration(RecyclerView.ItemDecoration decor){
         mContentView.addItemDecoration(decor);
     }

@@ -81,7 +81,7 @@ public interface IPullToLoad<T extends View> {
     void onLoadComplete();
 
     /**
-     * 当所有内容加载完毕后,调用此方法,开启回弹
+     * 当所有内容加载完毕后,调用此方法,开启回弹,当下拉加载更新后,状态会还原
      */
     void onAllLoaded();
 

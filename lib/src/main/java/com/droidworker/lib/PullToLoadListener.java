@@ -1,6 +1,7 @@
 package com.droidworker.lib;
 
 /**
+ * 拉动触发的回调
  * @author https://github.com/DroidWorkerLYF
  */
 public interface PullToLoadListener {

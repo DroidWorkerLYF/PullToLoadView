@@ -8,7 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 /**
- * 支持加载更新,加载更多的RecyclerView
+ * 垂直方向的RecyclerView,{@link #createContentView(int)}后,如果没有显示的指定布局方向,则默认设置为
+ * {@link LinearLayoutManager#VERTICAL}
  * @author https://github.com/DroidWorkerLYF
  */
 public class PullToLoadVerticalRecyclerView extends PullToLoadRecyclerView {

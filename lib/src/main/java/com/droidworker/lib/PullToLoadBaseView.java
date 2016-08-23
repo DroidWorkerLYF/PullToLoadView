@@ -736,6 +736,9 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * @param state 状态
      */
     protected void setState(State state) {
+        if(mState == state){
+            return;
+        }
         mState = state;
         switch (mState) {
         case PULL_FROM_START:
