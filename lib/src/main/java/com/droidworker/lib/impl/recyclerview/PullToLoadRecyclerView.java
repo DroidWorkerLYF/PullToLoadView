@@ -1,6 +1,7 @@
 package com.droidworker.lib.impl.recyclerview;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -174,7 +175,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
      * 设置Adapter,将参数包装为HeaderAndFooterWrapper用于添加header和footer
      * @param baseRecyclerViewAdapter adapter
      */
-    public void setAdapter(BaseRecyclerViewAdapter baseRecyclerViewAdapter) {
+    public void setAdapter(@NonNull BaseRecyclerViewAdapter baseRecyclerViewAdapter) {
         final HeaderAndFooterWrapper wrapper = new HeaderAndFooterWrapper(baseRecyclerViewAdapter);
         mContentView.setAdapter(wrapper);
     }

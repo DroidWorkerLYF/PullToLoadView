@@ -18,11 +18,17 @@ import android.widget.Adapter;
  */
 public abstract class PullToLoadAbsListView<T extends AbsListView> extends PullToLoadBaseView<T>
         implements AbsListView.OnScrollListener {
+    /**
+     * 最后一项是否可见
+     */
     protected boolean mLastItemVisible;
     /**
      * 自动加载更多时添加到最后的footer
      */
     protected LoadingLayout mAutoLoadFooter;
+    /**
+     * 滚动监听
+     */
     private AbsListView.OnScrollListener mOnScrollListener;
 
     public PullToLoadAbsListView(Context context) {
@@ -36,6 +42,10 @@ public abstract class PullToLoadAbsListView<T extends AbsListView> extends PullT
         mContentView.setOnScrollListener(this);
     }
 
+    /**
+     * 设置滚动监听
+     * @param onScrollListener {@link android.view.View.OnScrollChangeListener}
+     */
     public void setOnScrollListener(AbsListView.OnScrollListener onScrollListener) {
         mOnScrollListener = onScrollListener;
     }
@@ -93,6 +103,8 @@ public abstract class PullToLoadAbsListView<T extends AbsListView> extends PullT
                 break;
             }
             mAutoLoadFooter.setLayoutParams(layoutParams);
+        } else {
+            mAutoLoadFooter = null;
         }
     }
 
@@ -113,6 +125,10 @@ public abstract class PullToLoadAbsListView<T extends AbsListView> extends PullT
         }
     }
 
+    /**
+     * 第一项是否完全可见
+     * @return true:第一项完全可见
+     */
     private boolean isFirstItemVisible() {
         final Adapter adapter = mContentView.getAdapter();
         if (adapter == null || adapter.isEmpty()) {
@@ -128,6 +144,10 @@ public abstract class PullToLoadAbsListView<T extends AbsListView> extends PullT
         return false;
     }
 
+    /**
+     * 最后一项是否完全可见
+     * @return true:最后一项完全可见
+     */
     private boolean isLastItemVisible() {
         final Adapter adapter = mContentView.getAdapter();
 
@@ -145,7 +165,6 @@ public abstract class PullToLoadAbsListView<T extends AbsListView> extends PullT
                 }
             }
         }
-
         return false;
     }
 }

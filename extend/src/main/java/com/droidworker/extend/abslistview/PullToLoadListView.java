@@ -5,6 +5,7 @@ import com.droidworker.lib.constant.Orientation;
 import com.droidworker.lib.constant.State;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,14 +45,16 @@ public class PullToLoadListView extends PullToLoadAbsListView<ListView> {
                 throw new UnsupportedOperationException("View should be a ListView");
             }
         }
+        listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         return listView;
     }
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-        if (scrollState == SCROLL_STATE_IDLE && mLastItemVisible
-                && !isAllLoaded() && getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
+        if (scrollState == SCROLL_STATE_IDLE && mLastItemVisible && !isAllLoaded()
+                && getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE
+                && mAutoLoadFooter != null) {
             if (mContentView.getFooterViewsCount() == 0) {
                 mContentView.addFooterView(mAutoLoadFooter);
             }
@@ -83,10 +86,12 @@ public class PullToLoadListView extends PullToLoadAbsListView<ListView> {
     protected void reset() {
         super.reset();
         mLastItemVisible = false;
-        mContentView.removeFooterView(mAutoLoadFooter);
+        if(mAutoLoadFooter != null){
+            mContentView.removeFooterView(mAutoLoadFooter);
+        }
     }
 
-    public void setAdapter(BaseAdapter adapter) {
+    public void setAdapter(@NonNull BaseAdapter adapter) {
         mContentView.setAdapter(adapter);
     }
 }
