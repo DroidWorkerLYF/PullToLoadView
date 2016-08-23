@@ -19,7 +19,6 @@ import com.droidworker.pulltoloadview.R;
  * @author https://github.com/DroidWorkerLYF
  */
 public class RecyclerViewActivity extends BaseActivity {
-    private Toolbar mToolbar;
     private PullToLoadVerticalRecyclerView mPullToLoadVerticalRecyclerView;
     private Adapter mAdapter;
     private int scrollY;
@@ -62,8 +61,8 @@ public class RecyclerViewActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recyclerview_v);
 
-        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
-        setSupportActionBar(mToolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
         setTitle(R.string.demo_1_title);
 
         mPullToLoadVerticalRecyclerView = (PullToLoadVerticalRecyclerView) findViewById(R.id.recycler_view);
@@ -93,9 +92,9 @@ public class RecyclerViewActivity extends BaseActivity {
                     final int height = mPullToLoadVerticalRecyclerView.getBarHeight() * 2;
                     scrollY += dy;
                     if (scrollY >= height) {
-                        mToolbar.setAlpha(0.8f);
+                        toolbar.setAlpha(0.8f);
                     } else {
-                        mToolbar.setAlpha(1 - 0.2f * scrollY / height);
+                        toolbar.setAlpha(1 - 0.2f * scrollY / height);
                     }
                 }
             });

@@ -16,7 +16,9 @@
     <string name="demo_3">RecyclerView horizontal demo</string>
     <string name="demo_3_title">PullToLoadRecyclerView H</string>
     <string name="demo_4">WebView demo</string>
-    <string name="demo_4_title">WebView</string>
+    <string name="demo_4_title">PullToLoadWebView</string>
+    <string name="demo_5">ScrollView demo</string>
+    <string name="demo_5_title">PullToLoadScrollView</string>
     <string name="error">Error</string>
     <string name="empty">Empty</string>
 

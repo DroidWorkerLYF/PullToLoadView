@@ -23,6 +23,7 @@
         <activity android:name=".abslistview.ListViewActivity"/>
         <activity android:name=".recyclerview.RecyclerViewHorizontalActivity"/>
         <activity android:name=".WebViewActivity"/>
+        <activity android:name=".scrollview.ScrollViewActivity"/>
     </application>
 
 </manifest>
