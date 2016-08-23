@@ -19,13 +19,21 @@ import com.droidworker.lib.constant.Orientation;
 import com.droidworker.lib.constant.State;
 
 /**
- * 所有支持刷新和加载更多视图的父类,定义了touch事件的处理,和基本的方法.
+ * BaseView,提供对于手势的处理,可以实现下拉加载更新,上拉加载更多,回弹,支持为指定Condition添加对应的视图,比如
+ * 空白页,网络错误页.
+ * 可以支持内容区域从Toolbar下方滚动({@link com.droidworker.lib.R.styleable#PullToLoadView_underBar}).
+ * 支持的模式:{@link LoadMode}.根据手势,对应内部状态:{@link State}.
+ * 可以指定{@link com.droidworker.lib.R.styleable#PullToLoadView_content_view_id}来生成ContentView,
+ * 应对如果view的属性只通过xml可以配置的情况下或者通用的样式.
  * @author https://github.com/DroidWorkerLYF
  */
 public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayout
         implements IPullToLoad<T> {
     private static final String TAG = "PullToLoadBaseView";
     private static final float FRICTION = 2.0f;
+    /**
+     * 用于获取系统的actionbar size
+     */
     private static final int[] THEME_ATTRS = { android.R.attr.actionBarSize };
     /**
      * Header view
@@ -35,13 +43,25 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * Footer view
      */
     private ILoadingLayout mFooter;
+    /**
+     * header的视图
+     */
     private View mHeaderView;
+    /**
+     * footer的视图
+     */
     private View mFooterView;
     /**
      * 实际显示内容的view
      */
     protected T mContentView;
+    /**
+     * Condition和view的映射
+     */
     protected SparseArray<View> mConditionViews = new SparseArray<>(2);
+    /**
+     * 当前展示的Condition
+     */
     protected View mCurConditionView;
     /**
      * 是否在Z轴上位于Toolbar或者自定义的导航栏下方.
@@ -89,13 +109,37 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * 平滑滚动动画
      */
     private ValueAnimator mValueAnimator;
+    /**
+     * 使用下拉回弹
+     */
     private boolean mOverScrollStart;
+    /**
+     * 使用下拉回弹
+     */
     private boolean mOverScrollEnd;
+    /**
+     * 全部加载.加载更多到最后一页,修改此属性为true,开启上拉回弹
+     */
     private boolean mIsAllLoaded;
+    /**
+     * mode是否改变了
+     */
     private boolean mModeChanged;
+    /**
+     * Top padding
+     */
     private int mPaddingTop;
+    /**
+     * Left padding
+     */
     private int mPaddingLeft;
+    /**
+     * Right padding
+     */
     private int mPaddingRight;
+    /**
+     * Bottom padding
+     */
     private int mPaddingBottom;
 
     public PullToLoadBaseView(Context context) {

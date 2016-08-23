@@ -1,7 +1,7 @@
 package com.droidworker.extend.scrollview;
 
 /**
- * @author luoyanfeng@le.com
+ * @author https://github.com/DroidWorkerLYF
  */
 public class PullToLoadScrollView {
 }
