@@ -1,8 +1,8 @@
 package com.droidworker.pulltoloadview.abslistview;
 
+import com.droidworker.extend.abslistview.PullToLoadListView;
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.LoadMode;
-import com.droidworker.lib.impl.abslistview.PullToLoadListView;
 import com.droidworker.pulltoloadview.BaseActivity;
 import com.droidworker.pulltoloadview.R;
 
