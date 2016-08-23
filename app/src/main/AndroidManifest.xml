@@ -24,6 +24,7 @@
         <activity android:name=".recyclerview.RecyclerViewHorizontalActivity"/>
         <activity android:name=".WebViewActivity"/>
         <activity android:name=".scrollview.ScrollViewActivity"/>
+        <activity android:name=".scrollview.HorizontalScrollViewActivity"/>
     </application>
 
 </manifest>

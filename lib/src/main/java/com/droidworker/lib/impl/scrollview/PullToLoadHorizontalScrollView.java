@@ -4,13 +4,16 @@ import com.droidworker.lib.ILoadingLayout;
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.Direction;
 import com.droidworker.lib.constant.Orientation;
+import com.droidworker.lib.impl.LoadingLayout;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.HorizontalScrollView;
 
 /**
- * 扩展HorizontalScrollView
+ * 扩展{@link HorizontalScrollView}
  * @author https://github.com/DroidWorkerLYF
  */
 public class PullToLoadHorizontalScrollView extends PullToLoadBaseView<HorizontalScrollView> {
@@ -29,27 +32,48 @@ public class PullToLoadHorizontalScrollView extends PullToLoadBaseView<Horizonta
 
     @Override
     public boolean canScrollHorizontal(Direction direction) {
-        return false;
+        switch (direction) {
+        case START:
+        default:
+            return mContentView.getScrollX() != 0;
+        case END:
+            View scrollViewChild = mContentView.getChildAt(0);
+            if (scrollViewChild != null) {
+                return mContentView.getScrollX() < (scrollViewChild.getWidth() - getWidth());
+            }
+            return true;
+        }
     }
 
     @Override
     protected Orientation getScrollOrientation() {
-        return null;
+        return Orientation.HORIZONTAL;
     }
 
     @Override
     protected ILoadingLayout createHeader() {
-        return null;
+        return new LoadingLayout(getContext(), getScrollOrientation());
     }
 
     @Override
     protected ILoadingLayout createFooter() {
-        return null;
+        return new LoadingLayout(getContext(), getScrollOrientation());
     }
 
     @Override
     protected HorizontalScrollView createContentView(int layoutId) {
-        return null;
+        HorizontalScrollView horizontalScrollView;
+        if (layoutId == 0) {
+            horizontalScrollView = new HorizontalScrollView(getContext());
+        } else {
+            View view = LayoutInflater.from(getContext()).inflate(layoutId, mContentView, false);
+            if (view instanceof HorizontalScrollView) {
+                horizontalScrollView = (HorizontalScrollView) view;
+            } else {
+                throw new UnsupportedOperationException("View should be a HorizontalScrollView");
+            }
+        }
+        return horizontalScrollView;
     }
 
     @Override

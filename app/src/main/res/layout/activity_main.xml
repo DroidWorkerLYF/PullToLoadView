@@ -53,6 +53,13 @@
                 android:onClick="onClick"
                 android:text="@string/demo_5"/>
 
+            <Button
+                android:id="@+id/demo6"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:onClick="onClick"
+                android:text="@string/demo_6"/>
+
         </LinearLayout>
 
     </ScrollView>

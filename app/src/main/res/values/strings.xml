@@ -19,6 +19,8 @@
     <string name="demo_4_title">PullToLoadWebView</string>
     <string name="demo_5">ScrollView demo</string>
     <string name="demo_5_title">PullToLoadScrollView</string>
+    <string name="demo_6">HorizontalScrollView demo</string>
+    <string name="demo_6_title">PullToLoadHorizontalScrollView</string>
     <string name="error">Error</string>
     <string name="empty">Empty</string>
 
