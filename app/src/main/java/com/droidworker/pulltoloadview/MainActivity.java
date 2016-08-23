@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         case R.id.demo3:
             startActivity(new Intent(MainActivity.this, RecyclerViewHorizontalActivity.class));
             break;
+        case R.id.demo4:
+            startActivity(new Intent(MainActivity.this, WebViewActivity.class));
         }
     }
 
