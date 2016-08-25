@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -69,9 +70,17 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      */
     private boolean mIsUnderBar;
     /**
-     * 指定的内容view id
+     * 自定义内容的layout id
      */
-    private int mContentViewId;
+    private int mContentLayoutId;
+    /**
+     * 自定义header的layout id
+     */
+    private int mHeaderLayoutId;
+    /**
+     * 自定义footer的layout id
+     */
+    private int mFooterLayoutId;
     /**
      * 支持的加载模式
      */
@@ -152,7 +161,9 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.PullToLoadView);
         mIsUnderBar = typedArray.getBoolean(R.styleable.PullToLoadView_underBar, false);
-        mContentViewId = typedArray.getResourceId(R.styleable.PullToLoadView_content_view_id, 0);
+        mContentLayoutId = typedArray.getResourceId(R.styleable.PullToLoadView_content_view_id, 0);
+        mHeaderLayoutId = typedArray.getResourceId(R.styleable.PullToLoadView_header_view_id, 0);
+        mFooterLayoutId = typedArray.getResourceId(R.styleable.PullToLoadView_footer_view_id, 0);
         mBarSize = typedArray.getDimensionPixelSize(R.styleable.PullToLoadView_bar_size, 0);
         typedArray.recycle();
         if(getScrollOrientation() == Orientation.VERTICAL && mBarSize == 0){
@@ -186,7 +197,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * 初始化视图
      */
     private void initView() {
-        mContentView = createContentView(mContentViewId);
+        mContentView = createContentView(mContentLayoutId);
         addContentView(mContentView);
 
         mHeader = createHeader();
@@ -213,6 +224,14 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * @return header
      */
     protected ILoadingLayout createHeader(){
+        if(mHeaderLayoutId != 0){
+            View view = LayoutInflater.from(getContext()).inflate(mHeaderLayoutId, this, false);
+            if(view instanceof ILoadingLayout){
+                return (ILoadingLayout) view;
+            } else {
+                throw new UnsupportedOperationException("a custom header layout must implements ILoadingLayout");
+            }
+        }
         return new LoadingLayout(getContext(), getScrollOrientation());
     }
 
@@ -221,6 +240,14 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * @return footer
      */
     protected ILoadingLayout createFooter(){
+        if(mFooterLayoutId != 0){
+            View view = LayoutInflater.from(getContext()).inflate(mFooterLayoutId, this, false);
+            if(view instanceof ILoadingLayout){
+                return (ILoadingLayout) view;
+            } else {
+                throw new UnsupportedOperationException("a custom footer layout must implements ILoadingLayout");
+            }
+        }
         return new LoadingLayout(getContext(), getScrollOrientation());
     }
 

@@ -8,7 +8,10 @@
 
     <com.droidworker.extend.abslistview.PullToLoadListView
         android:id="@+id/list_view"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:footer_view_id="@layout/layout_custom_header"
+        app:header_view_id="@layout/layout_custom_header"/>
 
 </LinearLayout>

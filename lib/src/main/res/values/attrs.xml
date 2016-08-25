@@ -7,5 +7,9 @@
         <attr name="content_view_id" format="reference"/>
         <!-- under bar的情况下,如果不是标准的android actionbar size,可以通过此属性明确指定-->
         <attr name="bar_size" format="dimension"/>
+        <!-- 指定此id对应的layout inflate成header -->
+        <attr name="header_view_id" format="reference"/>
+        <!-- 指定此id对应的layout inflate成footer -->
+        <attr name="footer_view_id" format="reference"/>
     </declare-styleable>
 </resources>
