@@ -1,6 +1,5 @@
 package com.droidworker.extend.abslistview;
 
-import com.droidworker.lib.ILoadingLayout;
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.Direction;
 import com.droidworker.lib.constant.LoadMode;
@@ -66,16 +65,6 @@ public abstract class PullToLoadAbsListView<T extends AbsListView> extends PullT
     @Override
     public boolean canScrollHorizontal(Direction direction) {
         return false;
-    }
-
-    @Override
-    protected ILoadingLayout createHeader() {
-        return new LoadingLayout(getContext(), getScrollOrientation());
-    }
-
-    @Override
-    protected ILoadingLayout createFooter() {
-        return new LoadingLayout(getContext(), getScrollOrientation());
     }
 
     @Override

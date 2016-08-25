@@ -17,6 +17,7 @@ import com.droidworker.lib.constant.Direction;
 import com.droidworker.lib.constant.LoadMode;
 import com.droidworker.lib.constant.Orientation;
 import com.droidworker.lib.constant.State;
+import com.droidworker.lib.impl.LoadingLayout;
 
 /**
  * BaseView,提供对于手势的处理,可以实现下拉加载更新,上拉加载更多,回弹,支持为指定Condition添加对应的视图,比如
@@ -211,13 +212,17 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * 创建header
      * @return header
      */
-    protected abstract ILoadingLayout createHeader();
+    protected ILoadingLayout createHeader(){
+        return new LoadingLayout(getContext(), getScrollOrientation());
+    }
 
     /**
      * 创建footer
      * @return footer
      */
-    protected abstract ILoadingLayout createFooter();
+    protected ILoadingLayout createFooter(){
+        return new LoadingLayout(getContext(), getScrollOrientation());
+    }
 
     /**
      * 创建内容区域视图

@@ -1,14 +1,5 @@
 package com.droidworker.lib.impl.recyclerview;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.View;
-
-import com.droidworker.lib.ILoadingLayout;
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.Direction;
 import com.droidworker.lib.constant.LoadMode;
@@ -16,6 +7,14 @@ import com.droidworker.lib.constant.State;
 import com.droidworker.lib.impl.LoadingLayout;
 import com.droidworker.lib.recyclerview.BaseRecyclerViewAdapter;
 import com.droidworker.lib.recyclerview.HeaderAndFooterWrapper;
+
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
 
 /**
  * 支持加载更新,加载更多的RecyclerView扩展.
@@ -55,16 +54,6 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
     public boolean canScrollHorizontal(Direction direction) {
         // 使用ViewCompat中的方法
         return ViewCompat.canScrollHorizontally(mContentView, direction.getIntValue());
-    }
-
-    @Override
-    protected ILoadingLayout createHeader() {
-        return new LoadingLayout(getContext(), getScrollOrientation());
-    }
-
-    @Override
-    protected ILoadingLayout createFooter() {
-        return new LoadingLayout(getContext(), getScrollOrientation());
     }
 
     @Override

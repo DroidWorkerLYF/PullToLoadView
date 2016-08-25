@@ -1,10 +1,8 @@
 package com.droidworker.lib.impl.scrollview;
 
-import com.droidworker.lib.ILoadingLayout;
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.Direction;
 import com.droidworker.lib.constant.Orientation;
-import com.droidworker.lib.impl.LoadingLayout;
 
 import android.content.Context;
 import android.support.v4.widget.NestedScrollView;
@@ -28,15 +26,12 @@ public class PullToLoadScrollView extends PullToLoadBaseView<NestedScrollView> {
     @Override
     public boolean canScrollVertical(Direction direction) {
         switch (direction) {
-        case START:
-        default:
-            return mContentView.getScrollY() != 0;
-        case END:
-            View scrollViewChild = mContentView.getChildAt(0);
-            if (scrollViewChild != null) {
-                return mContentView.getScrollY() < (scrollViewChild.getHeight() - getHeight());
-            }
-            return true;
+            case START:
+            default:
+                return mContentView.getScrollY() != 0;
+            case END:
+                View scrollViewChild = mContentView.getChildAt(0);
+                return scrollViewChild == null || mContentView.getScrollY() < (scrollViewChild.getHeight() - getHeight());
         }
     }
 
@@ -48,16 +43,6 @@ public class PullToLoadScrollView extends PullToLoadBaseView<NestedScrollView> {
     @Override
     protected Orientation getScrollOrientation() {
         return Orientation.VERTICAL;
-    }
-
-    @Override
-    protected ILoadingLayout createHeader() {
-        return new LoadingLayout(getContext(), getScrollOrientation());
-    }
-
-    @Override
-    protected ILoadingLayout createFooter() {
-        return new LoadingLayout(getContext(), getScrollOrientation());
     }
 
     @Override

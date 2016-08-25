@@ -1,6 +1,5 @@
 package com.droidworker.lib.impl;
 
-import com.droidworker.lib.ILoadingLayout;
 import com.droidworker.lib.PullToLoadBaseView;
 import com.droidworker.lib.constant.Direction;
 import com.droidworker.lib.constant.LoadMode;
@@ -49,16 +48,6 @@ public class PullToLoadWebView extends PullToLoadBaseView<WebView> {
     @Override
     protected Orientation getScrollOrientation() {
         return Orientation.VERTICAL;
-    }
-
-    @Override
-    protected ILoadingLayout createHeader() {
-        return new LoadingLayout(getContext(), getScrollOrientation());
-    }
-
-    @Override
-    protected ILoadingLayout createFooter() {
-        return new LoadingLayout(getContext(), getScrollOrientation());
     }
 
     @Override
