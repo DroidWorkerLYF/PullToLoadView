@@ -41,4 +41,20 @@ public enum LoadMode {
     public boolean isPullFromEnd() {
         return this == PULL_FROM_END || this == BOTH || this == PULL_FROM_START_AUTO_LOAD_MORE;
     }
+
+    public boolean shouldShowHeader() {
+        return this == PULL_FROM_START || this == MANUAL_ONLY || this == PULL_FROM_START_AUTO_LOAD_MORE || this == BOTH;
+    }
+
+    public boolean shouldShowFooter() {
+        return this == PULL_FROM_END || this == BOTH;
+    }
+
+    public boolean canOverScrollStart() {
+        return this == MANUAL_ONLY || this == PULL_FROM_END || this == DISABLED;
+    }
+
+    public boolean canOverScrollEnd() {
+        return this == PULL_FROM_START || this == MANUAL_ONLY || this == PULL_FROM_START_AUTO_LOAD_MORE || this == DISABLED;
+    }
 }

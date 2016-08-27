@@ -208,8 +208,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mFooterView = mFooter.getLoadingView();
         addViewInternal(mFooterView, getLoadingLayoutLayoutParams());
 
-        // 将内容视图提到最前,主要是为了覆盖在header上.
-        bringChildToFront(mContentView);
+//        bringChildToFront(mHeaderView);
     }
 
     /**
@@ -390,50 +389,13 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * @param loadMode 加载模式
      */
     private void adjustForMode(LoadMode loadMode) {
-        switch (loadMode) {
-        case PULL_FROM_START: {
-            mOverScrollStart = false;
-            mOverScrollEnd = true;
-            mHeaderView.setVisibility(VISIBLE);
-            mFooterView.setVisibility(INVISIBLE);
+        mOverScrollStart = loadMode.canOverScrollStart();
+        mOverScrollEnd = loadMode.canOverScrollEnd();
+        if(!loadMode.shouldShowHeader()){
+            mHeader.hide();
         }
-            break;
-        case MANUAL_ONLY: {
-            mOverScrollStart = true;
-            mOverScrollEnd = true;
-            mHeaderView.setVisibility(INVISIBLE);
-            mFooterView.setVisibility(INVISIBLE);
-        }
-            break;
-        case PULL_FROM_END: {
-            mOverScrollStart = true;
-            mOverScrollEnd = false;
-            mHeaderView.setVisibility(INVISIBLE);
-            mFooterView.setVisibility(VISIBLE);
-        }
-            break;
-        case PULL_FROM_START_AUTO_LOAD_MORE: {
-            mOverScrollStart = false;
-            mOverScrollEnd = true;
-            mHeaderView.setVisibility(VISIBLE);
-            mFooterView.setVisibility(INVISIBLE);
-        }
-            break;
-        case DISABLED: {
-            mOverScrollStart = true;
-            mOverScrollEnd = true;
-            mHeaderView.setVisibility(INVISIBLE);
-            mFooterView.setVisibility(INVISIBLE);
-        }
-            break;
-        default:
-        case BOTH: {
-            mOverScrollStart = false;
-            mOverScrollEnd = false;
-            mHeaderView.setVisibility(VISIBLE);
-            mFooterView.setVisibility(VISIBLE);
-        }
-            break;
+        if(!loadMode.shouldShowFooter()){
+            mFooter.hide();
         }
         updateUI(mIsUnderBar);
     }
