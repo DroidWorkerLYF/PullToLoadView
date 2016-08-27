@@ -3,6 +3,8 @@
     <declare-styleable name="PullToLoadView">
         <!-- 是否在ToolBar(导航栏)下方(Z轴) -->
         <attr name="underBar" format="boolean"/>
+        <!-- 配合underBar使用 -->
+        <attr name="underbar_header_background" format="reference"/>
         <!-- 指定此id对应的layout inflate成刷新视图的内容view -->
         <attr name="content_view_id" format="reference"/>
         <!-- under bar的情况下,如果不是标准的android actionbar size,可以通过此属性明确指定-->

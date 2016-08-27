@@ -151,6 +151,12 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * Bottom padding
      */
     private int mPaddingBottom;
+    /**
+     * 使用bringChildToFront,将header置于content之上,但是没有背景色会导致header和内容区域
+     * 看起来重叠在了一起,所以underBar模式下需要给出背景的resId,如果自定义header设置了背景,
+     * 则可忽略此项
+     */
+    private int mHeaderBgResId;
 
     public PullToLoadBaseView(Context context) {
         this(context, null);
@@ -165,8 +171,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mHeaderLayoutId = typedArray.getResourceId(R.styleable.PullToLoadView_header_view_id, 0);
         mFooterLayoutId = typedArray.getResourceId(R.styleable.PullToLoadView_footer_view_id, 0);
         mBarSize = typedArray.getDimensionPixelSize(R.styleable.PullToLoadView_bar_size, 0);
+        mHeaderBgResId = typedArray.getResourceId(R.styleable
+                .PullToLoadView_underbar_header_background, 0);
         typedArray.recycle();
-        if(getScrollOrientation() == Orientation.VERTICAL && mBarSize == 0){
+        if(getScrollOrientation() == Orientation.VERTICAL && mBarSize == 0 && mIsUnderBar){
             mBarSize = getActionBarSize();
         }
 
@@ -208,7 +216,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mFooterView = mFooter.getLoadingView();
         addViewInternal(mFooterView, getLoadingLayoutLayoutParams());
 
-//        bringChildToFront(mHeaderView);
+        bringChildToFront(mHeaderView);
+        if(mHeaderBgResId != 0){
+            mHeaderView.setBackgroundResource(mHeaderBgResId);
+        }
     }
 
     /**
