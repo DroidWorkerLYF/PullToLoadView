@@ -1,1 +1,1 @@
-include ':app', ':lib', ':extend'
+include ':example', ':pulltoloadview', ':extend'

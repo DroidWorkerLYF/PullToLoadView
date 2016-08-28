@@ -1,8 +1,8 @@
 package com.droidworker.extend.abslistview;
 
-import com.droidworker.lib.constant.LoadMode;
-import com.droidworker.lib.constant.Orientation;
-import com.droidworker.lib.constant.State;
+import com.droidworker.pulltoloadview.constant.LoadMode;
+import com.droidworker.pulltoloadview.constant.Orientation;
+import com.droidworker.pulltoloadview.constant.State;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
