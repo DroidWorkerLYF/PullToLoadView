@@ -1,5 +1,11 @@
 # PullToLoadView
-下拉刷新的控件已经很多了，本没必要再造轮子，然而产品提了一个需求，感觉[Android-PullToRefresh](https://github.com/chrisbanes/Android-PullToRefresh)实现不了(而且被公司内部公共组件改的乱七八糟的)，所以试着再造个轮子。。。主要是实现underbar里的效果。当然很多都参考了**Android-PullToRefresh**，图用mindnote做的，没想画类图。。。
+##配置
+```
+compile 'com.droidworker:pulltoloadview:0.9'
+```
+
+##Why
+下拉刷新的控件已经很多了，本没必要再造轮子，然而产品提了一个需求，感觉[Android-PullToRefresh](https://github.com/chrisbanes/Android-PullToRefresh)实现不便(而且被公司内部公共组件改的乱七八糟的)，所以试着再造个轮子。。。主要是实现underbar里的效果。当然很多都参考了**Android-PullToRefresh**，图用mindnote做的，没想画类图。。。
 ![尝试用mindnote,待更新](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/PullToLoadView.mindnode/QuickLook/Preview.jpg?raw=true)
 
 ##分析
