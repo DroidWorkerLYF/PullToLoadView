@@ -863,6 +863,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mEndX = mStartX = 0;
         mEndY = mStartY = 0;
         mHeader.hide();
+        mFooter.hide();
         smoothScrollTo(0);
     }
 
