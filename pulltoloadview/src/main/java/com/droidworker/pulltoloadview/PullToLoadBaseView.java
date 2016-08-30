@@ -355,6 +355,8 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             break;
         }
         mContentView.setOverScrollMode(OVER_SCROLL_NEVER);
+        mHeader.hide();
+        mHeader.hide();
         updateContentUI(isUnderBar);
     }
 
@@ -402,12 +404,12 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     private void adjustForMode(LoadMode loadMode) {
         mOverScrollStart = loadMode.canOverScrollStart();
         mOverScrollEnd = loadMode.canOverScrollEnd();
-        if(!loadMode.shouldShowHeader()){
-            mHeader.hide();
-        }
-        if(!loadMode.shouldShowFooter()){
-            mFooter.hide();
-        }
+//        if(!loadMode.shouldShowHeader()){
+//            mHeader.hide();
+//        }
+//        if(!loadMode.shouldShowFooter()){
+//            mFooter.hide();
+//        }
         updateUI(mIsUnderBar);
     }
 
