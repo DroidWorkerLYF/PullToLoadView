@@ -2,8 +2,6 @@ package com.droidworker.example.recyclerview;
 
 import android.widget.TextView;
 
-import com.droidworker.pulltoloadview.recyclerview.BaseRecyclerViewAdapter;
-import com.droidworker.pulltoloadview.recyclerview.UniversalViewHolder;
 import com.droidworker.example.R;
 
 /**

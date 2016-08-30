@@ -1,4 +1,4 @@
-package com.droidworker.pulltoloadview.recyclerview;
+package com.droidworker.example.recyclerview;
 
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;

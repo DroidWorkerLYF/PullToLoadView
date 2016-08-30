@@ -5,8 +5,6 @@ import com.droidworker.pulltoloadview.constant.Direction;
 import com.droidworker.pulltoloadview.constant.LoadMode;
 import com.droidworker.pulltoloadview.constant.State;
 import com.droidworker.pulltoloadview.impl.LoadingLayout;
-import com.droidworker.pulltoloadview.recyclerview.BaseRecyclerViewAdapter;
-import com.droidworker.pulltoloadview.recyclerview.HeaderAndFooterWrapper;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -162,10 +160,10 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
 
     /**
      * 设置Adapter,将参数包装为HeaderAndFooterWrapper用于添加header和footer
-     * @param baseRecyclerViewAdapter adapter
+     * @param adapter adapter
      */
-    public void setAdapter(@NonNull BaseRecyclerViewAdapter baseRecyclerViewAdapter) {
-        final HeaderAndFooterWrapper wrapper = new HeaderAndFooterWrapper(baseRecyclerViewAdapter);
+    public void setAdapter(@NonNull RecyclerView.Adapter adapter) {
+        final HeaderAndFooterWrapper wrapper = new HeaderAndFooterWrapper(adapter);
         mContentView.setAdapter(wrapper);
     }
 
@@ -179,9 +177,9 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
 
     /**
      * 获取被包装的Adapter
-     * @return {@link BaseRecyclerViewAdapter}
+     * @return {@link android.support.v7.widget.RecyclerView.Adapter}
      */
-    public BaseRecyclerViewAdapter getWrappedAdapter() {
+    public RecyclerView.Adapter getWrappedAdapter() {
         return ((HeaderAndFooterWrapper) mContentView.getAdapter()).getWrappedAdapter();
     }
 
