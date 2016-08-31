@@ -404,12 +404,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     private void adjustForMode(LoadMode loadMode) {
         mOverScrollStart = loadMode.canOverScrollStart();
         mOverScrollEnd = loadMode.canOverScrollEnd();
-//        if(!loadMode.shouldShowHeader()){
-//            mHeader.hide();
-//        }
-//        if(!loadMode.shouldShowFooter()){
-//            mFooter.hide();
-//        }
         updateUI(mIsUnderBar);
     }
 
@@ -835,7 +829,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         case PULL_FROM_START:
         default:
             mIsAllLoaded = false;
-            smoothScrollTo(-mBarSize - (mFooter.getSize() - mBarSize));
+            smoothScrollTo(-mHeader.getSize());
             if (mPullToLoadListener != null) {
                 mPullToLoadListener.onLoadNew();
             }
