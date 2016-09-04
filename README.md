@@ -35,3 +35,8 @@ demo里有完整的演示
 * 自动刷新
 
 ![模式](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/art/loadmode.png?raw=true)
+
+##额外的
+* 可以指定header，content，footer的layout resource id
+* 可以自定义reset时，回滚时间
+
