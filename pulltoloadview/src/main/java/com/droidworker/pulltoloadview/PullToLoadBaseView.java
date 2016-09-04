@@ -809,13 +809,14 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             break;
         case MANUAL_UPDATE:
             mHeader.show();
-            onPull(state, 0);
             manualLoad();
+            onPull(state, -mHeader.getSize());
             break;
         case OVER_SCROLL:
             reset();
             break;
         case RESET:
+            onPull(state, 0);
             reset();
             break;
         }
