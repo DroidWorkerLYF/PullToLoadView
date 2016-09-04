@@ -13,5 +13,7 @@
         <attr name="header_view_id" format="reference"/>
         <!-- 指定此id对应的layout inflate成footer -->
         <attr name="footer_view_id" format="reference"/>
+        <attr name="scroll_to_top_duration" format="integer"/>
+        <attr name="scroll_to_bottom_duration" format="integer"/>
     </declare-styleable>
 </resources>

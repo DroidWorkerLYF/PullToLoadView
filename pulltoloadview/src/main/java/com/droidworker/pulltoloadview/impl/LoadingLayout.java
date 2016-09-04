@@ -96,7 +96,9 @@ public class LoadingLayout extends FrameLayout implements ILoadingLayout {
             mTextView.setText(R.string.loading);
         } else if (state == State.RESET) {
             //reset,停止动画
-            mTextView.setText(R.string.done);
+            if(distance != 0){
+                mTextView.setText(R.string.done);
+            }
             mImageView.clearAnimation();
         } else {
             if (state == State.PULL_FROM_START) {

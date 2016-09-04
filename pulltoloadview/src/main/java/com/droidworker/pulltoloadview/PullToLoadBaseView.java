@@ -32,6 +32,7 @@ import com.droidworker.pulltoloadview.impl.LoadingLayout;
 public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayout
         implements IPullToLoad<T> {
     private static final String TAG = "PullToLoadBaseView";
+    private static final int DEFAULT_ANIM_DURATION = 300;
     private static final float FRICTION = 2.0f;
     /**
      * 用于获取系统的actionbar size
@@ -81,6 +82,14 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * 自定义footer的layout id
      */
     private int mFooterLayoutId;
+    /**
+     * State为reset时,滑动到top动画时间
+     */
+    private int mScrollTopDuration;
+    /**
+     * State为reset时,滑动到bottom动画时间
+     */
+    private int mScrollBottomDuration;
     /**
      * 支持的加载模式
      */
@@ -157,6 +166,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * 则可忽略此项
      */
     private int mHeaderBgResId;
+    /**
+     * true代表完成了加载更新或者加载更多,配合reset更新使用
+     */
+    private boolean mDone;
 
     public PullToLoadBaseView(Context context) {
         this(context, null);
@@ -173,6 +186,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mBarSize = typedArray.getDimensionPixelSize(R.styleable.PullToLoadView_bar_size, 0);
         mHeaderBgResId = typedArray.getResourceId(R.styleable
                 .PullToLoadView_underbar_header_background, 0);
+        mScrollTopDuration = typedArray.getInt(R.styleable.PullToLoadView_scroll_to_top_duration,
+                DEFAULT_ANIM_DURATION);
+        mScrollBottomDuration = typedArray.getInt(R.styleable
+                .PullToLoadView_scroll_to_bottom_duration, DEFAULT_ANIM_DURATION);
         typedArray.recycle();
         if(getScrollOrientation() == Orientation.VERTICAL && mBarSize == 0 && mIsUnderBar){
             mBarSize = getActionBarSize();
@@ -502,6 +519,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     @Override
     public void onLoadComplete() {
         if (isLoading()) {
+            mDone = true;
             setState(State.RESET);
         }
         if(mCurConditionView != null){
@@ -816,7 +834,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             reset();
             break;
         case RESET:
-            onPull(state, 0);
             reset();
             break;
         }
@@ -853,11 +870,13 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * 重置状态
      */
     protected void reset() {
+        onPull(State.RESET, mDone ? mCurLoadMode == LoadMode.PULL_FROM_START ? mHeader.getSize() : -mFooter.getSize() : 0);
+        smoothScrollTo(0);
+        mDone = false;
         mCurLoadMode = null;
         mIsIntercepted = false;
         mEndX = mStartX = 0;
         mEndY = mStartY = 0;
-        smoothScrollTo(0);
     }
 
     protected State getState() {
@@ -957,6 +976,11 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             return;
         }
         mValueAnimator = ValueAnimator.ofInt(oldScrollValue, (int) scrollValue);
+        if(scrollValue == 0 && mDone){
+            mValueAnimator.setDuration(mCurLoadMode == LoadMode.PULL_FROM_START ? mScrollTopDuration : mScrollBottomDuration);
+        } else {
+            mValueAnimator.setDuration(DEFAULT_ANIM_DURATION);
+        }
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
