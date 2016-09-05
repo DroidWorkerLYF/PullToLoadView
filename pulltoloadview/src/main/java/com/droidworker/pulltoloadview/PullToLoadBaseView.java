@@ -1,5 +1,7 @@
 package com.droidworker.pulltoloadview;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -985,6 +987,15 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 scroll((int) animation.getAnimatedValue());
+            }
+        });
+        mValueAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if(mState == State.RESET){
+                    mHeader.hide();
+                }
             }
         });
         mValueAnimator.start();
