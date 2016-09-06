@@ -152,7 +152,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
         super.reset();
         loadMore = false;
         HeaderAndFooterWrapper wrapper = getAdapter();
-        if (wrapper != null && mAutoLoadFooter != null) {
+        if (wrapper != null && mAutoLoadFooter != null && wrapper.containsFooter(mAutoLoadFooter)) {
             wrapper.removeFooter(mAutoLoadFooter);
             wrapper.notifyDataSetChanged();
         }
