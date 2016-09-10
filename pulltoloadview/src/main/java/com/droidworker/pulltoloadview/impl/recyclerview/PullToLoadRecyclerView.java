@@ -114,16 +114,16 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
             mAutoLoadFooter = new LoadingLayout(getContext(), getScrollOrientation());
             RecyclerView.LayoutParams layoutParams;
             switch (getScrollOrientation()) {
-                case VERTICAL:
-                default: {
-                    layoutParams = new RecyclerView.LayoutParams(LayoutParams.MATCH_PARENT,
-                            LayoutParams.WRAP_CONTENT);
-                }
+            case VERTICAL:
+            default: {
+                layoutParams = new RecyclerView.LayoutParams(LayoutParams.MATCH_PARENT,
+                        LayoutParams.WRAP_CONTENT);
+            }
                 break;
-                case HORIZONTAL: {
-                    layoutParams = new RecyclerView.LayoutParams(LayoutParams.WRAP_CONTENT,
-                            LayoutParams.MATCH_PARENT);
-                }
+            case HORIZONTAL: {
+                layoutParams = new RecyclerView.LayoutParams(LayoutParams.WRAP_CONTENT,
+                        LayoutParams.MATCH_PARENT);
+            }
                 break;
             }
             mAutoLoadFooter.setLayoutParams(layoutParams);
@@ -195,7 +195,8 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
      * 添加{@link android.support.v7.widget.RecyclerView.ItemDecoration}
      * @param decor item decoration
      */
-    public void addItemDecoration(RecyclerView.ItemDecoration decor){
+    public void addItemDecoration(RecyclerView.ItemDecoration decor) {
         mContentView.addItemDecoration(decor);
     }
+
 }
