@@ -1,11 +1,5 @@
 package com.droidworker.pulltoloadview;
 
-import com.droidworker.pulltoloadview.constant.Direction;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.constant.Orientation;
-import com.droidworker.pulltoloadview.constant.State;
-import com.droidworker.pulltoloadview.impl.LoadingLayout;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -23,6 +17,12 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import com.droidworker.pulltoloadview.constant.Direction;
+import com.droidworker.pulltoloadview.constant.LoadMode;
+import com.droidworker.pulltoloadview.constant.Orientation;
+import com.droidworker.pulltoloadview.constant.State;
+import com.droidworker.pulltoloadview.impl.LoadingLayout;
 
 /**
  * BaseView,提供对于手势的处理,可以实现下拉加载更新,上拉加载更多,回弹,支持为指定Condition添加对应的视图,比如
@@ -179,6 +179,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * true代表完成了加载更新或者加载更多,配合reset更新使用
      */
     private boolean mDone;
+    private int[] mDirectionMove = new int[2];
 
     public PullToLoadBaseView(Context context) {
         this(context, null);
@@ -1127,39 +1128,37 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             offset = dx;
             break;
         }
-        final int[] directionMove = getDirectionOffset(dx, dy);
-        final float scrollDirectionMove = directionMove[0];
-        final float otherDirectionMove = directionMove[1];
+        getDirectionOffset(dx, dy);
         if (offset < 0 && isReadyToPullStart()) {
             consumed[0] = dx;
             consumed[1] = dy;
 
             if (mCurLoadMode == null) {
-                final float absMove = Math.abs(scrollDirectionMove);
-                if (absMove > Math.abs(otherDirectionMove) && scrollDirectionMove <= -1f) {
+                final float absMove = Math.abs(mDirectionMove[0]);
+                if (absMove > Math.abs(mDirectionMove[1]) && mDirectionMove[0] <= -1f) {
                     mCurLoadMode = LoadMode.PULL_FROM_START;
                     setState(State.PULL_FROM_START);
                     Log("onNestedScroll pull from start");
-                    handleNestedScrollPull(scrollDirectionMove);
+                    handleNestedScrollPull(mDirectionMove[0]);
                 }
             } else {
-                handleNestedScrollPull(scrollDirectionMove);
+                handleNestedScrollPull(mDirectionMove[0]);
             }
         } else if (offset > 0 && isReadyToPullEnd()) {
             consumed[0] = dx;
             consumed[1] = dy;
 
             if (mCurLoadMode == null) {
-                final float absMove = Math.abs(scrollDirectionMove);
-                if (absMove > Math.abs(otherDirectionMove) && scrollDirectionMove >= 1f
+                final float absMove = Math.abs(mDirectionMove[0]);
+                if (absMove > Math.abs(mDirectionMove[1]) && mDirectionMove[0] >= 1f
                         && isReadyToPullEnd()) {
                     mCurLoadMode = LoadMode.PULL_FROM_END;
                     setState(State.PULL_FROM_END);
                     Log("onNestedScroll pull from end");
-                    handleNestedScrollPull(scrollDirectionMove);
+                    handleNestedScrollPull(mDirectionMove[0]);
                 }
             } else {
-                handleNestedScrollPull(scrollDirectionMove);
+                handleNestedScrollPull(mDirectionMove[0]);
             }
         } else if (mCurLoadMode != null) {
             switch (mCurLoadMode) {
@@ -1167,7 +1166,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 if (getInternalScrollOffset() < 0) {
                     consumed[0] = dx;
                     consumed[1] = dy;
-                    handleNestedScrollPull(scrollDirectionMove);
+                    handleNestedScrollPull(mDirectionMove[0]);
                 }
                 break;
             }
@@ -1175,7 +1174,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 if (getInternalScrollOffset() > 0) {
                     consumed[0] = dx;
                     consumed[1] = dy;
-                    handleNestedScrollPull(scrollDirectionMove);
+                    handleNestedScrollPull(mDirectionMove[0]);
                 }
                 break;
             }
@@ -1191,10 +1190,13 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         switch (getScrollOrientation()) {
         case VERTICAL:
         default:
-            return new int[] { dy, dx };
+            mDirectionMove[0] = dy;
+            mDirectionMove[1] = dx;
         case HORIZONTAL:
-            return new int[] { dx, dy };
+            mDirectionMove[0] = dx;
+            mDirectionMove[1] = dy;
         }
+        return mDirectionMove;
     }
 
     /**
