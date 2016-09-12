@@ -1165,7 +1165,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                     }
                     handleNestedScrollPull(mDirectionMove[0]);
                 }
-            } else if (offset > 0 && isReadyToPullEnd()) {
+            } else if (offset > 0 && isReadyToPullEnd() && mLoadMode != LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
                 consumed[0] = dx;
                 consumed[1] = dy;
 
