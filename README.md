@@ -24,6 +24,10 @@ compile 'com.droidworker:pulltoloadview:0.9.5'
 
 ![underbar](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/art/underbar.gif?raw=true)
 
+**支持nested scroll**
+
+![nested scroll](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/art/NestedScroll.gif?raw=true)
+
 demo里有完整的演示
 
 ##支持的模式  
