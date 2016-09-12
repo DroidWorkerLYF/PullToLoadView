@@ -1160,7 +1160,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                         handleNestedScrollPull(mDirectionMove[0]);
                     }
                 } else {
-                    if(mHeaderView.getVisibility() != View.VISIBLE){
+                    if(mHeaderView.getVisibility() != View.VISIBLE && mLoadMode.shouldShowHeader() ){
                         mHeader.show();
                     }
                     handleNestedScrollPull(mDirectionMove[0]);
