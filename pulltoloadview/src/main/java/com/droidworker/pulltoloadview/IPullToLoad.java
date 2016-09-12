@@ -86,6 +86,12 @@ public interface IPullToLoad<T extends View> {
     void onAllLoaded();
 
     /**
+     * 是否全部加载完毕
+     * @return true 则表示调用过onAllLoaded,已经都加载完了
+     */
+    boolean isAllLoaded();
+
+    /**
      * 设置加载回调
      * @param pullToLoadListener 回调
      */
