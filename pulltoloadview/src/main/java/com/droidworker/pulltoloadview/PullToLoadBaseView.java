@@ -128,7 +128,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     /**
      * 是否支持NestedScroll
      */
-    private boolean isNestedScrollEnable;
+    private boolean mIsNestedScrollEnable;
     /**
      * NestedScroll下当前的滚动距离
      */
@@ -246,7 +246,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      */
     private void initView() {
         mContentView = createContentView(mContentLayoutId);
-        isNestedScrollEnable = ViewCompat.isNestedScrollingEnabled(mContentView);
+        mIsNestedScrollEnable = ViewCompat.isNestedScrollingEnabled(mContentView);
         addContentView(mContentView);
         mContentView.setOverScrollMode(OVER_SCROLL_NEVER);
 
@@ -444,7 +444,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
     @Override
     public void setMode(LoadMode loadMode) {
-        if (mCurLoadMode == loadMode) {
+        if (mLoadMode == loadMode) {
             return;
         }
         mModeChanged = true;
@@ -615,8 +615,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             return false;
         }
         // 如果已经设置了滑动状态并且视图时支持NestedScroll的,则更新touch事件的位置,不拦截事件
-        if (mCurLoadMode != null && isNestedScrollEnable) {
-            mHandleByNestedScroll = true;
+        if (mCurLoadMode != null && mHandleByNestedScroll) {
             mEndX = event.getX();
             mEndY = event.getY();
             return false;
@@ -669,18 +668,20 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 if (scrollDirectionMove >= 1f && isReadyToPullStart()) {
                     mEndX = x;
                     mEndY = y;
-                    mIsIntercepted = !isNestedScrollEnable;
+                    mIsIntercepted = !mIsNestedScrollEnable;
+                    mHandleByNestedScroll = mIsNestedScrollEnable;
                     mCurLoadMode = LoadMode.PULL_FROM_START;
                     setState(State.PULL_FROM_START);
-                    Log("intercept action move pull from start");
                 } else if (scrollDirectionMove <= -1f && isReadyToPullEnd()) {
                     mEndX = x;
                     mEndY = y;
-                    mIsIntercepted = !isNestedScrollEnable;
+                    mIsIntercepted = !mIsNestedScrollEnable;
+                    mHandleByNestedScroll = mIsNestedScrollEnable;
                     mCurLoadMode = LoadMode.PULL_FROM_END;
                     setState(State.PULL_FROM_END);
-                    Log("intercept action move pull from end");
                 }
+                Log("onInterceptTouchEvent nested scroll " + mHandleByNestedScroll + " curLoadMode "
+                        + mCurLoadMode);
             }
             break;
         }
@@ -887,6 +888,9 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * 进入loading状态
      */
     protected void onLoading() {
+        if (mCurLoadMode == null) {
+            return;
+        }
         switch (mCurLoadMode) {
         case PULL_FROM_START:
         default:
@@ -1101,7 +1105,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
     @Override
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        if (mHandleByNestedScroll) {
+        if (mHandleByNestedScroll && mCurLoadMode != null) {
             final float endValue,startValue;
             switch (getScrollOrientation()) {
                 case VERTICAL:
@@ -1122,6 +1126,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                     handlePull();
                 } else {
                     mHandleByNestedScroll = false;
+                    mCurLoadMode = null;
                     mHeader.hide();
                 }
                 break;
@@ -1132,6 +1137,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                     handlePull();
                 } else {
                     mHandleByNestedScroll = false;
+                    mCurLoadMode = null;
                 }
                 break;
             }
