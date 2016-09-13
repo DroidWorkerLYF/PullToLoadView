@@ -1,7 +1,7 @@
 # PullToLoadView
 ##配置
 ```
-compile 'com.droidworker:pulltoloadview:0.9'
+compile 'com.droidworker:pulltoloadview:0.9.5'
 ```
 
 ##Why
@@ -24,6 +24,10 @@ compile 'com.droidworker:pulltoloadview:0.9'
 
 ![underbar](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/art/underbar.gif?raw=true)
 
+**支持nested scroll**
+
+![nested scroll](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/art/NestedScroll.gif?raw=true)
+
 demo里有完整的演示
 
 ##支持的模式  
@@ -39,4 +43,5 @@ demo里有完整的演示
 ##额外的
 * 可以指定header，content，footer的layout resource id
 * 可以自定义reset时，回滚时间
+* 开始支持NestedScroll，目前PullToLoad的RecyclerView现在可以支持内容和下拉上拉的无缝切换
 
