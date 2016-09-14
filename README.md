@@ -18,8 +18,6 @@ compile 'com.droidworker:pulltoloadview:0.9.5'
 
 ##演示gif
 
-![下拉刷新](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/art/loadnew.gif?raw=true)
-
 **underbar**  
 
 ![underbar](https://github.com/DroidWorkerLYF/PullToLoadView/blob/master/art/underbar.gif?raw=true)
