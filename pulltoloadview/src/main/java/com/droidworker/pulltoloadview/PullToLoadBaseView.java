@@ -1,11 +1,5 @@
 package com.droidworker.pulltoloadview;
 
-import com.droidworker.pulltoloadview.constant.Direction;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.constant.Orientation;
-import com.droidworker.pulltoloadview.constant.State;
-import com.droidworker.pulltoloadview.impl.LoadingLayout;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -23,6 +17,12 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import com.droidworker.pulltoloadview.constant.Direction;
+import com.droidworker.pulltoloadview.constant.LoadMode;
+import com.droidworker.pulltoloadview.constant.Orientation;
+import com.droidworker.pulltoloadview.constant.State;
+import com.droidworker.pulltoloadview.impl.LoadingLayout;
 
 /**
  * BaseView,提供对于手势的处理,可以实现下拉加载更新,上拉加载更多,回弹,支持为指定Condition添加对应的视图,比如
@@ -850,7 +850,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         if (mState == state) {
             return;
         }
-        mState = state;
         switch (mState) {
         case PULL_FROM_START:
             if (!mOverScrollStart) {
@@ -886,6 +885,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             reset();
             break;
         }
+        mState = state;
     }
 
     /**
@@ -905,8 +905,13 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             }
             break;
         case PULL_FROM_END:
-            smoothScrollTo(mFooter.getSize());
-            if (mPullToLoadListener != null) {
+            if (mPullToLoadListener == null) {
+                return;
+            }
+            if(mLoadMode == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE){
+                mPullToLoadListener.onLoadMore();
+            } else {
+                smoothScrollTo(mFooter.getSize());
                 mPullToLoadListener.onLoadMore();
             }
             break;
@@ -931,7 +936,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mIsIntercepted = false;
         mEndX = mStartX = 0;
         mEndY = mStartY = 0;
-        mState = State.RESET;
     }
 
     protected State getState() {

@@ -1,11 +1,5 @@
 package com.droidworker.pulltoloadview.impl.recyclerview;
 
-import com.droidworker.pulltoloadview.PullToLoadBaseView;
-import com.droidworker.pulltoloadview.constant.Direction;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.constant.State;
-import com.droidworker.pulltoloadview.impl.LoadingLayout;
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
@@ -14,6 +8,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.droidworker.pulltoloadview.PullToLoadBaseView;
+import com.droidworker.pulltoloadview.constant.Direction;
+import com.droidworker.pulltoloadview.constant.LoadMode;
+import com.droidworker.pulltoloadview.constant.State;
+import com.droidworker.pulltoloadview.impl.LoadingLayout;
+
 /**
  * 支持加载更新,加载更多的RecyclerView扩展.
  * 因为RecyclerView方向的不确定性,指定为{@link android.support.v7.widget.LinearLayoutManager}时,
@@ -21,6 +21,7 @@ import android.view.View;
  * @author https://github.com/DroidWorkerLYF
  */
 public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
+    private HeaderAndFooterWrapper mWrapper = new HeaderAndFooterWrapper();
     /**
      * 自动加载更多时添加到最后的footer
      */
@@ -75,14 +76,11 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && loadMore && !isAllLoaded()) {
-                    HeaderAndFooterWrapper wrapper = getAdapter();
-                    if (wrapper != null && mAutoLoadFooter != null) {
-                        recyclerView.scrollToPosition(wrapper.getItemCount());
-                        if (!wrapper.containsFooter(mAutoLoadFooter)) {
-                            wrapper.addFooter(mAutoLoadFooter);
-                        }
-                        mAutoLoadFooter.onPull(State.LOADING, 0);
+                    if (mAutoLoadFooter != null) {
+//                        recyclerView.scrollToPosition(wrapper.getItemCount());
+                        addLoadingFooter();
                         setCurLoadMode(LoadMode.PULL_FROM_END);
+                        mAutoLoadFooter.onPull(State.LOADING, 0);
                         setState(State.LOADING);
                     }
                 }
@@ -115,47 +113,65 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
             RecyclerView.LayoutParams layoutParams;
             switch (getScrollOrientation()) {
             case VERTICAL:
-            default: {
+            default:
                 layoutParams = new RecyclerView.LayoutParams(LayoutParams.MATCH_PARENT,
                         LayoutParams.WRAP_CONTENT);
-            }
                 break;
-            case HORIZONTAL: {
+            case HORIZONTAL:
                 layoutParams = new RecyclerView.LayoutParams(LayoutParams.WRAP_CONTENT,
                         LayoutParams.MATCH_PARENT);
-            }
                 break;
             }
             mAutoLoadFooter.setLayoutParams(layoutParams);
         } else {
+            removeLoadingFooter();
             mAutoLoadFooter = null;
         }
     }
 
-    @Override
-    protected void onLoading() {
-        if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
-            if (getCurLoadMode() == LoadMode.PULL_FROM_END) {
-                if (getPullToLoadListener() != null) {
-                    getPullToLoadListener().onLoadMore();
-                }
-            } else {
-                super.onLoading();
-            }
-        } else {
-            super.onLoading();
+    private void addLoadingFooter(){
+        if(mWrapper != null && !mWrapper.containsFooter(mAutoLoadFooter)){
+            mWrapper.addFooter(mAutoLoadFooter);
         }
     }
+
+    private void removeLoadingFooter(){
+        if(mWrapper != null && mWrapper.containsFooter(mAutoLoadFooter)){
+            mWrapper.removeFooter(mAutoLoadFooter);
+        }
+    }
+
+//    @Override
+//    protected void onLoading() {
+//        if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
+//            if (getCurLoadMode() == LoadMode.PULL_FROM_END) {
+//                if (getPullToLoadListener() != null) {
+//                    getPullToLoadListener().onLoadMore();
+//                }
+//            } else {
+//                super.onLoading();
+//            }
+//        } else {
+//            super.onLoading();
+//        }
+//    }
 
     @Override
     protected void reset() {
         super.reset();
         loadMore = false;
-        HeaderAndFooterWrapper wrapper = getAdapter();
-        if (wrapper != null && mAutoLoadFooter != null && wrapper.containsFooter(mAutoLoadFooter)) {
-            wrapper.removeFooter(mAutoLoadFooter);
-            wrapper.notifyDataSetChanged();
-        }
+//        HeaderAndFooterWrapper wrapper = getAdapter();
+//        if (wrapper != null && mAutoLoadFooter != null && wrapper.containsFooter(mAutoLoadFooter)) {
+//            wrapper.removeFooter(mAutoLoadFooter);
+//            wrapper.notifyDataSetChanged();
+//        }
+    }
+
+    @Override
+    public void onAllLoaded() {
+        super.onAllLoaded();
+
+        removeLoadingFooter();
     }
 
     /**
@@ -163,8 +179,8 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
      * @param adapter adapter
      */
     public void setAdapter(@NonNull RecyclerView.Adapter adapter) {
-        final HeaderAndFooterWrapper wrapper = new HeaderAndFooterWrapper(adapter);
-        mContentView.setAdapter(wrapper);
+        mWrapper.setWrappedAdapter(adapter);
+        mContentView.setAdapter(mWrapper);
     }
 
     /**
@@ -172,7 +188,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
      * @return {@link HeaderAndFooterWrapper}
      */
     public HeaderAndFooterWrapper getAdapter() {
-        return (HeaderAndFooterWrapper) mContentView.getAdapter();
+        return mWrapper;
     }
 
     /**
@@ -180,7 +196,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
      * @return {@link android.support.v7.widget.RecyclerView.Adapter}
      */
     public RecyclerView.Adapter getWrappedAdapter() {
-        return ((HeaderAndFooterWrapper) mContentView.getAdapter()).getWrappedAdapter();
+        return mWrapper.getWrappedAdapter();
     }
 
     /**
