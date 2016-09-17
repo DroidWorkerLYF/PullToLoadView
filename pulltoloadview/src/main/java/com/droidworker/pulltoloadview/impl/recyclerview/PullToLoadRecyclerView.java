@@ -46,7 +46,19 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
     @Override
     public boolean canScrollVertical(Direction direction) {
         // 使用ViewCompat中的方法
-        return ViewCompat.canScrollVertically(mContentView, direction.getIntValue());
+        final int offset = mContentView.computeVerticalScrollOffset();
+        final int range = mContentView.computeVerticalScrollRange() -
+                mContentView.computeVerticalScrollExtent();
+        if (range == 0) return false;
+        if (direction.getIntValue() < 0) {
+            return offset > 0;
+        } else {
+            if(getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE){
+                return offset < range - mAutoLoadFooter.getHeight();
+            } else {
+                return offset < range - 1;
+            }
+        }
     }
 
     @Override
@@ -155,6 +167,9 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
      * @param show
      */
     private void updateFooterHeight(boolean show){
+        if(mAutoLoadFooter == null){
+            return;
+        }
         RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mAutoLoadFooter.getLayoutParams();
         switch (getScrollOrientation()) {
             case VERTICAL:
