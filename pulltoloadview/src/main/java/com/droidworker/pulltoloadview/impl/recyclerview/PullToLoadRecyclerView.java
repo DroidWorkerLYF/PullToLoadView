@@ -156,26 +156,14 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
      */
     private void updateFooterHeight(boolean show){
         RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mAutoLoadFooter.getLayoutParams();
-        if(show){
-            switch (getScrollOrientation()) {
-                case VERTICAL:
-                default:
-                    layoutParams.height = LayoutParams.WRAP_CONTENT;
-                    break;
-                case HORIZONTAL:
-                    layoutParams.width = LayoutParams.WRAP_CONTENT;
-                    break;
-            }
-        } else {
-            switch (getScrollOrientation()) {
-                case VERTICAL:
-                default:
-                    layoutParams.height = 1;
-                    break;
-                case HORIZONTAL:
-                    layoutParams.width = 1;
-                    break;
-            }
+        switch (getScrollOrientation()) {
+            case VERTICAL:
+            default:
+                layoutParams.height = show?LayoutParams.WRAP_CONTENT:1;
+                break;
+            case HORIZONTAL:
+                layoutParams.width = show?LayoutParams.WRAP_CONTENT:1;
+                break;
         }
         mAutoLoadFooter.setLayoutParams(layoutParams);
     }
