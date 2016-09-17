@@ -77,8 +77,6 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && loadMore && !isAllLoaded()) {
                     if (mAutoLoadFooter != null) {
-//                        recyclerView.scrollToPosition(wrapper.getItemCount());
-                        addLoadingFooter();
                         setCurLoadMode(LoadMode.PULL_FROM_END);
                         mAutoLoadFooter.onPull(State.LOADING, 0);
                         setState(State.LOADING);
@@ -109,20 +107,26 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
     protected void updateContentUI(boolean isUnderBar) {
         mContentView.scrollToPosition(0);
         if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
-            mAutoLoadFooter = new LoadingLayout(getContext(), getScrollOrientation());
-            RecyclerView.LayoutParams layoutParams;
-            switch (getScrollOrientation()) {
-            case VERTICAL:
-            default:
-                layoutParams = new RecyclerView.LayoutParams(LayoutParams.MATCH_PARENT,
-                        LayoutParams.WRAP_CONTENT);
-                break;
-            case HORIZONTAL:
-                layoutParams = new RecyclerView.LayoutParams(LayoutParams.WRAP_CONTENT,
-                        LayoutParams.MATCH_PARENT);
-                break;
+            if(mAutoLoadFooter == null){
+                mAutoLoadFooter = new LoadingLayout(getContext(), getScrollOrientation());
+                RecyclerView.LayoutParams layoutParams;
+                switch (getScrollOrientation()) {
+                    case VERTICAL:
+                    default:
+                        layoutParams = new RecyclerView.LayoutParams(LayoutParams.MATCH_PARENT,
+                                LayoutParams.WRAP_CONTENT);
+                        break;
+                    case HORIZONTAL:
+                        layoutParams = new RecyclerView.LayoutParams(LayoutParams.WRAP_CONTENT,
+                                LayoutParams.MATCH_PARENT);
+                        break;
+                }
+                mAutoLoadFooter.setLayoutParams(layoutParams);
             }
-            mAutoLoadFooter.setLayoutParams(layoutParams);
+
+            if(!mWrapper.containsFooter(mAutoLoadFooter)){
+                addLoadingFooter();
+            }
         } else {
             removeLoadingFooter();
             mAutoLoadFooter = null;
@@ -141,37 +145,42 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
         }
     }
 
-//    @Override
-//    protected void onLoading() {
-//        if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
-//            if (getCurLoadMode() == LoadMode.PULL_FROM_END) {
-//                if (getPullToLoadListener() != null) {
-//                    getPullToLoadListener().onLoadMore();
-//                }
-//            } else {
-//                super.onLoading();
-//            }
-//        } else {
-//            super.onLoading();
-//        }
-//    }
+    private void updateFooterHeight(boolean show){
+        RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mAutoLoadFooter.getLayoutParams();
+        if(show){
+            switch (getScrollOrientation()) {
+                case VERTICAL:
+                default:
+                    layoutParams.height = LayoutParams.WRAP_CONTENT;
+                    break;
+                case HORIZONTAL:
+                    layoutParams.height = LayoutParams.MATCH_PARENT;
+                    break;
+            }
+        } else {
+            layoutParams.height = 1;
+        }
+        mAutoLoadFooter.setLayoutParams(layoutParams);
+    }
 
     @Override
     protected void reset() {
         super.reset();
         loadMore = false;
-//        HeaderAndFooterWrapper wrapper = getAdapter();
-//        if (wrapper != null && mAutoLoadFooter != null && wrapper.containsFooter(mAutoLoadFooter)) {
-//            wrapper.removeFooter(mAutoLoadFooter);
-//            wrapper.notifyDataSetChanged();
-//        }
     }
 
     @Override
     public void onAllLoaded() {
         super.onAllLoaded();
 
-        removeLoadingFooter();
+        updateFooterHeight(false);
+    }
+
+    @Override
+    protected void setAllLoaded(boolean isAllLoaded) {
+        super.setAllLoaded(isAllLoaded);
+
+        updateFooterHeight(true);
     }
 
     /**

@@ -580,6 +580,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         return mIsAllLoaded;
     }
 
+    protected void setAllLoaded(boolean isAllLoaded){
+        mIsAllLoaded = isAllLoaded;
+    }
+
     @Override
     public void setOnPullToLoadListener(PullToLoadListener pullToLoadListener) {
         mPullToLoadListener = pullToLoadListener;
@@ -850,7 +854,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         if (mState == state) {
             return;
         }
-        switch (mState) {
+        switch (state) {
         case PULL_FROM_START:
             if (!mOverScrollStart) {
                 mHeader.show();
@@ -898,7 +902,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         switch (mCurLoadMode) {
         case PULL_FROM_START:
         default:
-            mIsAllLoaded = false;
+            setAllLoaded(false);
             smoothScrollTo(-mHeader.getSize());
             if (mPullToLoadListener != null) {
                 mPullToLoadListener.onLoadNew();
