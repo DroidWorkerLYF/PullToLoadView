@@ -124,27 +124,36 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
                 mAutoLoadFooter.setLayoutParams(layoutParams);
             }
 
-            if(!mWrapper.containsFooter(mAutoLoadFooter)){
-                addLoadingFooter();
-            }
+            addLoadingFooter();
         } else {
             removeLoadingFooter();
             mAutoLoadFooter = null;
         }
     }
 
+    /**
+     * 添加自动加载更多的footer
+     */
     private void addLoadingFooter(){
         if(mWrapper != null && !mWrapper.containsFooter(mAutoLoadFooter)){
             mWrapper.addFooter(mAutoLoadFooter);
         }
     }
 
+    /**
+     * 移除自动加载更多的footer,只使用于非{@link LoadMode#PULL_FROM_START_AUTO_LOAD_MORE}
+     * 否则,应该使用{@link #updateFooterHeight(boolean)}
+     */
     private void removeLoadingFooter(){
         if(mWrapper != null && mWrapper.containsFooter(mAutoLoadFooter)){
             mWrapper.removeFooter(mAutoLoadFooter);
         }
     }
 
+    /**
+     * 根据是否show出来,设定
+     * @param show
+     */
     private void updateFooterHeight(boolean show){
         RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mAutoLoadFooter.getLayoutParams();
         if(show){
@@ -154,11 +163,19 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
                     layoutParams.height = LayoutParams.WRAP_CONTENT;
                     break;
                 case HORIZONTAL:
-                    layoutParams.height = LayoutParams.MATCH_PARENT;
+                    layoutParams.width = LayoutParams.WRAP_CONTENT;
                     break;
             }
         } else {
-            layoutParams.height = 1;
+            switch (getScrollOrientation()) {
+                case VERTICAL:
+                default:
+                    layoutParams.height = 1;
+                    break;
+                case HORIZONTAL:
+                    layoutParams.width = 1;
+                    break;
+            }
         }
         mAutoLoadFooter.setLayoutParams(layoutParams);
     }
@@ -170,17 +187,10 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
     }
 
     @Override
-    public void onAllLoaded() {
-        super.onAllLoaded();
-
-        updateFooterHeight(false);
-    }
-
-    @Override
-    protected void setAllLoaded(boolean isAllLoaded) {
+    public void setAllLoaded(boolean isAllLoaded) {
         super.setAllLoaded(isAllLoaded);
-
-        updateFooterHeight(true);
+        //需要根据是否是全部加载完毕,更新footer高度
+        updateFooterHeight(!isAllLoaded);
     }
 
     /**
@@ -188,6 +198,9 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
      * @param adapter adapter
      */
     public void setAdapter(@NonNull RecyclerView.Adapter adapter) {
+        if(mWrapper == null){
+            return;
+        }
         mWrapper.setWrappedAdapter(adapter);
         mContentView.setAdapter(mWrapper);
     }
@@ -205,7 +218,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
      * @return {@link android.support.v7.widget.RecyclerView.Adapter}
      */
     public RecyclerView.Adapter getWrappedAdapter() {
-        return mWrapper.getWrappedAdapter();
+        return mWrapper == null ? null : mWrapper.getWrappedAdapter();
     }
 
     /**

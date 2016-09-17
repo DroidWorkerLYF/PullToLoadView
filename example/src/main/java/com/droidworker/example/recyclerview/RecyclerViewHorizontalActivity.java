@@ -1,16 +1,16 @@
 package com.droidworker.example.recyclerview;
 
-import com.droidworker.pulltoloadview.PullToLoadBaseView;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.impl.recyclerview.PullToLoadHorizontalRecyclerView;
-import com.droidworker.example.BaseActivity;
-import com.droidworker.example.DividerItemDecoration;
-import com.droidworker.example.R;
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+
+import com.droidworker.example.BaseActivity;
+import com.droidworker.example.DividerItemDecoration;
+import com.droidworker.example.R;
+import com.droidworker.pulltoloadview.PullToLoadBaseView;
+import com.droidworker.pulltoloadview.constant.LoadMode;
+import com.droidworker.pulltoloadview.impl.recyclerview.PullToLoadHorizontalRecyclerView;
 
 /**
  * @author https://github.com/DroidWorkerLYF
@@ -38,7 +38,7 @@ public class RecyclerViewHorizontalActivity extends BaseActivity {
             public void run() {
                 mPullToLoadHorizontalRecyclerView.onLoadComplete();
                 if (mAdapter.getItemCount() >= 30) {
-                    mPullToLoadHorizontalRecyclerView.onAllLoaded();
+                    mPullToLoadHorizontalRecyclerView.setAllLoaded(true);
                 } else {
                     mAdapter.updateCount();
                     mPullToLoadHorizontalRecyclerView.getAdapter().notifyDataSetChanged();

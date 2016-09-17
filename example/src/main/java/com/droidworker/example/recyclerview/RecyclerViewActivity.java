@@ -7,13 +7,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 
-import com.droidworker.pulltoloadview.PullToLoadBaseView;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.impl.recyclerview.PullToLoadVerticalRecyclerView;
 import com.droidworker.example.BaseActivity;
 import com.droidworker.example.ConditionType;
 import com.droidworker.example.DividerItemDecoration;
 import com.droidworker.example.R;
+import com.droidworker.pulltoloadview.PullToLoadBaseView;
+import com.droidworker.pulltoloadview.constant.LoadMode;
+import com.droidworker.pulltoloadview.impl.recyclerview.PullToLoadVerticalRecyclerView;
 
 /**
  * @author https://github.com/DroidWorkerLYF
@@ -42,7 +42,7 @@ public class RecyclerViewActivity extends BaseActivity {
             public void run() {
                 mPullToLoadVerticalRecyclerView.onLoadComplete();
                 if (mAdapter.getItemCount() >= 30) {
-                    mPullToLoadVerticalRecyclerView.onAllLoaded();
+                    mPullToLoadVerticalRecyclerView.setAllLoaded(true);
                 } else {
                     mAdapter.updateCount();
                     mPullToLoadVerticalRecyclerView.getAdapter().notifyDataSetChanged();

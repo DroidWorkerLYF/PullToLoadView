@@ -569,19 +569,17 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     }
 
     @Override
-    public void onAllLoaded() {
-        mIsAllLoaded = true;
-        mOverScrollEnd = true;
-        mFooterView.setVisibility(INVISIBLE);
-    }
-
-    @Override
     public boolean isAllLoaded() {
         return mIsAllLoaded;
     }
 
-    protected void setAllLoaded(boolean isAllLoaded){
+    @Override
+    public void setAllLoaded(boolean isAllLoaded){
         mIsAllLoaded = isAllLoaded;
+        if(isAllLoaded){
+            mOverScrollEnd = true;
+            mFooterView.setVisibility(INVISIBLE);
+        }
     }
 
     @Override

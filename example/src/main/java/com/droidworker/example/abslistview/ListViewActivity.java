@@ -1,14 +1,14 @@
 package com.droidworker.example.abslistview;
 
-import com.droidworker.extend.abslistview.PullToLoadListView;
-import com.droidworker.pulltoloadview.PullToLoadBaseView;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.example.BaseActivity;
-import com.droidworker.example.R;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+
+import com.droidworker.example.BaseActivity;
+import com.droidworker.example.R;
+import com.droidworker.extend.abslistview.PullToLoadListView;
+import com.droidworker.pulltoloadview.PullToLoadBaseView;
+import com.droidworker.pulltoloadview.constant.LoadMode;
 
 /**
  * @author https://github.com/DroidWorkerLYF
@@ -36,7 +36,7 @@ public class ListViewActivity extends BaseActivity {
             public void run() {
                 mPullToLoadListView.onLoadComplete();
                 if (mAdapter.getCount() >= 30) {
-                    mPullToLoadListView.onAllLoaded();
+                    mPullToLoadListView.setAllLoaded(true);
                 } else {
                     mAdapter.updateCount();
                     mAdapter.notifyDataSetChanged();

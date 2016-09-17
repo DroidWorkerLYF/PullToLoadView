@@ -81,15 +81,16 @@ public interface IPullToLoad<T extends View> {
     void onLoadComplete();
 
     /**
-     * 当所有内容加载完毕后,调用此方法,开启回弹,当下拉加载更新后,状态会还原
-     */
-    void onAllLoaded();
-
-    /**
      * 是否全部加载完毕
      * @return true 则表示调用过onAllLoaded,已经都加载完了
      */
     boolean isAllLoaded();
+
+    /**
+     * 设置是否全部加载完成,
+     * 当所有内容加载完毕后,调用此方法,开启回弹,当下拉加载更新后,状态会还原
+     */
+    void setAllLoaded(boolean isAllLoaded);
 
     /**
      * 设置加载回调
