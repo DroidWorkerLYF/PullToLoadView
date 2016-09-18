@@ -938,6 +938,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mIsIntercepted = false;
         mEndX = mStartX = 0;
         mEndY = mStartY = 0;
+        mState = State.RESET;
     }
 
     protected State getState() {
