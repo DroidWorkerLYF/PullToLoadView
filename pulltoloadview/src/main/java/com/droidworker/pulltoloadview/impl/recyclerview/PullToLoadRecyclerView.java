@@ -1,5 +1,11 @@
 package com.droidworker.pulltoloadview.impl.recyclerview;
 
+import com.droidworker.pulltoloadview.PullToLoadBaseView;
+import com.droidworker.pulltoloadview.constant.Direction;
+import com.droidworker.pulltoloadview.constant.LoadMode;
+import com.droidworker.pulltoloadview.constant.State;
+import com.droidworker.pulltoloadview.impl.LoadingLayout;
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
@@ -7,12 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-
-import com.droidworker.pulltoloadview.PullToLoadBaseView;
-import com.droidworker.pulltoloadview.constant.Direction;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.constant.State;
-import com.droidworker.pulltoloadview.impl.LoadingLayout;
 
 /**
  * 支持加载更新,加载更多的RecyclerView扩展.
@@ -45,15 +45,16 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
 
     @Override
     public boolean canScrollVertical(Direction direction) {
-        // 使用ViewCompat中的方法
+        // 参照ViewCompat中的方法
         final int offset = mContentView.computeVerticalScrollOffset();
-        final int range = mContentView.computeVerticalScrollRange() -
-                mContentView.computeVerticalScrollExtent();
-        if (range == 0) return false;
+        final int range = mContentView.computeVerticalScrollRange()
+                - mContentView.computeVerticalScrollExtent();
+        if (range == 0)
+            return false;
         if (direction.getIntValue() < 0) {
             return offset > 0;
         } else {
-            if(getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE){
+            if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
                 return offset < range - mAutoLoadFooter.getHeight();
             } else {
                 return offset < range - 1;
@@ -119,19 +120,19 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
     protected void updateContentUI(boolean isUnderBar) {
         mContentView.scrollToPosition(0);
         if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
-            if(mAutoLoadFooter == null){
+            if (mAutoLoadFooter == null) {
                 mAutoLoadFooter = new LoadingLayout(getContext(), getScrollOrientation());
                 RecyclerView.LayoutParams layoutParams;
                 switch (getScrollOrientation()) {
-                    case VERTICAL:
-                    default:
-                        layoutParams = new RecyclerView.LayoutParams(LayoutParams.MATCH_PARENT,
-                                LayoutParams.WRAP_CONTENT);
-                        break;
-                    case HORIZONTAL:
-                        layoutParams = new RecyclerView.LayoutParams(LayoutParams.WRAP_CONTENT,
-                                LayoutParams.MATCH_PARENT);
-                        break;
+                case VERTICAL:
+                default:
+                    layoutParams = new RecyclerView.LayoutParams(LayoutParams.MATCH_PARENT,
+                            LayoutParams.WRAP_CONTENT);
+                    break;
+                case HORIZONTAL:
+                    layoutParams = new RecyclerView.LayoutParams(LayoutParams.WRAP_CONTENT,
+                            LayoutParams.MATCH_PARENT);
+                    break;
                 }
                 mAutoLoadFooter.setLayoutParams(layoutParams);
             }
@@ -146,8 +147,8 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
     /**
      * 添加自动加载更多的footer
      */
-    private void addLoadingFooter(){
-        if(mWrapper != null && !mWrapper.containsFooter(mAutoLoadFooter)){
+    private void addLoadingFooter() {
+        if (mWrapper != null && !mWrapper.containsFooter(mAutoLoadFooter)) {
             mWrapper.addFooter(mAutoLoadFooter);
         }
     }
@@ -156,8 +157,8 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
      * 移除自动加载更多的footer,只使用于非{@link LoadMode#PULL_FROM_START_AUTO_LOAD_MORE}
      * 否则,应该使用{@link #updateFooterHeight(boolean)}
      */
-    private void removeLoadingFooter(){
-        if(mWrapper != null && mWrapper.containsFooter(mAutoLoadFooter)){
+    private void removeLoadingFooter() {
+        if (mWrapper != null && mWrapper.containsFooter(mAutoLoadFooter)) {
             mWrapper.removeFooter(mAutoLoadFooter);
         }
     }
@@ -166,19 +167,20 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
      * 根据是否show出来,设定
      * @param show
      */
-    private void updateFooterHeight(boolean show){
-        if(mAutoLoadFooter == null){
+    private void updateFooterHeight(boolean show) {
+        if (mAutoLoadFooter == null) {
             return;
         }
-        RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mAutoLoadFooter.getLayoutParams();
+        RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mAutoLoadFooter
+                .getLayoutParams();
         switch (getScrollOrientation()) {
-            case VERTICAL:
-            default:
-                layoutParams.height = show?LayoutParams.WRAP_CONTENT:1;
-                break;
-            case HORIZONTAL:
-                layoutParams.width = show?LayoutParams.WRAP_CONTENT:1;
-                break;
+        case VERTICAL:
+        default:
+            layoutParams.height = show ? LayoutParams.WRAP_CONTENT : 1;
+            break;
+        case HORIZONTAL:
+            layoutParams.width = show ? LayoutParams.WRAP_CONTENT : 1;
+            break;
         }
         mAutoLoadFooter.setLayoutParams(layoutParams);
     }
@@ -192,7 +194,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
     @Override
     public void setAllLoaded(boolean isAllLoaded) {
         super.setAllLoaded(isAllLoaded);
-        //需要根据是否是全部加载完毕,更新footer高度
+        // 需要根据是否是全部加载完毕,更新footer高度
         updateFooterHeight(!isAllLoaded);
     }
 
@@ -201,7 +203,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
      * @param adapter adapter
      */
     public void setAdapter(@NonNull RecyclerView.Adapter adapter) {
-        if(mWrapper == null){
+        if (mWrapper == null) {
             return;
         }
         mWrapper.setWrappedAdapter(adapter);

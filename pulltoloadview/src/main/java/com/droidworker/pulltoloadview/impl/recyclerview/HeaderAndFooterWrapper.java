@@ -20,7 +20,7 @@ public class HeaderAndFooterWrapper extends RecyclerView.Adapter {
     private SparseArrayCompat<View> mFooters = new SparseArrayCompat<>();
     private RecyclerView.Adapter mWrappedAdapter;
 
-    public HeaderAndFooterWrapper(){
+    public HeaderAndFooterWrapper() {
 
     }
 
@@ -37,16 +37,10 @@ public class HeaderAndFooterWrapper extends RecyclerView.Adapter {
     }
 
     public boolean containsHeader(View header) {
-        if(header == null){
-            return false;
-        }
         return mHeaders.indexOfValue(header) > -1;
     }
 
     public boolean containsFooter(View footer) {
-        if(footer == null){
-            return false;
-        }
         return mFooters.indexOfValue(footer) > -1;
     }
 
@@ -65,7 +59,7 @@ public class HeaderAndFooterWrapper extends RecyclerView.Adapter {
         return mWrappedAdapter.getItemCount();
     }
 
-    public void setWrappedAdapter(@NonNull RecyclerView.Adapter adapter){
+    public void setWrappedAdapter(@NonNull RecyclerView.Adapter adapter) {
         mWrappedAdapter = adapter;
     }
 
