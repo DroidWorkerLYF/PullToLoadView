@@ -651,6 +651,13 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 return true;
             }
             final float x = event.getX(), y = event.getY();
+            //解决NestedScroll时的bug
+            if(mStartX == 0){
+                mEndX = mStartX = x - 1;
+            }
+            if(mStartY == 0){
+                mEndY = mStartY = y - 1;
+            }
             final float scrollDirectionMove;
             final float otherDirectionMove;
             switch (getScrollOrientation()) {
