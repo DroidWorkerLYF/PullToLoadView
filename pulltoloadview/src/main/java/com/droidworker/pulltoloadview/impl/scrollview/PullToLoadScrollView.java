@@ -2,6 +2,7 @@ package com.droidworker.pulltoloadview.impl.scrollview;
 
 import com.droidworker.pulltoloadview.PullToLoadBaseView;
 import com.droidworker.pulltoloadview.constant.Direction;
+import com.droidworker.pulltoloadview.constant.LoadMode;
 import com.droidworker.pulltoloadview.constant.Orientation;
 
 import android.content.Context;
@@ -25,13 +26,16 @@ public class PullToLoadScrollView extends PullToLoadBaseView<NestedScrollView> {
 
     @Override
     public boolean canScrollVertical(Direction direction) {
-        switch (direction) {
-            case START:
-            default:
-                return mContentView.getScrollY() != 0;
-            case END:
-                View scrollViewChild = mContentView.getChildAt(0);
-                return scrollViewChild == null || mContentView.getScrollY() < (scrollViewChild.getHeight() - getHeight());
+        // 参照ViewCompat中的方法
+        final int offset = mContentView.computeVerticalScrollOffset();
+        final int range = mContentView.computeVerticalScrollRange()
+                - mContentView.computeVerticalScrollExtent();
+        if (range == 0)
+            return false;
+        if (direction.getIntValue() < 0) {
+            return offset > 0;
+        } else {
+            return offset < range - 1;
         }
     }
 
