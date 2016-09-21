@@ -8,10 +8,85 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="140dp"
-            android:text="@string/demo_5_title"/>
+            android:layout_margin="@dimen/item_padding"
+            android:background="@color/btn_background"
+            android:gravity="center"
+            android:text="@string/demo_5_title"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/title"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_margin="@dimen/item_padding"
+            android:background="@color/btn_background"
+            android:gravity="center"
+            android:text="@string/demo_5_title"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/title"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_margin="@dimen/item_padding"
+            android:background="@color/btn_background"
+            android:gravity="center"
+            android:text="@string/demo_5_title"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/title"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_margin="@dimen/item_padding"
+            android:background="@color/btn_background"
+            android:gravity="center"
+            android:text="@string/demo_5_title"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/title"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_margin="@dimen/item_padding"
+            android:background="@color/btn_background"
+            android:gravity="center"
+            android:text="@string/demo_5_title"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/title"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_margin="@dimen/item_padding"
+            android:background="@color/btn_background"
+            android:gravity="center"
+            android:text="@string/demo_5_title"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/title"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_margin="@dimen/item_padding"
+            android:background="@color/btn_background"
+            android:gravity="center"
+            android:text="@string/demo_5_title"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/title"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_margin="@dimen/item_padding"
+            android:background="@color/btn_background"
+            android:gravity="center"
+            android:text="@string/demo_5_title"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/title"/>
 
     </LinearLayout>
 

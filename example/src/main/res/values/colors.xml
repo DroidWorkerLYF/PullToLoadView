@@ -6,4 +6,5 @@
     <color name="page_background">#ecf0f1</color>
     <color name="title">#333333</color>
     <color name="sub_title">#666666</color>
+    <color name="btn_background">#5a595b</color>
 </resources>
