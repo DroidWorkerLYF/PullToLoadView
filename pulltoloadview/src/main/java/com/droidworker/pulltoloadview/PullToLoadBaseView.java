@@ -551,9 +551,14 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
     @Override
     public void setLoading() {
-        if (!isLoading()) {
-            setState(State.MANUAL_UPDATE);
-        }
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isLoading()) {
+                    setState(State.MANUAL_UPDATE);
+                }
+            }
+        }, 300);
     }
 
     @Override
@@ -779,6 +784,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         case PULL_FROM_START:
             return isReadyToPullEnd() && mOverScrollEnd;
         case PULL_FROM_START_AUTO_LOAD_MORE:
+        case PULL_FROM_START_AUTO_LOAD_MORE_WITH_FOOTER:
             return isReadyToPullEnd() && mOverScrollEnd;
         case PULL_FROM_END:
             return isReadyToPullStart() && mOverScrollStart;
@@ -804,6 +810,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         case BOTH:
             return isReadyToPullStart() || isReadyToPullEnd();
         case PULL_FROM_START_AUTO_LOAD_MORE:
+        case PULL_FROM_START_AUTO_LOAD_MORE_WITH_FOOTER:
             return isReadyToPullStart();
         default:
             return false;
@@ -917,7 +924,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             if (mPullToLoadListener == null) {
                 return;
             }
-            if (mLoadMode == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
+            if (mLoadMode.isAutoLoadMore()) {
                 mPullToLoadListener.onLoadMore();
             } else {
                 smoothScrollTo(mFooter.getSize());
@@ -1198,7 +1205,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             }
         } else if (offset > 0) {
             if (isReadyToPullEnd()
-                    && (mLoadMode != LoadMode.PULL_FROM_START_AUTO_LOAD_MORE || isAllLoaded())) {
+                    && (!mLoadMode.isAutoLoadMore() || isAllLoaded())) {
                 setConsumed(dx, dy, consumed);
 
                 if (mCurLoadMode == null) {

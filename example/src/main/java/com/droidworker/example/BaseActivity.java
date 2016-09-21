@@ -34,6 +34,9 @@ public abstract class BaseActivity extends AppCompatActivity implements PullToLo
         case R.id.pull_from_start_auto_load_more:
             getPullToLoadView().setMode(LoadMode.PULL_FROM_START_AUTO_LOAD_MORE);
             break;
+        case R.id.pull_from_start_auto_load_more_with_footer:
+            getPullToLoadView().setMode(LoadMode.PULL_FROM_START_AUTO_LOAD_MORE_WITH_FOOTER);
+            break;
         case R.id.pull_from_end:
             getPullToLoadView().setMode(LoadMode.PULL_FROM_END);
             break;

@@ -8,7 +8,7 @@ import com.droidworker.pulltoloadview.impl.LoadingLayout;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -49,13 +49,23 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
         final int offset = mContentView.computeVerticalScrollOffset();
         final int range = mContentView.computeVerticalScrollRange()
                 - mContentView.computeVerticalScrollExtent();
-        if (range == 0)
+        if (range == 0){
             return false;
+        }
         if (direction.getIntValue() < 0) {
             return offset > 0;
         } else {
-            if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
-                return offset < range - mAutoLoadFooter.getHeight();
+            LoadMode loadMode = getMode();
+            if (loadMode.isAutoLoadMore()) {
+                if(loadMode.shouldShowAutoLoadMoreFooter()){
+                    return offset < range - mAutoLoadFooter.getHeight();
+                } else {
+                    View view = findLastVisibleItem();
+                    if (view == null) {
+                        return offset < range - 1;
+                    }
+                    return offset + view.getHeight() < range ;
+                }
             } else {
                 return offset < range - 1;
             }
@@ -66,18 +76,40 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
     public boolean canScrollHorizontal(Direction direction) {
         // 参照ViewCompat中的方法
         final int offset = mContentView.computeHorizontalScrollOffset();
-        final int range = mContentView.computeHorizontalScrollRange() -
-                mContentView.computeHorizontalScrollExtent();
-        if (range == 0) return false;
+        final int range = mContentView.computeHorizontalScrollRange()
+                - mContentView.computeHorizontalScrollExtent();
+        if (range == 0){
+            return false;
+        }
         if (direction.getIntValue() < 0) {
             return offset > 0;
         } else {
-            if(getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE){
-                return offset < range - mAutoLoadFooter.getWidth();
+            LoadMode loadMode = getMode();
+            if (loadMode.isAutoLoadMore()) {
+                if(loadMode.shouldShowAutoLoadMoreFooter()){
+                    return offset < range - mAutoLoadFooter.getWidth();
+                } else {
+                    View view = findLastVisibleItem();
+                    if (view == null) {
+                        return offset < range - 1;
+                    }
+                    return offset + view.getWidth() < range ;
+                }
             } else {
                 return offset < range - 1;
             }
         }
+    }
+
+    private View findLastVisibleItem() {
+        RecyclerView.LayoutManager layoutManager = mContentView.getLayoutManager();
+        if (layoutManager instanceof LinearLayoutManager) {
+            int position = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+            if (position >= 0) {
+                return layoutManager.findViewByPosition(position);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -101,9 +133,11 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && loadMore && !isAllLoaded()) {
-                    if (mAutoLoadFooter != null) {
+                    if (getMode().isAutoLoadMore()) {
                         setCurLoadMode(LoadMode.PULL_FROM_END);
-                        mAutoLoadFooter.onPull(State.LOADING, 0);
+                        if(mAutoLoadFooter != null){
+                            mAutoLoadFooter.onPull(State.LOADING, 0);
+                        }
                         setState(State.LOADING);
                     }
                 }
@@ -117,8 +151,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                loadMore = !canScrollVertical(Direction.END)
-                        && getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE;
+                loadMore = !canScrollVertical(Direction.END) && getMode().isAutoLoadMore();
 
                 if (mOnScrollListener != null) {
                     mOnScrollListener.onScrolled(recyclerView, dx, dy);
@@ -131,7 +164,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
     @Override
     protected void updateContentUI(boolean isUnderBar) {
         mContentView.scrollToPosition(0);
-        if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
+        if (getMode().shouldShowAutoLoadMoreFooter()) {
             if (mAutoLoadFooter == null) {
                 mAutoLoadFooter = new LoadingLayout(getContext(), getScrollOrientation());
                 RecyclerView.LayoutParams layoutParams;
@@ -148,7 +181,6 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
                 }
                 mAutoLoadFooter.setLayoutParams(layoutParams);
             }
-
             addLoadingFooter();
         } else {
             removeLoadingFooter();
@@ -166,7 +198,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
     }
 
     /**
-     * 移除自动加载更多的footer,只使用于非{@link LoadMode#PULL_FROM_START_AUTO_LOAD_MORE}
+     * 移除自动加载更多的footer,只使用于非{@link LoadMode#PULL_FROM_START_AUTO_LOAD_MORE_WITH_FOOTER}
      * 否则,应该使用{@link #updateFooterHeight(boolean)}
      */
     private void removeLoadingFooter() {

@@ -14,6 +14,10 @@ public enum LoadMode {
      */
     PULL_FROM_START_AUTO_LOAD_MORE,
     /**
+     * 从头部拉动加载更新,自动加载更多
+     */
+    PULL_FROM_START_AUTO_LOAD_MORE_WITH_FOOTER,
+    /**
      * 从尾部拉动,加载更多
      */
     PULL_FROM_END,
@@ -56,5 +60,13 @@ public enum LoadMode {
 
     public boolean canOverScrollEnd() {
         return this == PULL_FROM_START || this == MANUAL_ONLY || this == PULL_FROM_START_AUTO_LOAD_MORE || this == DISABLED;
+    }
+
+    public boolean isAutoLoadMore(){
+        return this == PULL_FROM_START_AUTO_LOAD_MORE || this == PULL_FROM_START_AUTO_LOAD_MORE_WITH_FOOTER;
+    }
+
+    public boolean shouldShowAutoLoadMoreFooter(){
+        return this == PULL_FROM_START_AUTO_LOAD_MORE_WITH_FOOTER;
     }
 }
