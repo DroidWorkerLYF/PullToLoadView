@@ -64,8 +64,20 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
 
     @Override
     public boolean canScrollHorizontal(Direction direction) {
-        // 使用ViewCompat中的方法
-        return ViewCompat.canScrollHorizontally(mContentView, direction.getIntValue());
+        // 参照ViewCompat中的方法
+        final int offset = mContentView.computeHorizontalScrollOffset();
+        final int range = mContentView.computeHorizontalScrollRange() -
+                mContentView.computeHorizontalScrollExtent();
+        if (range == 0) return false;
+        if (direction.getIntValue() < 0) {
+            return offset > 0;
+        } else {
+            if(getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE){
+                return offset < range - mAutoLoadFooter.getWidth();
+            } else {
+                return offset < range - 1;
+            }
+        }
     }
 
     @Override
