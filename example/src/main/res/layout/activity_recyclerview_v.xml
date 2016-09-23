@@ -11,7 +11,8 @@
         app:content_view_id="@layout/layout_my_recyclerview"
         android:paddingTop="@dimen/item_divider"
         app:underBar="true"
-        app:underbar_header_background="@color/page_background"/>
+        app:underbar_header_background="@color/page_background"
+        app:use_max_scroll="true"/>
 
     <include layout="@layout/toolbar"/>
 

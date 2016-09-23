@@ -129,6 +129,8 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * 是否支持NestedScroll
      */
     private boolean mIsNestedScrollEnable;
+    private boolean mUseMaxPull;
+    private int mMaxPullScroll;
     /**
      * NestedScroll下当前的滚动距离
      */
@@ -213,6 +215,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 DEFAULT_ANIM_DURATION);
         mScrollBottomDuration = typedArray.getInt(
                 R.styleable.PullToLoadView_scroll_to_bottom_duration, DEFAULT_ANIM_DURATION);
+        mUseMaxPull = typedArray.getBoolean(R.styleable.PullToLoadView_use_max_scroll, false);
         typedArray.recycle();
         if (getScrollOrientation() == Orientation.VERTICAL && mBarSize == 0 && mIsUnderBar) {
             mBarSize = getActionBarSize();
@@ -282,6 +285,17 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             return getScrollY();
         case HORIZONTAL:
             return getScrollX();
+        }
+    }
+
+    private int getMaxPullScroll() {
+        switch (getScrollOrientation()) {
+        case VERTICAL:
+        default:
+            return mIsUnderBar ? Math.round(getHeight() / FRICTION) - getBarHeight()
+                    : Math.round(getHeight() / FRICTION);
+        case HORIZONTAL:
+            return Math.round(getWidth() / FRICTION);
         }
     }
 
@@ -410,6 +424,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 mFooterView.setTranslationX(mFooter.getSize());
                 break;
             }
+            mMaxPullScroll = mUseMaxPull ? getMaxPullScroll() : 0;
         }
         mHeader.hide();
         mFooter.hide();
@@ -656,11 +671,11 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 return true;
             }
             final float x = event.getX(), y = event.getY();
-            //解决NestedScroll时的bug
-            if(mStartX == 0){
+            // 解决NestedScroll时的bug
+            if (mStartX == 0) {
                 mEndX = mStartX = x - 1;
             }
-            if(mStartY == 0){
+            if (mStartY == 0) {
                 mEndY = mStartY = y - 1;
             }
             final float scrollDirectionMove;
@@ -1044,6 +1059,19 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             scrollTo((int) scrollValue, 0);
             break;
         }
+        if (mUseMaxPull) {
+            if (Math.abs(scrollValue) >= mMaxPullScroll) {
+                switch (mCurLoadMode) {
+                case PULL_FROM_START:
+                default:
+                    setState(State.UPDATING);
+                    break;
+                case PULL_FROM_END:
+                    setState(State.LOADING);
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -1204,8 +1232,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 }
             }
         } else if (offset > 0) {
-            if (isReadyToPullEnd()
-                    && (!mLoadMode.isAutoLoadMore() || isAllLoaded())) {
+            if (isReadyToPullEnd() && (!mLoadMode.isAutoLoadMore() || isAllLoaded())) {
                 setConsumed(dx, dy, consumed);
 
                 if (mCurLoadMode == null) {
