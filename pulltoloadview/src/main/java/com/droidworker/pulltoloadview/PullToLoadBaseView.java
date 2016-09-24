@@ -1,11 +1,5 @@
 package com.droidworker.pulltoloadview;
 
-import com.droidworker.pulltoloadview.constant.Direction;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.constant.Orientation;
-import com.droidworker.pulltoloadview.constant.State;
-import com.droidworker.pulltoloadview.impl.LoadingLayout;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -23,6 +17,12 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import com.droidworker.pulltoloadview.constant.Direction;
+import com.droidworker.pulltoloadview.constant.LoadMode;
+import com.droidworker.pulltoloadview.constant.Orientation;
+import com.droidworker.pulltoloadview.constant.State;
+import com.droidworker.pulltoloadview.impl.LoadingLayout;
 
 /**
  * BaseView,提供对于手势的处理,可以实现下拉加载更新,上拉加载更多,回弹,支持为指定Condition添加对应的视图,比如
@@ -527,12 +527,18 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
     @Override
     public void addConditionView(View conditionView, int conditionType) {
+        if(conditionType <= 0){
+            throw new IllegalArgumentException("condition type should be greater than 0");
+        }
         mConditionViews.put(conditionType, conditionView);
         addConditionView(conditionView);
     }
 
     private void addConditionView(View view) {
         if (view == null) {
+            return;
+        }
+        if(view.getParent() != null){
             return;
         }
         view.setVisibility(GONE);

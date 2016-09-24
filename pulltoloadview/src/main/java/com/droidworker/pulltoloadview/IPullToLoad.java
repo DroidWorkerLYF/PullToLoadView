@@ -1,10 +1,10 @@
 package com.droidworker.pulltoloadview;
 
+import android.view.View;
+
 import com.droidworker.pulltoloadview.constant.Direction;
 import com.droidworker.pulltoloadview.constant.LoadMode;
 import com.droidworker.pulltoloadview.constant.State;
-
-import android.view.View;
 
 /**
  * @author https://github.com/DroidWorkerLYF
@@ -40,7 +40,7 @@ public interface IPullToLoad<T extends View> {
     /**
      * 增加特殊情况的视图,例如空数据,错误页面
      * @param conditionView 特殊视图
-     * @param conditionType 情况
+     * @param conditionType 情况类型(应该>0)
      */
     void addConditionView(View conditionView, int conditionType);
 

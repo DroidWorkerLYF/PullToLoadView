@@ -1,11 +1,5 @@
 package com.droidworker.pulltoloadview.impl.recyclerview;
 
-import com.droidworker.pulltoloadview.PullToLoadBaseView;
-import com.droidworker.pulltoloadview.constant.Direction;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.constant.State;
-import com.droidworker.pulltoloadview.impl.LoadingLayout;
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +8,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.droidworker.pulltoloadview.PullToLoadBaseView;
+import com.droidworker.pulltoloadview.constant.Direction;
+import com.droidworker.pulltoloadview.constant.LoadMode;
+import com.droidworker.pulltoloadview.constant.State;
+import com.droidworker.pulltoloadview.impl.LoadingLayout;
+
 /**
  * 支持加载更新,加载更多的RecyclerView扩展.
  * 因为RecyclerView方向的不确定性,指定为{@link android.support.v7.widget.LinearLayoutManager}时,
@@ -21,6 +21,7 @@ import android.view.View;
  * @author https://github.com/DroidWorkerLYF
  */
 public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
+    private final static int EMPTY = -1;
     private HeaderAndFooterWrapper mWrapper = new HeaderAndFooterWrapper();
     /**
      * 自动加载更多时添加到最后的footer
@@ -34,6 +35,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
      * 滚动的监听
      */
     private RecyclerView.OnScrollListener mOnScrollListener;
+    private InternalObserver mInternalObserver = new InternalObserver();
 
     public PullToLoadRecyclerView(Context context) {
         super(context);
@@ -250,6 +252,11 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
         if (mWrapper == null) {
             return;
         }
+        RecyclerView.Adapter oldAdapter = getWrappedAdapter();
+        if(oldAdapter != null){
+            oldAdapter.unregisterAdapterDataObserver(mInternalObserver);
+        }
+        adapter.registerAdapterDataObserver(mInternalObserver);
         mWrapper.setWrappedAdapter(adapter);
         mContentView.setAdapter(mWrapper);
     }
@@ -286,4 +293,17 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
         mContentView.addItemDecoration(decor);
     }
 
+    private class InternalObserver extends RecyclerView.AdapterDataObserver{
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            if(mWrapper.getWrappedItemCount() == 0){
+                showConditionView(EMPTY);
+            }
+        }
+    }
+
+    public void setEmptyView(View emptyView){
+        addConditionView(emptyView, EMPTY);
+    }
 }
