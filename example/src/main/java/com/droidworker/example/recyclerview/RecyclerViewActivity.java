@@ -70,7 +70,7 @@ public class RecyclerViewActivity extends BaseActivity {
         mAdapter = new Adapter(getResources().getStringArray(R.array.title),
                 getResources().getStringArray(R.array.content), true);
         if (mPullToLoadVerticalRecyclerView != null) {
-            mPullToLoadVerticalRecyclerView.setMode(LoadMode.PULL_FROM_START_AUTO_LOAD_MORE);
+            mPullToLoadVerticalRecyclerView.setMode(LoadMode.START_AUTO_LOAD_MORE);
             mPullToLoadVerticalRecyclerView.setOnPullToLoadListener(this);
             mPullToLoadVerticalRecyclerView.setAdapter(mAdapter);
             mPullToLoadVerticalRecyclerView.addItemDecoration(new DividerItemDecoration(

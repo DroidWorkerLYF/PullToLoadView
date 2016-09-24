@@ -64,7 +64,7 @@ public class ListViewActivity extends BaseActivity {
         mAdapter = new Adapter(getResources().getStringArray(R.array.title),
                 getResources().getStringArray(R.array.content));
         if (mPullToLoadListView != null) {
-            mPullToLoadListView.setMode(LoadMode.PULL_FROM_START_AUTO_LOAD_MORE);
+            mPullToLoadListView.setMode(LoadMode.START_AUTO_LOAD_MORE);
             mPullToLoadListView.setOnPullToLoadListener(this);
             mPullToLoadListView.setAdapter(mAdapter);
         }

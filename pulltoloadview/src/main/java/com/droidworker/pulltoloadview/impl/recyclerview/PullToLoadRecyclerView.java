@@ -136,7 +136,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && loadMore && !isAllLoaded()) {
                     if (getMode().isAutoLoadMore()) {
-                        setCurLoadMode(LoadMode.PULL_FROM_END);
+                        setCurLoadMode(LoadMode.END);
                         if(mAutoLoadFooter != null){
                             mAutoLoadFooter.onPull(State.LOADING, 0);
                         }
@@ -200,7 +200,7 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
     }
 
     /**
-     * 移除自动加载更多的footer,只使用于非{@link LoadMode#PULL_FROM_START_AUTO_LOAD_MORE_WITH_FOOTER}
+     * 移除自动加载更多的footer,只使用于非{@link LoadMode#START_AUTO_LOAD_MORE_WITH_FOOTER}
      * 否则,应该使用{@link #updateFooterHeight(boolean)}
      */
     private void removeLoadingFooter() {

@@ -623,10 +623,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             return;
         }
         switch (mCurLoadMode) {
-        case PULL_FROM_START:
+        case START:
             mHeader.onPull(state, distance);
             break;
-        case PULL_FROM_END:
+        case END:
             mFooter.onPull(state, distance);
             break;
         }
@@ -705,14 +705,14 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                     mEndY = y;
                     mIsIntercepted = !mIsNestedScrollEnable || !canScroll();
                     mHandleByNestedScroll = !mIsIntercepted;
-                    mCurLoadMode = LoadMode.PULL_FROM_START;
+                    mCurLoadMode = LoadMode.START;
                     setState(State.PULL_FROM_START);
                 } else if (scrollDirectionMove <= -1f && isReadyToPullEnd()) {
                     mEndX = x;
                     mEndY = y;
                     mIsIntercepted = !mIsNestedScrollEnable || !canScroll();
                     mHandleByNestedScroll = !mIsIntercepted;
-                    mCurLoadMode = LoadMode.PULL_FROM_END;
+                    mCurLoadMode = LoadMode.END;
                     setState(State.PULL_FROM_END);
                 }
                 Log("onInterceptTouchEvent nested scroll " + mHandleByNestedScroll + " curLoadMode "
@@ -769,8 +769,8 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * Action为up或者cancel时的处理方法,当NestedScroll结束时,需要同样的操作,所以将这部分代码提供为独立方法
      */
     private boolean onActionUpOrCancel() {
-        if (mOverScrollStart && mCurLoadMode == LoadMode.PULL_FROM_START
-                || mOverScrollEnd && mCurLoadMode == LoadMode.PULL_FROM_END) {
+        if (mOverScrollStart && mCurLoadMode == LoadMode.START
+                || mOverScrollEnd && mCurLoadMode == LoadMode.END) {
             Log("touch action up | cancel over scroll");
             setState(State.OVER_SCROLL);
             return true;
@@ -802,12 +802,12 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      */
     private boolean isOverScroll() {
         switch (mLoadMode) {
-        case PULL_FROM_START:
+        case START:
             return isReadyToPullEnd() && mOverScrollEnd;
-        case PULL_FROM_START_AUTO_LOAD_MORE:
-        case PULL_FROM_START_AUTO_LOAD_MORE_WITH_FOOTER:
+        case START_AUTO_LOAD_MORE:
+        case START_AUTO_LOAD_MORE_WITH_FOOTER:
             return isReadyToPullEnd() && mOverScrollEnd;
-        case PULL_FROM_END:
+        case END:
             return isReadyToPullStart() && mOverScrollStart;
         case MANUAL_ONLY:
         case DISABLED:
@@ -824,14 +824,14 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      */
     private boolean isReadyToPull() {
         switch (mLoadMode) {
-        case PULL_FROM_START:
+        case START:
             return isReadyToPullStart();
-        case PULL_FROM_END:
+        case END:
             return isReadyToPullEnd();
         case BOTH:
             return isReadyToPullStart() || isReadyToPullEnd();
-        case PULL_FROM_START_AUTO_LOAD_MORE:
-        case PULL_FROM_START_AUTO_LOAD_MORE_WITH_FOOTER:
+        case START_AUTO_LOAD_MORE:
+        case START_AUTO_LOAD_MORE_WITH_FOOTER:
             return isReadyToPullStart();
         default:
             return false;
@@ -910,7 +910,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             onPull(state, 0);
             break;
         case MANUAL_UPDATE:
-            mCurLoadMode = LoadMode.PULL_FROM_START;
+            mCurLoadMode = LoadMode.START;
             mHeader.show();
             manualLoad();
             onPull(state, -mHeader.getSize());
@@ -933,7 +933,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             return;
         }
         switch (mCurLoadMode) {
-        case PULL_FROM_START:
+        case START:
         default:
             setAllLoaded(false);
             smoothScrollTo(-mHeader.getSize());
@@ -941,7 +941,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 mPullToLoadListener.onLoadNew();
             }
             break;
-        case PULL_FROM_END:
+        case END:
             if (mPullToLoadListener == null) {
                 return;
             }
@@ -956,7 +956,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     }
 
     protected void manualLoad() {
-        mCurLoadMode = LoadMode.PULL_FROM_START;
+        mCurLoadMode = LoadMode.START;
         onLoading();
     }
 
@@ -965,7 +965,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      */
     protected void reset() {
         onPull(State.RESET, mDone
-                ? mCurLoadMode == LoadMode.PULL_FROM_START ? mHeader.getSize() : -mFooter.getSize()
+                ? mCurLoadMode == LoadMode.START ? mHeader.getSize() : -mFooter.getSize()
                 : 0);
         smoothScrollTo(0);
         mDone = false;
@@ -1000,11 +1000,11 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
         final float scrollValue;
         switch (mCurLoadMode) {
-        case PULL_FROM_START:
+        case START:
         default:
             scrollValue = Math.round(Math.min(startValue - endValue, 0) / FRICTION);
             break;
-        case PULL_FROM_END:
+        case END:
             scrollValue = Math.round(Math.max(startValue - endValue, 0) / FRICTION);
             break;
         }
@@ -1022,10 +1022,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      */
     private int getLoadingLayoutSize() {
         switch (mCurLoadMode) {
-        case PULL_FROM_START:
+        case START:
         default:
             return mHeader.getSize();
-        case PULL_FROM_END:
+        case END:
             return mFooter.getSize();
         }
     }
@@ -1037,7 +1037,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     private void updateStateWhenPull(float scrollValue) {
         final int size = getLoadingLayoutSize();
         switch (mCurLoadMode) {
-        case PULL_FROM_START:
+        case START:
         default:
             if (Math.abs(scrollValue) > size) {
                 setState(State.RELEASE_TO_UPDATE);
@@ -1045,7 +1045,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 setState(State.PULL_FROM_START);
             }
             break;
-        case PULL_FROM_END:
+        case END:
             if (Math.abs(scrollValue) > size) {
                 setState(State.RELEASE_TO_LOAD);
             } else {
@@ -1068,11 +1068,11 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         if (mUseMaxPull) {
             if (Math.abs(scrollValue) >= mMaxPullScroll) {
                 switch (mCurLoadMode) {
-                case PULL_FROM_START:
+                case START:
                 default:
                     setState(State.UPDATING);
                     break;
-                case PULL_FROM_END:
+                case END:
                     setState(State.LOADING);
                     break;
                 }
@@ -1103,7 +1103,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
         mValueAnimator = ValueAnimator.ofInt(oldScrollValue, (int) scrollValue);
         if (scrollValue == 0 && mDone) {
-            mValueAnimator.setDuration(mCurLoadMode == LoadMode.PULL_FROM_START ? mScrollTopDuration
+            mValueAnimator.setDuration(mCurLoadMode == LoadMode.START ? mScrollTopDuration
                     : mScrollBottomDuration);
         } else {
             mValueAnimator.setDuration(DEFAULT_ANIM_DURATION);
@@ -1182,7 +1182,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 : mStartY;
         final float endValue = getScrollOrientation() == Orientation.HORIZONTAL ? mEndX : mEndY;
         switch (mCurLoadMode) {
-        case PULL_FROM_START:
+        case START:
             if (endValue > startValue) {
                 setConsumed(dx, dy, consumed);
                 handlePull();
@@ -1192,7 +1192,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 mHeader.hide();
             }
             break;
-        case PULL_FROM_END:
+        case END:
             if (endValue < startValue) {
                 setConsumed(dx, dy, consumed);
                 handlePull();
@@ -1217,7 +1217,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 if (mCurLoadMode == null) {
                     final float absMove = Math.abs(mDirectionMove[0]);
                     if (absMove > Math.abs(mDirectionMove[1])) {
-                        mCurLoadMode = LoadMode.PULL_FROM_START;
+                        mCurLoadMode = LoadMode.START;
                         setState(State.PULL_FROM_START);
                         Log("onNestedScroll pull from start");
                     }
@@ -1229,7 +1229,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                     }
                     handleNestedScrollPull(mDirectionMove[0]);
                 }
-            } else if (mCurLoadMode == LoadMode.PULL_FROM_END) {
+            } else if (mCurLoadMode == LoadMode.END) {
                 if (getInternalScrollOffset() > 0) {
                     setConsumed(dx, dy, consumed);
                     handleNestedScrollPull(mDirectionMove[0]);
@@ -1244,7 +1244,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 if (mCurLoadMode == null) {
                     final float absMove = Math.abs(mDirectionMove[0]);
                     if (absMove > Math.abs(mDirectionMove[1])) {
-                        mCurLoadMode = LoadMode.PULL_FROM_END;
+                        mCurLoadMode = LoadMode.END;
                         setState(State.PULL_FROM_END);
                         Log("onNestedScroll pull from end");
                     }
@@ -1252,7 +1252,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 if (mCurLoadMode != null) {
                     handleNestedScrollPull(mDirectionMove[0]);
                 }
-            } else if (mCurLoadMode == LoadMode.PULL_FROM_START) {
+            } else if (mCurLoadMode == LoadMode.START) {
                 if (getInternalScrollOffset() < 0) {
                     setConsumed(dx, dy, consumed);
                     handleNestedScrollPull(mDirectionMove[0]);

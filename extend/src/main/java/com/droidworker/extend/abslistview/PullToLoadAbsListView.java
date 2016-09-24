@@ -75,7 +75,7 @@ public abstract class PullToLoadAbsListView<T extends AbsListView> extends PullT
                 mContentView.setSelection(0);
             }
         });
-        if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
+        if (getMode() == LoadMode.START_AUTO_LOAD_MORE) {
             mAutoLoadFooter = new LoadingLayout(getContext(), getScrollOrientation());
             AbsListView.LayoutParams layoutParams;
             switch (getScrollOrientation()) {

@@ -53,14 +53,14 @@ public class PullToLoadListView extends PullToLoadAbsListView<ListView> {
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
         if (scrollState == SCROLL_STATE_IDLE && mLastItemVisible && !isAllLoaded()
-                && getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE
+                && getMode() == LoadMode.START_AUTO_LOAD_MORE
                 && mAutoLoadFooter != null) {
             if (mContentView.getFooterViewsCount() == 0) {
                 mContentView.addFooterView(mAutoLoadFooter);
             }
             mContentView.smoothScrollToPosition(mContentView.getAdapter().getCount());
             mAutoLoadFooter.onPull(State.LOADING, 0);
-            setCurLoadMode(LoadMode.PULL_FROM_END);
+            setCurLoadMode(LoadMode.END);
             setState(State.LOADING);
         }
 
@@ -69,8 +69,8 @@ public class PullToLoadListView extends PullToLoadAbsListView<ListView> {
 
     @Override
     protected void onLoading() {
-        if (getMode() == LoadMode.PULL_FROM_START_AUTO_LOAD_MORE) {
-            if (getCurLoadMode() == LoadMode.PULL_FROM_END) {
+        if (getMode() == LoadMode.START_AUTO_LOAD_MORE) {
+            if (getCurLoadMode() == LoadMode.END) {
                 if (getPullToLoadListener() != null) {
                     getPullToLoadListener().onLoadMore();
                 }

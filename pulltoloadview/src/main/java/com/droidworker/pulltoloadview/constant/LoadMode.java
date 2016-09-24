@@ -8,19 +8,19 @@ public enum LoadMode {
     /**
      * 从头部拉动,加载更新
      */
-    PULL_FROM_START,
+    START,
     /**
      * 从头部拉动加载更新,自动加载更多
      */
-    PULL_FROM_START_AUTO_LOAD_MORE,
+    START_AUTO_LOAD_MORE,
     /**
      * 从头部拉动加载更新,自动加载更多
      */
-    PULL_FROM_START_AUTO_LOAD_MORE_WITH_FOOTER,
+    START_AUTO_LOAD_MORE_WITH_FOOTER,
     /**
      * 从尾部拉动,加载更多
      */
-    PULL_FROM_END,
+    END,
     /**
      * 同时支持PULL_FROM_START和PULL_FROM_END
      */
@@ -39,34 +39,34 @@ public enum LoadMode {
     }
 
     public boolean isPullFromStart() {
-        return this == PULL_FROM_START || this == BOTH || this == PULL_FROM_START_AUTO_LOAD_MORE;
+        return this == START || this == BOTH || this == START_AUTO_LOAD_MORE;
     }
 
     public boolean isPullFromEnd() {
-        return this == PULL_FROM_END || this == BOTH || this == PULL_FROM_START_AUTO_LOAD_MORE;
+        return this == END || this == BOTH || this == START_AUTO_LOAD_MORE;
     }
 
     public boolean shouldShowHeader() {
-        return this == PULL_FROM_START || this == MANUAL_ONLY || this == PULL_FROM_START_AUTO_LOAD_MORE || this == BOTH;
+        return this == START || this == MANUAL_ONLY || this == START_AUTO_LOAD_MORE || this == BOTH;
     }
 
     public boolean shouldShowFooter() {
-        return this == PULL_FROM_END || this == BOTH;
+        return this == END || this == BOTH;
     }
 
     public boolean canOverScrollStart() {
-        return this == MANUAL_ONLY || this == PULL_FROM_END || this == DISABLED;
+        return this == MANUAL_ONLY || this == END || this == DISABLED;
     }
 
     public boolean canOverScrollEnd() {
-        return this == PULL_FROM_START || this == MANUAL_ONLY || this == PULL_FROM_START_AUTO_LOAD_MORE || this == DISABLED;
+        return this == START || this == MANUAL_ONLY || this == START_AUTO_LOAD_MORE || this == DISABLED;
     }
 
     public boolean isAutoLoadMore(){
-        return this == PULL_FROM_START_AUTO_LOAD_MORE || this == PULL_FROM_START_AUTO_LOAD_MORE_WITH_FOOTER;
+        return this == START_AUTO_LOAD_MORE || this == START_AUTO_LOAD_MORE_WITH_FOOTER;
     }
 
     public boolean shouldShowAutoLoadMoreFooter(){
-        return this == PULL_FROM_START_AUTO_LOAD_MORE_WITH_FOOTER;
+        return this == START_AUTO_LOAD_MORE_WITH_FOOTER;
     }
 }

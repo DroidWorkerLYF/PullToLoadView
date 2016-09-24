@@ -24,7 +24,7 @@ public class PullToLoadWebView extends PullToLoadBaseView<WebView> {
     public PullToLoadWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        setMode(LoadMode.PULL_FROM_START);
+        setMode(LoadMode.START);
     }
 
     @Override
