@@ -153,7 +153,8 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                loadMore = !canScrollVertical(Direction.END) && getMode().isAutoLoadMore();
+                loadMore = !canScrollVertical(Direction.END) && getMode().isAutoLoadMore() &&
+                        mWrapper.getWrappedItemCount() > 0;
 
                 if (mOnScrollListener != null) {
                     mOnScrollListener.onScrolled(recyclerView, dx, dy);
