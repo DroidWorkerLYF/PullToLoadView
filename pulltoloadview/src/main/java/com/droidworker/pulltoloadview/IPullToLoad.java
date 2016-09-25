@@ -51,6 +51,12 @@ public interface IPullToLoad<T extends View> {
     void showConditionView(int conditionType);
 
     /**
+     * 隐藏特殊情况的视图
+     * @param conditionType 指定情况
+     */
+    void hideConditionView(int conditionType);
+
+    /**
      * 竖直方向上是否还可以沿指定方向滚动
      * @param direction 方向
      * @return true则可以继续滚动

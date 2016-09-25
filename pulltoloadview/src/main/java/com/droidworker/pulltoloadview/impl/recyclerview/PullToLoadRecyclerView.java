@@ -299,11 +299,13 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
             super.onChanged();
             if(mWrapper.getWrappedItemCount() == 0){
                 showConditionView(EMPTY);
+            } else {
+                hideConditionView(EMPTY);
             }
         }
     }
 
     public void setEmptyView(View emptyView){
-        addConditionView(emptyView, EMPTY);
+        addConditionViewInternal(emptyView, EMPTY);
     }
 }

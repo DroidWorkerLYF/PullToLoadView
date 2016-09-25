@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.droidworker.example.BaseActivity;
 import com.droidworker.example.ConditionType;
@@ -70,7 +71,7 @@ public class RecyclerViewActivity extends BaseActivity {
         mAdapter = new Adapter(getResources().getStringArray(R.array.title),
                 getResources().getStringArray(R.array.content), true);
         if (mPullToLoadVerticalRecyclerView != null) {
-            mPullToLoadVerticalRecyclerView.setMode(LoadMode.START_AUTO_LOAD_MORE);
+            mPullToLoadVerticalRecyclerView.setMode(LoadMode.START_AUTO_LOAD_MORE_WITH_FOOTER);
             mPullToLoadVerticalRecyclerView.setOnPullToLoadListener(this);
             mPullToLoadVerticalRecyclerView.setAdapter(mAdapter);
             mPullToLoadVerticalRecyclerView.addItemDecoration(new DividerItemDecoration(
@@ -116,5 +117,10 @@ public class RecyclerViewActivity extends BaseActivity {
         mAdapter.clear();
         mPullToLoadVerticalRecyclerView.getAdapter().notifyDataSetChanged();
         return true;
+    }
+
+    @Override
+    protected void addEmptyView(View view) {
+        mPullToLoadVerticalRecyclerView.setEmptyView(view);
     }
 }

@@ -527,21 +527,21 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
     @Override
     public void addConditionView(View conditionView, int conditionType) {
-        if(conditionType <= 0){
+        if(conditionType < 0){
             throw new IllegalArgumentException("condition type should be greater than 0");
         }
-        mConditionViews.put(conditionType, conditionView);
-        addConditionView(conditionView);
+        addConditionViewInternal(conditionView, conditionType);
     }
 
-    private void addConditionView(View view) {
-        if (view == null) {
+    protected void addConditionViewInternal(View conditionView, int conditionType) {
+        if (conditionView == null) {
             return;
         }
-        if(view.getParent() != null){
+        mConditionViews.put(conditionType, conditionView);
+        if(conditionView.getParent() != null){
             return;
         }
-        view.setVisibility(GONE);
+        conditionView.setVisibility(GONE);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         if (mIsUnderBar) {
@@ -549,7 +549,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         } else {
             layoutParams.topMargin = mContentView.getPaddingTop();
         }
-        addViewInternal(view, layoutParams);
+        addViewInternal(conditionView, layoutParams);
     }
 
     @Override
@@ -563,6 +563,14 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
         mCurConditionView = view;
         view.setVisibility(VISIBLE);
+    }
+
+    @Override
+    public void hideConditionView(int conditionType) {
+        if (mCurConditionView != null) {
+            mCurConditionView.setVisibility(GONE);
+            mCurConditionView = null;
+        }
     }
 
     @Override
@@ -587,10 +595,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         if (isLoading()) {
             mDone = true;
             setState(State.RESET);
-        }
-        if (mCurConditionView != null) {
-            mCurConditionView.setVisibility(GONE);
-            mCurConditionView = null;
         }
     }
 
