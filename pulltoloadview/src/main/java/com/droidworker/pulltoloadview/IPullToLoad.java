@@ -40,7 +40,7 @@ public interface IPullToLoad<T extends View> {
     /**
      * 增加特殊情况的视图,例如空数据,错误页面
      * @param conditionView 特殊视图
-     * @param conditionType 情况类型(应该>0)
+     * @param conditionType 情况类型(应该大于0)
      */
     void addConditionView(View conditionView, int conditionType);
 
