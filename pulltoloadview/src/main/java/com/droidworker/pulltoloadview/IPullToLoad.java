@@ -57,6 +57,12 @@ public interface IPullToLoad<T extends View> {
     void hideConditionView(int conditionType);
 
     /**
+     * 是否在所有情况下均可以下拉加载
+     * @param loadNewInAll true则在显示列如empty view, error view时,可以下拉加载
+     */
+    void loadNewInAllCondition(boolean loadNewInAll);
+
+    /**
      * 竖直方向上是否还可以沿指定方向滚动
      * @param direction 方向
      * @return true则可以继续滚动

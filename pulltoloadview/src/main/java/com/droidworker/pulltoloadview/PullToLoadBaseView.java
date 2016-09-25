@@ -195,6 +195,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * true代表完成了加载更新或者加载更多,配合reset更新使用
      */
     private boolean mDone;
+    /**
+     * 是否在所有情况加均可以下拉加载
+     */
+    private boolean mLoadNewInAll = true;
 
     public PullToLoadBaseView(Context context) {
         this(context, null);
@@ -563,6 +567,9 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
         mCurConditionView = view;
         view.setVisibility(VISIBLE);
+        if(!mLoadNewInAll){
+            mContentView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -571,6 +578,14 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             mCurConditionView.setVisibility(GONE);
             mCurConditionView = null;
         }
+        if(!mLoadNewInAll){
+            mContentView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void loadNewInAllCondition(boolean loadNewInAll) {
+        mLoadNewInAll = loadNewInAll;
     }
 
     @Override
