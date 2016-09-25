@@ -3,7 +3,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <com.droidworker.pulltoloadview.impl.scrollview.PullToLoadScrollView
+    <com.droidworker.pulltoloadview.impl.scrollview.PTLNestedScrollView
         android:id="@+id/scrollview"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"

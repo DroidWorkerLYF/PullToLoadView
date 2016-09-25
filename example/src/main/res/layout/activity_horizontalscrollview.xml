@@ -6,7 +6,7 @@
 
     <include layout="@layout/toolbar"/>
 
-    <com.droidworker.pulltoloadview.impl.scrollview.PullToLoadHorizontalScrollView
+    <com.droidworker.pulltoloadview.impl.scrollview.PTLHorizontalScrollView
         android:id="@+id/horizontalscrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

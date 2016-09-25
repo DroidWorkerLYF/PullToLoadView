@@ -1,7 +1,7 @@
 package com.droidworker.example.scrollview;
 
 import com.droidworker.pulltoloadview.PullToLoadBaseView;
-import com.droidworker.pulltoloadview.impl.scrollview.PullToLoadScrollView;
+import com.droidworker.pulltoloadview.impl.scrollview.PTLNestedScrollView;
 import com.droidworker.example.BaseActivity;
 import com.droidworker.example.R;
 
@@ -13,31 +13,31 @@ import android.support.v7.widget.Toolbar;
  * @author https://github.com/DroidWorkerLYF
  */
 public class ScrollViewActivity extends BaseActivity {
-    private PullToLoadScrollView mPullToLoadScrollView;
+    private PTLNestedScrollView mPTLNestedScrollView;
 
     @Override
     public void onLoadNew() {
-        mPullToLoadScrollView.postDelayed(new Runnable() {
+        mPTLNestedScrollView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mPullToLoadScrollView.onLoadComplete();
+                mPTLNestedScrollView.onLoadComplete();
             }
         }, 2000);
     }
 
     @Override
     public void onLoadMore() {
-        mPullToLoadScrollView.postDelayed(new Runnable() {
+        mPTLNestedScrollView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mPullToLoadScrollView.onLoadComplete();
+                mPTLNestedScrollView.onLoadComplete();
             }
         }, 2000);
     }
 
     @Override
     protected PullToLoadBaseView getPullToLoadView() {
-        return mPullToLoadScrollView;
+        return mPTLNestedScrollView;
     }
 
     @Override
@@ -49,10 +49,10 @@ public class ScrollViewActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         setTitle(R.string.demo_5_title);
 
-        mPullToLoadScrollView = (PullToLoadScrollView) findViewById(R.id.scrollview);
+        mPTLNestedScrollView = (PTLNestedScrollView) findViewById(R.id.scrollview);
 
-        if(mPullToLoadScrollView != null){
-            mPullToLoadScrollView.setOnPullToLoadListener(this);
+        if(mPTLNestedScrollView != null){
+            mPTLNestedScrollView.setOnPullToLoadListener(this);
         }
     }
 }

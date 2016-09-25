@@ -1,25 +1,25 @@
 package com.droidworker.pulltoloadview.impl.scrollview;
 
-import com.droidworker.pulltoloadview.PullToLoadBaseView;
-import com.droidworker.pulltoloadview.constant.Direction;
-import com.droidworker.pulltoloadview.constant.Orientation;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 
+import com.droidworker.pulltoloadview.PullToLoadBaseView;
+import com.droidworker.pulltoloadview.constant.Direction;
+import com.droidworker.pulltoloadview.constant.Orientation;
+
 /**
  * 扩展{@link HorizontalScrollView}
  * @author https://github.com/DroidWorkerLYF
  */
-public class PullToLoadHorizontalScrollView extends PullToLoadBaseView<HorizontalScrollView> {
-    public PullToLoadHorizontalScrollView(Context context) {
+public class PTLHorizontalScrollView extends PullToLoadBaseView<HorizontalScrollView> {
+    public PTLHorizontalScrollView(Context context) {
         super(context);
     }
 
-    public PullToLoadHorizontalScrollView(Context context, AttributeSet attrs) {
+    public PTLHorizontalScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

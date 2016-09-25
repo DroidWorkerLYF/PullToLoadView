@@ -1,26 +1,25 @@
 package com.droidworker.pulltoloadview.impl.scrollview;
 
-import com.droidworker.pulltoloadview.PullToLoadBaseView;
-import com.droidworker.pulltoloadview.constant.Direction;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.constant.Orientation;
-
 import android.content.Context;
 import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.droidworker.pulltoloadview.PullToLoadBaseView;
+import com.droidworker.pulltoloadview.constant.Direction;
+import com.droidworker.pulltoloadview.constant.Orientation;
+
 /**
  * 扩展{@link NestedScrollView}
  * @author https://github.com/DroidWorkerLYF
  */
-public class PullToLoadScrollView extends PullToLoadBaseView<NestedScrollView> {
-    public PullToLoadScrollView(Context context) {
+public class PTLNestedScrollView extends PullToLoadBaseView<NestedScrollView> {
+    public PTLNestedScrollView(Context context) {
         super(context);
     }
 
-    public PullToLoadScrollView(Context context, AttributeSet attrs) {
+    public PTLNestedScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

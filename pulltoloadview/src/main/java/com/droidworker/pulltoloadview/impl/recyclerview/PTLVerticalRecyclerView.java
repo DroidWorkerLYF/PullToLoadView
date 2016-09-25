@@ -8,29 +8,32 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 /**
- * 水平方向的RecyclerView,{@link #createContentView(int)}后一律设置为{@link LinearLayoutManager#HORIZONTAL}
+ * 垂直方向的RecyclerView,{@link #createContentView(int)}后,如果没有显示的指定布局方向,则默认设置为
+ * {@link LinearLayoutManager#VERTICAL}
  * @author https://github.com/DroidWorkerLYF
  */
-public class PullToLoadHorizontalRecyclerView extends PullToLoadRecyclerView {
+public class PTLVerticalRecyclerView extends PTLRecyclerView {
 
-    public PullToLoadHorizontalRecyclerView(Context context) {
+    public PTLVerticalRecyclerView(Context context) {
         super(context);
     }
 
-    public PullToLoadHorizontalRecyclerView(Context context, AttributeSet attrs) {
+    public PTLVerticalRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
     protected Orientation getScrollOrientation() {
-        return Orientation.HORIZONTAL;
+        return Orientation.VERTICAL;
     }
 
     @Override
     protected RecyclerView createContentView(int layoutId) {
         RecyclerView recyclerView = super.createContentView(layoutId);
-        recyclerView.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        if (recyclerView.getLayoutManager() == null) {
+            recyclerView.setLayoutManager(
+                    new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        }
         return recyclerView;
     }
 }

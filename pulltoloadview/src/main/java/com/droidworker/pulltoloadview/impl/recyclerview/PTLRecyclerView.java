@@ -20,7 +20,7 @@ import com.droidworker.pulltoloadview.impl.LoadingLayout;
  * 默认是垂直的,无法指定水平方向,所以目前还是拆分成独立的竖向和横向由子类去实现
  * @author https://github.com/DroidWorkerLYF
  */
-public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<RecyclerView> {
+public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
     private final static int EMPTY = -1;
     private HeaderAndFooterWrapper mWrapper = new HeaderAndFooterWrapper();
     /**
@@ -37,11 +37,11 @@ public abstract class PullToLoadRecyclerView extends PullToLoadBaseView<Recycler
     private RecyclerView.OnScrollListener mOnScrollListener;
     private InternalObserver mInternalObserver = new InternalObserver();
 
-    public PullToLoadRecyclerView(Context context) {
+    public PTLRecyclerView(Context context) {
         super(context);
     }
 
-    public PullToLoadRecyclerView(Context context, AttributeSet attrs) {
+    public PTLRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

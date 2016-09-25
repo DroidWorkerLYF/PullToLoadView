@@ -10,13 +10,13 @@ import com.droidworker.example.DividerItemDecoration;
 import com.droidworker.example.R;
 import com.droidworker.pulltoloadview.PullToLoadBaseView;
 import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.impl.recyclerview.PullToLoadHorizontalRecyclerView;
+import com.droidworker.pulltoloadview.impl.recyclerview.PTLHorizontalRecyclerView;
 
 /**
  * @author https://github.com/DroidWorkerLYF
  */
 public class RecyclerViewHorizontalActivity extends BaseActivity {
-    private PullToLoadHorizontalRecyclerView mPullToLoadHorizontalRecyclerView;
+    private PTLHorizontalRecyclerView mPullToLoadHorizontalRecyclerView;
     private Adapter mAdapter;
 
     @Override
@@ -62,7 +62,7 @@ public class RecyclerViewHorizontalActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         setTitle(R.string.demo_3_title);
 
-        mPullToLoadHorizontalRecyclerView = (PullToLoadHorizontalRecyclerView) findViewById(
+        mPullToLoadHorizontalRecyclerView = (PTLHorizontalRecyclerView) findViewById(
                 R.id.recycler_view_h);
         mAdapter = new Adapter(getResources().getStringArray(R.array.title),
                 getResources().getStringArray(R.array.content), false);

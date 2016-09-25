@@ -1,43 +1,43 @@
 package com.droidworker.example.scrollview;
 
-import com.droidworker.pulltoloadview.PullToLoadBaseView;
-import com.droidworker.pulltoloadview.impl.scrollview.PullToLoadHorizontalScrollView;
-import com.droidworker.example.BaseActivity;
-import com.droidworker.example.R;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+
+import com.droidworker.example.BaseActivity;
+import com.droidworker.example.R;
+import com.droidworker.pulltoloadview.PullToLoadBaseView;
+import com.droidworker.pulltoloadview.impl.scrollview.PTLHorizontalScrollView;
 
 /**
  * @author luoyanfeng@le.com
  */
 public class HorizontalScrollViewActivity extends BaseActivity {
-    private PullToLoadHorizontalScrollView mPullToLoadHorizontalScrollView;
+    private PTLHorizontalScrollView mPTLHorizontalScrollView;
 
     @Override
     public void onLoadNew() {
-        mPullToLoadHorizontalScrollView.postDelayed(new Runnable() {
+        mPTLHorizontalScrollView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mPullToLoadHorizontalScrollView.onLoadComplete();
+                mPTLHorizontalScrollView.onLoadComplete();
             }
         }, 2000);
     }
 
     @Override
     public void onLoadMore() {
-        mPullToLoadHorizontalScrollView.postDelayed(new Runnable() {
+        mPTLHorizontalScrollView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mPullToLoadHorizontalScrollView.onLoadComplete();
+                mPTLHorizontalScrollView.onLoadComplete();
             }
         }, 2000);
     }
 
     @Override
     protected PullToLoadBaseView getPullToLoadView() {
-        return mPullToLoadHorizontalScrollView;
+        return mPTLHorizontalScrollView;
     }
 
     @Override
@@ -49,9 +49,9 @@ public class HorizontalScrollViewActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         setTitle(R.string.demo_6_title);
 
-        mPullToLoadHorizontalScrollView = (PullToLoadHorizontalScrollView) findViewById(R.id.horizontalscrollview);
-        if(mPullToLoadHorizontalScrollView != null){
-            mPullToLoadHorizontalScrollView.setOnPullToLoadListener(this);
+        mPTLHorizontalScrollView = (PTLHorizontalScrollView) findViewById(R.id.horizontalscrollview);
+        if(mPTLHorizontalScrollView != null){
+            mPTLHorizontalScrollView.setOnPullToLoadListener(this);
         }
     }
 }
