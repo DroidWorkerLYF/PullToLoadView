@@ -1,1 +1,1 @@
-include ':example', ':pulltoloadview', ':extend'
+include ':example', ':pulltoloadview'
