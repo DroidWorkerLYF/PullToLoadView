@@ -531,7 +531,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
     @Override
     public void addConditionView(View conditionView, int conditionType) {
-        if(conditionType < 0){
+        if(conditionType <= 0){
             throw new IllegalArgumentException("condition type should be greater than 0");
         }
         addConditionViewInternal(conditionView, conditionType);
@@ -743,6 +743,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         return mIsIntercepted;
     }
 
+    /**
+     * @return 判断当前页面是否超过一屏可以滚动,如果不可以滚动,则对于支持NestedScroll的视图也不进行处理,因为
+     *         内容区域无法滚动,所以无法在move时return true,会导致问题(参考了SwipeRefreshLayout也不支持)
+     */
     private boolean canScroll() {
         return !(isReadyToPullStart() && isReadyToPullEnd());
     }

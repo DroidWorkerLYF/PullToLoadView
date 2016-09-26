@@ -229,6 +229,7 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
             layoutParams.width = show ? LayoutParams.WRAP_CONTENT : 1;
             break;
         }
+        mAutoLoadFooter.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
         mAutoLoadFooter.setLayoutParams(layoutParams);
     }
 
@@ -294,6 +295,10 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
         mContentView.addItemDecoration(decor);
     }
 
+    public void setEmptyView(View emptyView){
+        addConditionViewInternal(emptyView, EMPTY);
+    }
+
     private class InternalObserver extends RecyclerView.AdapterDataObserver{
         @Override
         public void onChanged() {
@@ -304,9 +309,5 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
                 hideConditionView(EMPTY);
             }
         }
-    }
-
-    public void setEmptyView(View emptyView){
-        addConditionViewInternal(emptyView, EMPTY);
     }
 }
