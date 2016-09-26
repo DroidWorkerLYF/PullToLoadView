@@ -47,11 +47,20 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
 
     @Override
     public boolean canScrollVertical(Direction direction) {
+        return internalCanScrollVertical(direction, false);
+    }
+
+    /**
+     * 是否可以滚动和load more的判断都需要使用此方法,通过是不是要提前加载来区分返回状态.
+     * @param direction 滚动方向
+     * @param earlyLoading 是否提前加载
+     */
+    private boolean internalCanScrollVertical(Direction direction, boolean earlyLoading){
         // 参照ViewCompat中的方法
         final int offset = mContentView.computeVerticalScrollOffset();
         final int range = mContentView.computeVerticalScrollRange()
                 - mContentView.computeVerticalScrollExtent();
-        if (range == 0){
+        if (range == 0) {
             return false;
         }
         if (direction.getIntValue() < 0) {
@@ -59,14 +68,14 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
         } else {
             LoadMode loadMode = getMode();
             if (loadMode.isAutoLoadMore()) {
-                if(loadMode.shouldShowAutoLoadMoreFooter()){
+                if (loadMode.shouldShowAutoLoadMoreFooter()) {
                     return offset < range - mAutoLoadFooter.getHeight();
                 } else {
                     View view = findLastVisibleItem();
-                    if (view == null) {
+                    if (view == null || !earlyLoading) {
                         return offset < range - 1;
                     }
-                    return offset + view.getHeight() < range ;
+                    return offset + view.getHeight() < range;
                 }
             } else {
                 return offset < range - 1;
@@ -153,7 +162,7 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                loadMore = !canScrollVertical(Direction.END) && getMode().isAutoLoadMore() &&
+                loadMore = !internalCanScrollVertical(Direction.END, true) && getMode().isAutoLoadMore() &&
                         mWrapper.getWrappedItemCount() > 0;
 
                 if (mOnScrollListener != null) {
