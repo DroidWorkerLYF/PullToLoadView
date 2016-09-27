@@ -1,6 +1,5 @@
 package com.droidworker.example;
 
-import com.droidworker.example.abslistview.ListViewActivity;
 import com.droidworker.example.recyclerview.RecyclerViewActivity;
 import com.droidworker.example.recyclerview.RecyclerViewHorizontalActivity;
 import com.droidworker.example.scrollview.HorizontalScrollViewActivity;
@@ -24,9 +23,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
         case R.id.demo1:
             startActivity(new Intent(MainActivity.this, RecyclerViewActivity.class));
-            break;
-        case R.id.demo2:
-            startActivity(new Intent(MainActivity.this, ListViewActivity.class));
             break;
         case R.id.demo3:
             startActivity(new Intent(MainActivity.this, RecyclerViewHorizontalActivity.class));

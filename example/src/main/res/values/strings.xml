@@ -12,8 +12,6 @@
     <string name="show_error_view">show error view</string>
     <string name="demo_1">RecyclerView demo</string>
     <string name="demo_1_title">PullToLoadRecyclerView V</string>
-    <string name="demo_2">ListView demo</string>
-    <string name="demo_2_title">PullToLoadListView</string>
     <string name="demo_3">RecyclerView horizontal demo</string>
     <string name="demo_3_title">PullToLoadRecyclerView H</string>
     <string name="demo_4">WebView demo</string>
