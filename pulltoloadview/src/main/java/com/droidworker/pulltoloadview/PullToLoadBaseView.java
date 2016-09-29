@@ -1,5 +1,11 @@
 package com.droidworker.pulltoloadview;
 
+import com.droidworker.pulltoloadview.constant.Direction;
+import com.droidworker.pulltoloadview.constant.LoadMode;
+import com.droidworker.pulltoloadview.constant.Orientation;
+import com.droidworker.pulltoloadview.constant.State;
+import com.droidworker.pulltoloadview.impl.LoadingLayout;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -17,12 +23,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-import com.droidworker.pulltoloadview.constant.Direction;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.constant.Orientation;
-import com.droidworker.pulltoloadview.constant.State;
-import com.droidworker.pulltoloadview.impl.LoadingLayout;
 
 /**
  * BaseView,提供对于手势的处理,可以实现下拉加载更新,上拉加载更多,回弹,支持为指定Condition添加对应的视图,比如
@@ -125,6 +125,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * 触摸事件起始的坐标
      */
     private float mStartX, mStartY;
+    private float mPreScrollValue;
     /**
      * 是否支持NestedScroll
      */
@@ -531,7 +532,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
     @Override
     public void addConditionView(View conditionView, int conditionType) {
-        if(conditionType <= 0){
+        if (conditionType <= 0) {
             throw new IllegalArgumentException("condition type should be greater than 0");
         }
         addConditionViewInternal(conditionView, conditionType);
@@ -542,7 +543,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             return;
         }
         mConditionViews.put(conditionType, conditionView);
-        if(conditionView.getParent() != null){
+        if (conditionView.getParent() != null) {
             return;
         }
         conditionView.setVisibility(GONE);
@@ -567,7 +568,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
         mCurConditionView = view;
         view.setVisibility(VISIBLE);
-        if(!mLoadNewInAll){
+        if (!mLoadNewInAll) {
             mContentView.setVisibility(View.INVISIBLE);
         }
     }
@@ -578,7 +579,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             mCurConditionView.setVisibility(GONE);
             mCurConditionView = null;
         }
-        if(!mLoadNewInAll){
+        if (!mLoadNewInAll) {
             mContentView.setVisibility(View.VISIBLE);
         }
     }
@@ -591,6 +592,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     @Override
     public boolean isLoading() {
         return mState == State.UPDATING || mState == State.LOADING || mState == State.MANUAL_UPDATE;
+    }
+
+    private boolean isUpdating() {
+        return mState == State.UPDATING || mState == State.MANUAL_UPDATE;
     }
 
     @Override
@@ -639,6 +644,14 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     @Override
     public void onPull(State state, float distance) {
         if (mCurLoadMode == null) {
+            return;
+        }
+        if (isLoading()) {
+            if (isUpdating()) {
+                mHeader.onPull(State.UPDATING, -mHeader.getSize());
+            } else {
+                mFooter.onPull(State.LOADING, mFooter.getSize());
+            }
             return;
         }
         switch (mCurLoadMode) {
@@ -691,10 +704,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             if (!isReadyToPull() && !isOverScroll()) {
                 return false;
             }
-            if (isLoading()) {
-                Log("intercept action move is loading");
-                return true;
-            }
             final float x = event.getX(), y = event.getY();
             // 解决NestedScroll时的bug
             if (mStartX == 0) {
@@ -702,6 +711,10 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             }
             if (mStartY == 0) {
                 mEndY = mStartY = y - 1;
+            }
+            if (mIsNestedScrollEnable && isLoading()) {
+                mIsIntercepted = false;
+                return false;
             }
             final float scrollDirectionMove;
             final float otherDirectionMove;
@@ -757,10 +770,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             Log("touch action pull to load not enable");
             return false;
         }
-        if (isLoading()) {
-            Log("touch action is loading");
-            return true;
-        }
         switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN:
             if (isReadyToPull() || isOverScroll()) {
@@ -792,10 +801,20 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * Action为up或者cancel时的处理方法,当NestedScroll结束时,需要同样的操作,所以将这部分代码提供为独立方法
      */
     private boolean onActionUpOrCancel() {
+        mPreScrollValue = 0;
         if (mOverScrollStart && mCurLoadMode == LoadMode.START
                 || mOverScrollEnd && mCurLoadMode == LoadMode.END) {
             Log("touch action up | cancel over scroll");
             setState(State.OVER_SCROLL);
+            return true;
+        }
+
+        if (mState == State.LOADING) {
+            Log("touch action up | cancel is loading");
+            return true;
+        }
+        if (mState == State.UPDATING) {
+            Log("touch action up | cancel is updating");
             return true;
         }
 
@@ -806,11 +825,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         } else if (mState == State.RELEASE_TO_LOAD) {
             Log("touch up | cancel start loading");
             setState(State.LOADING);
-            return true;
-        }
-
-        if (isLoading()) {
-            Log("touch action up | cancel is loading");
             return true;
         }
 
@@ -907,7 +921,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * @param state 状态
      */
     protected void setState(State state) {
-        if (mState == state) {
+        if (mState == state || isLoading()) {
             return;
         }
         switch (state) {
@@ -935,8 +949,8 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         case MANUAL_UPDATE:
             mCurLoadMode = LoadMode.START;
             mHeader.show();
-            manualLoad();
             onPull(state, -mHeader.getSize());
+            manualLoad();
             break;
         case OVER_SCROLL:
             reset();
@@ -960,6 +974,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         default:
             setAllLoaded(false);
             smoothScrollTo(-mHeader.getSize());
+            mNestedScrollOffset = -mHeader.getSize();
             if (mPullToLoadListener != null) {
                 mPullToLoadListener.onLoadNew();
             }
@@ -988,14 +1003,15 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      */
     protected void reset() {
         onPull(State.RESET, mDone
-                ? mCurLoadMode == LoadMode.START ? mHeader.getSize() : -mFooter.getSize()
-                : 0);
+                ? mCurLoadMode == LoadMode.START ? mHeader.getSize() : -mFooter.getSize() : 0);
         smoothScrollTo(0);
         mDone = false;
         mCurLoadMode = null;
         mIsIntercepted = false;
         mEndX = mStartX = 0;
         mEndY = mStartY = 0;
+        mPreScrollValue = 0;
+        mNestedScrollOffset = 0;
         mState = State.RESET;
     }
 
@@ -1021,19 +1037,30 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             endValue = mEndX;
             break;
         }
-        final float scrollValue;
+        float scrollValue;
         switch (mCurLoadMode) {
         case START:
         default:
-            scrollValue = Math.round(Math.min(startValue - endValue, 0) / FRICTION);
+            scrollValue = Math.min(startValue - endValue, 0);
+            if (isLoading() && scrollValue < mPreScrollValue
+                    && getInternalScrollOffset() == -mHeader.getSize()) {
+                scrollValue = 0;
+                mHeader.show();
+            }
             break;
         case END:
-            scrollValue = Math.round(Math.max(startValue - endValue, 0) / FRICTION);
+            scrollValue = Math.max(startValue - endValue, 0);
+            if (isLoading()) {
+                Log.e(TAG, "handlePull " + scrollValue);
+            }
             break;
         }
-
-        if (scrollValue != 0 && !isLoading()) {
-            scroll(scrollValue);
+        if (!isLoading()) {
+            scrollValue = Math.round(scrollValue / FRICTION);
+        }
+        if (scrollValue != 0) {
+            scroll(scrollValue, scrollValue < mPreScrollValue);
+            mPreScrollValue = scrollValue;
             updateStateWhenPull(scrollValue);
             onPull(mState, scrollValue);
         }
@@ -1058,6 +1085,12 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * @param scrollValue 偏移量
      */
     private void updateStateWhenPull(float scrollValue) {
+        if (isLoading()) {
+            if (isUpdating()) {
+                mHeader.show();
+            }
+            return;
+        }
         final int size = getLoadingLayoutSize();
         switch (mCurLoadMode) {
         case START:
@@ -1078,7 +1111,22 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
     }
 
-    private void scroll(float scrollValue) {
+    private void scroll(float scrollValue, boolean isDown) {
+        if (isLoading()) {
+            switch (mCurLoadMode) {
+            case START:
+            default:
+                if (isDown && scrollValue <= -mHeader.getSize()) {
+                    scrollValue = -mHeader.getSize();
+                }
+                break;
+            case END:
+                if (!isDown && scrollValue >= mFooter.getSize()) {
+                    scrollValue = mFooter.getSize();
+                }
+                break;
+            }
+        }
         switch (getScrollOrientation()) {
         case VERTICAL:
         default:
@@ -1126,15 +1174,15 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         }
         mValueAnimator = ValueAnimator.ofInt(oldScrollValue, (int) scrollValue);
         if (scrollValue == 0 && mDone) {
-            mValueAnimator.setDuration(mCurLoadMode == LoadMode.START ? mScrollTopDuration
-                    : mScrollBottomDuration);
+            mValueAnimator.setDuration(
+                    mCurLoadMode == LoadMode.START ? mScrollTopDuration : mScrollBottomDuration);
         } else {
             mValueAnimator.setDuration(DEFAULT_ANIM_DURATION);
         }
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                scroll((int) animation.getAnimatedValue());
+                scroll((int) animation.getAnimatedValue(), false);
             }
         });
         mValueAnimator.addListener(new AnimatorListenerAdapter() {
@@ -1178,7 +1226,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      */
     private void onStopNestedScroll() {
         onActionUpOrCancel();
-        mNestedScrollOffset = 0;
+        // mNestedScrollOffset = 0;
         mHandleByNestedScroll = false;
     }
 
@@ -1206,7 +1254,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         final float endValue = getScrollOrientation() == Orientation.HORIZONTAL ? mEndX : mEndY;
         switch (mCurLoadMode) {
         case START:
-            if (endValue > startValue) {
+            if (endValue >= startValue) {
                 setConsumed(dx, dy, consumed);
                 handlePull();
             } else {
@@ -1233,6 +1281,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     private void triggerByChild(int dx, int dy, int[] consumed) {
         final int offset = getScrollOrientation() == Orientation.HORIZONTAL ? dx : dy;
         getDirectionOffset(dx, dy);
+        Log.e(TAG, "offset " + offset);
         if (offset < 0) {
             if (isReadyToPullStart()) {
                 setConsumed(dx, dy, consumed);
@@ -1319,9 +1368,24 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * @param scrollValue 偏移量
      */
     private void handleNestedScrollPull(float scrollValue) {
-        mNestedScrollOffset += Math.round(scrollValue) / FRICTION;
-        if (mNestedScrollOffset != 0 && !isLoading()) {
-            scroll(mNestedScrollOffset);
+        if (!isLoading()) {
+            mNestedScrollOffset += Math.round(scrollValue / FRICTION);
+        } else {
+            mNestedScrollOffset += Math.round(scrollValue);
+            switch (mCurLoadMode) {
+            case START:
+            default:
+                if (scrollValue < 0 && mNestedScrollOffset <= -mHeader.getSize()) {
+                    mNestedScrollOffset = -mHeader.getSize();
+                }
+                break;
+            case END:
+                Log.e(TAG, "handleNestedScrollPull " + scrollValue + " " + mNestedScrollOffset);
+                break;
+            }
+        }
+        if (mNestedScrollOffset != 0) {
+            scroll(mNestedScrollOffset, scrollValue < 0);
             updateStateWhenPull(mNestedScrollOffset);
             onPull(mState, mNestedScrollOffset);
         }
