@@ -614,6 +614,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     public void onLoadComplete() {
         if (isLoading()) {
             mDone = true;
+            Log("load complete");
             setState(State.RESET);
         }
     }
@@ -921,7 +922,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * @param state 状态
      */
     protected void setState(State state) {
-        if (mState == state || isLoading()) {
+        if (mState == state || state != State.RESET && isLoading()) {
             return;
         }
         switch (state) {
@@ -986,6 +987,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             if (mLoadMode.isAutoLoadMore()) {
                 mPullToLoadListener.onLoadMore();
             } else {
+                mNestedScrollOffset = mFooter.getSize();
                 smoothScrollTo(mFooter.getSize());
                 mPullToLoadListener.onLoadMore();
             }
@@ -1050,9 +1052,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             break;
         case END:
             scrollValue = Math.max(startValue - endValue, 0);
-            if (isLoading()) {
-                Log.e(TAG, "handlePull " + scrollValue);
-            }
             break;
         }
         if (!isLoading()) {
@@ -1258,6 +1257,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 setConsumed(dx, dy, consumed);
                 handlePull();
             } else {
+                Log.e(TAG, "triggerByParent 1");
                 mHandleByNestedScroll = false;
                 mCurLoadMode = null;
                 mHeader.hide();
@@ -1281,7 +1281,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     private void triggerByChild(int dx, int dy, int[] consumed) {
         final int offset = getScrollOrientation() == Orientation.HORIZONTAL ? dx : dy;
         getDirectionOffset(dx, dy);
-        Log.e(TAG, "offset " + offset);
         if (offset < 0) {
             if (isReadyToPullStart()) {
                 setConsumed(dx, dy, consumed);
@@ -1322,6 +1321,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                     }
                 }
                 if (mCurLoadMode != null) {
+                    Log.e(TAG, "trigger by child " + mDirectionMove[0]);
                     handleNestedScrollPull(mDirectionMove[0]);
                 }
             } else if (mCurLoadMode == LoadMode.START) {
@@ -1380,7 +1380,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 }
                 break;
             case END:
-                Log.e(TAG, "handleNestedScrollPull " + scrollValue + " " + mNestedScrollOffset);
                 break;
             }
         }
