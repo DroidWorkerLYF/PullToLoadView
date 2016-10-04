@@ -82,6 +82,8 @@ public interface IPullToLoad<T extends View> {
      */
     boolean isLoading();
 
+    boolean isUpdating();
+
     /**
      * 设置为加载({@link State#MANUAL_UPDATE})
      */

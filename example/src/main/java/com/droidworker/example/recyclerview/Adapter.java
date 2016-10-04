@@ -27,7 +27,7 @@ public class Adapter extends BaseRecyclerViewAdapter {
         TextView titleView = universalViewHolder.findViewById(R.id.title);
         TextView subTitleView = universalViewHolder.findViewById(R.id.subtitle);
 
-        titleView.setText(mTitle[position % 3]);
+        titleView.setText(mTitle[position % 3] + "  " +position);
         subTitleView.setText(mContent[position % 3]);
     }
 
