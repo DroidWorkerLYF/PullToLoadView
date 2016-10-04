@@ -442,8 +442,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     private int getActionBarSize() {
         final TypedArray a = getContext().obtainStyledAttributes(THEME_ATTRS);
         try {
-            return a.getDimensionPixelSize(0,
-                    getResources().getDimensionPixelSize(R.dimen.actionBarSize));
+            return a.getDimensionPixelSize(0, 0);
         } finally {
             a.recycle();
         }
@@ -611,7 +610,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     public void onLoadComplete() {
         if (isUpdating() || isLoading()) {
             mDone = true;
-            Log("load complete");
+            Log("complete");
             setState(State.RESET);
         }
     }
