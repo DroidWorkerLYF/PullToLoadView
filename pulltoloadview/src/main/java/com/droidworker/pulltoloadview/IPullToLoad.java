@@ -77,11 +77,13 @@ public interface IPullToLoad<T extends View> {
     boolean canScrollHorizontal(Direction direction);
 
     /**
-     * 是否正在加载
-     * @return true 正在加载
+     * 是否正在加载更多
      */
     boolean isLoading();
 
+    /**
+     * 是否正在加载更新
+     */
     boolean isUpdating();
 
     /**

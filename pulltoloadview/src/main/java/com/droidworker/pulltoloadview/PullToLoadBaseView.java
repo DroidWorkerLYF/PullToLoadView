@@ -488,10 +488,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         return mLoadMode;
     }
 
-    protected LoadMode getCurLoadMode() {
-        return mCurLoadMode;
-    }
-
     protected void setCurLoadMode(LoadMode loadMode) {
         mCurLoadMode = loadMode;
     }
@@ -639,10 +635,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mPullToLoadListener = pullToLoadListener;
     }
 
-    protected PullToLoadListener getPullToLoadListener() {
-        return mPullToLoadListener;
-    }
-
     @Override
     public void onPull(State state, float distance) {
         if (mCurLoadMode == null) {
@@ -652,10 +644,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             mHeader.onPull(State.UPDATING, -mHeader.getSize());
             return;
         }
-//        if(isLoading()){
-//            mFooter.onPull(State.LOADING, mFooter.getSize());
-//            return;
-//        }
         switch (mCurLoadMode) {
         case START:
             mHeader.onPull(state, distance);
@@ -732,7 +720,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 break;
             }
             final float absMove = Math.abs(scrollDirectionMove);
-            // 如果是支持NestedScroll的视图类型,则不拦截touch时间,只设置状态
+            // 如果是支持NestedScroll的视图类型,则不拦截touch事件,只设置状态
             if (absMove > mTouchSlop && absMove > Math.abs(otherDirectionMove)) {
                 if (scrollDirectionMove >= 1f && isReadyToPullStart()) {
                     mEndX = x;
@@ -824,7 +812,8 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             Log("touch up | cancel start updating");
             setState(State.UPDATING);
             return true;
-        } else if (mState == State.RELEASE_TO_LOAD) {
+        }
+        if (mState == State.RELEASE_TO_LOAD) {
             Log("touch up | cancel start loading");
             setState(State.LOADING);
             return true;
@@ -1227,7 +1216,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      */
     private void onStopNestedScroll() {
         onActionUpOrCancel();
-        // mNestedScrollOffset = 0;
         mHandleByNestedScroll = false;
     }
 
@@ -1259,7 +1247,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 setConsumed(dx, dy, consumed);
                 handlePull();
             } else {
-                Log.e(TAG, "triggerByParent 1");
                 mHandleByNestedScroll = false;
                 mCurLoadMode = null;
                 mHeader.hide();
@@ -1323,7 +1310,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                     }
                 }
                 if (mCurLoadMode != null) {
-                    Log.e(TAG, "trigger by child " + mDirectionMove[0]);
                     handleNestedScrollPull(mDirectionMove[0]);
                 }
             } else if (mCurLoadMode == LoadMode.START) {
