@@ -659,7 +659,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         if (!mLoadMode.isPullToLoad() && !isOverScroll()) {
-            Log("intercept pull to load not enable");
             return false;
         }
         // 如果已经设置了滑动状态并且视图时支持NestedScroll的,则更新touch事件的位置,不拦截事件
@@ -682,7 +681,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         switch (action) {
         case MotionEvent.ACTION_DOWN:
             if (isReadyToPull() || isOverScroll()) {
-                Log("intercept action down");
                 mEndX = mStartX = event.getX();
                 mEndY = mStartY = event.getY();
                 mIsIntercepted = false;
@@ -756,7 +754,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!mLoadMode.isPullToLoad() && !isOverScroll()) {
-            Log("touch action pull to load not enable");
             return false;
         }
         switch (event.getAction()) {
@@ -1262,18 +1259,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         final int offset = getScrollOrientation() == Orientation.HORIZONTAL ? dx : dy;
         getDirectionOffset(dx, dy);
         if (offset < 0) {
-//            if(isUpdating()){
-//                if (mHeaderView.getVisibility() != View.VISIBLE
-//                        && mLoadMode.shouldShowHeader()) {
-//                    mHeader.show();
-//                }
-//                handleNestedScrollPull(mDirectionMove[0]);
-//            } else if(isLoading()){
-//                if (getInternalScrollOffset() > 0) {
-//                    setConsumed(dx, dy, consumed);
-//                    handleNestedScrollPull(mDirectionMove[0]);
-//                }
-//            } else
             if (isReadyToPullStart()) {
                 setConsumed(dx, dy, consumed);
 
@@ -1301,21 +1286,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 }
             }
         } else if (offset > 0) {
-//            if(isUpdating()){
-//                if (getInternalScrollOffset() < 0) {
-//                    setConsumed(dx, dy, consumed);
-//                    handleNestedScrollPull(mDirectionMove[0]);
-//                } else {
-//                    if (mHeaderView.getVisibility() != View.INVISIBLE) {
-//                        mHeader.hide();
-//                    }
-//                }
-//            } else if(isLoading()){
-//                if(isReadyToPullEnd()){
-//                    setConsumed(dx, dy, consumed);
-//                    handleNestedScrollPull(mDirectionMove[0]);
-//                }
-//            } else
             if (isReadyToPullEnd() && (!mLoadMode.isAutoLoadMore() || isAllLoaded())) {
                 //非加载中移动时,向上滑动,如果此时满足上拉加载更多的条件,则不滚动内容,吞掉dx/dy
                 setConsumed(dx, dy, consumed);
