@@ -17,6 +17,5 @@
         <attr name="scroll_to_top_duration" format="integer"/>
         <!-- State为reset时,滑动到bottom动画时间 -->
         <attr name="scroll_to_bottom_duration" format="integer"/>
-        <attr name="use_max_scroll" format="boolean"/>
     </declare-styleable>
 </resources>
