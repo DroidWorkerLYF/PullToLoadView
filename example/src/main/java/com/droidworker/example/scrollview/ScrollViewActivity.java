@@ -1,13 +1,14 @@
 package com.droidworker.example.scrollview;
 
-import com.droidworker.pulltoloadview.PullToLoadBaseView;
-import com.droidworker.pulltoloadview.impl.scrollview.PTLNestedScrollView;
-import com.droidworker.example.BaseActivity;
-import com.droidworker.example.R;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
+
+import com.droidworker.example.BaseActivity;
+import com.droidworker.example.R;
+import com.droidworker.pulltoloadview.PullToLoadBaseView;
+import com.droidworker.pulltoloadview.impl.scrollview.PTLNestedScrollView;
 
 /**
  * @author https://github.com/DroidWorkerLYF
@@ -47,12 +48,23 @@ public class ScrollViewActivity extends BaseActivity {
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        setTitle(R.string.demo_5_title);
+        setTitle(R.string.demo_4_title);
 
         mPTLNestedScrollView = (PTLNestedScrollView) findViewById(R.id.scrollview);
 
         if(mPTLNestedScrollView != null){
             mPTLNestedScrollView.setOnPullToLoadListener(this);
+            mPTLNestedScrollView.getContentView().setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    final int height = mPTLNestedScrollView.getBarHeight() * 2;
+                    if (scrollY >= height) {
+                        toolbar.setAlpha(0.8f);
+                    } else {
+                        toolbar.setAlpha(1 - 0.2f * scrollY / height);
+                    }
+                }
+            });
         }
     }
 }

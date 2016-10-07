@@ -60,7 +60,7 @@ public class RecyclerViewHorizontalActivity extends BaseActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        setTitle(R.string.demo_3_title);
+        setTitle(R.string.demo_2_title);
 
         mPullToLoadHorizontalRecyclerView = (PTLHorizontalRecyclerView) findViewById(
                 R.id.recycler_view_h);

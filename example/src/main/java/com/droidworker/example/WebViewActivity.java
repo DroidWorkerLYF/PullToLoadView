@@ -38,7 +38,7 @@ public class WebViewActivity extends BaseActivity {
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(mToolbar);
-        setTitle(R.string.demo_4_title);
+        setTitle(R.string.demo_3_title);
 
         mPullToLoadWebView = (PullToLoadWebView) findViewById(R.id.webview);
         if(mPullToLoadWebView != null){

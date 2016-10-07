@@ -47,7 +47,7 @@ public class HorizontalScrollViewActivity extends BaseActivity {
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        setTitle(R.string.demo_6_title);
+        setTitle(R.string.demo_5_title);
 
         mPTLHorizontalScrollView = (PTLHorizontalScrollView) findViewById(R.id.horizontalscrollview);
         if(mPTLHorizontalScrollView != null){

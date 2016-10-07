@@ -30,42 +30,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 android:onClick="onClick"
-                android:text="@string/demo_3"/>
+                android:text="@string/demo_2"/>
 
             <Button
                 android:id="@+id/demo4"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 android:onClick="onClick"
-                android:text="@string/demo_4"/>
+                android:text="@string/demo_3"/>
 
             <Button
                 android:id="@+id/demo5"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 android:onClick="onClick"
-                android:text="@string/demo_5"/>
+                android:text="@string/demo_4"/>
 
             <Button
                 android:id="@+id/demo6"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 android:onClick="onClick"
-                android:text="@string/demo_6"/>
-
-            <Button
-                android:id="@+id/demo7"
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:onClick="onClick"
-                android:text="@string/demo_7"/>
-
-            <Button
-                android:id="@+id/demo8"
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:onClick="onClick"
-                android:text="@string/demo_8"/>
+                android:text="@string/demo_5"/>
 
         </LinearLayout>
 
