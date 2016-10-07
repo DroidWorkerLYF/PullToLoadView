@@ -1,7 +1,7 @@
 # PullToLoadView
 ##配置
 ```
-compile 'com.droidworker:pulltoloadview:0.9.8'
+compile 'com.droidworker:pulltoloadview:0.9.9'
 ```
 
 ##Why

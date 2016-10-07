@@ -38,7 +38,7 @@ publish {
     userOrg = 'droidworkerlyf'
     groupId = 'com.droidworker'
     artifactId = 'pulltoloadview'
-    publishVersion = '0.9.8'
+    publishVersion = '0.9.9'
     desc = ''
     website = 'https://github.com/DroidWorkerLYF/PullToLoadView'
 }
