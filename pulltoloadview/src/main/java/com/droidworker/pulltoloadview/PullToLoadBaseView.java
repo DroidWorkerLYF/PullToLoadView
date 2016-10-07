@@ -1262,18 +1262,19 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         final int offset = getScrollOrientation() == Orientation.HORIZONTAL ? dx : dy;
         getDirectionOffset(dx, dy);
         if (offset < 0) {
-            if(isUpdating()){
-                if (mHeaderView.getVisibility() != View.VISIBLE
-                        && mLoadMode.shouldShowHeader()) {
-                    mHeader.show();
-                }
-                handleNestedScrollPull(mDirectionMove[0]);
-            } else if(isLoading()){
-                if (getInternalScrollOffset() > 0) {
-                    setConsumed(dx, dy, consumed);
-                    handleNestedScrollPull(mDirectionMove[0]);
-                }
-            } else if (isReadyToPullStart()) {
+//            if(isUpdating()){
+//                if (mHeaderView.getVisibility() != View.VISIBLE
+//                        && mLoadMode.shouldShowHeader()) {
+//                    mHeader.show();
+//                }
+//                handleNestedScrollPull(mDirectionMove[0]);
+//            } else if(isLoading()){
+//                if (getInternalScrollOffset() > 0) {
+//                    setConsumed(dx, dy, consumed);
+//                    handleNestedScrollPull(mDirectionMove[0]);
+//                }
+//            } else
+            if (isReadyToPullStart()) {
                 setConsumed(dx, dy, consumed);
 
                 if (mCurLoadMode == null) {
@@ -1296,25 +1297,26 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                     setConsumed(dx, dy, consumed);
                     handleNestedScrollPull(mDirectionMove[0]);
                 } else {
-                    mCurLoadMode = null;
+                    mCurLoadMode = isLoading() ? mCurLoadMode : null;
                 }
             }
         } else if (offset > 0) {
-            if(isUpdating()){
-                if (getInternalScrollOffset() < 0) {
-                    setConsumed(dx, dy, consumed);
-                    handleNestedScrollPull(mDirectionMove[0]);
-                } else {
-                    if (mHeaderView.getVisibility() != View.INVISIBLE) {
-                        mHeader.hide();
-                    }
-                }
-            } else if(isLoading()){
-                if(isReadyToPullEnd()){
-                    setConsumed(dx, dy, consumed);
-                    handleNestedScrollPull(mDirectionMove[0]);
-                }
-            } else if (isReadyToPullEnd() && (!mLoadMode.isAutoLoadMore() || isAllLoaded())) {
+//            if(isUpdating()){
+//                if (getInternalScrollOffset() < 0) {
+//                    setConsumed(dx, dy, consumed);
+//                    handleNestedScrollPull(mDirectionMove[0]);
+//                } else {
+//                    if (mHeaderView.getVisibility() != View.INVISIBLE) {
+//                        mHeader.hide();
+//                    }
+//                }
+//            } else if(isLoading()){
+//                if(isReadyToPullEnd()){
+//                    setConsumed(dx, dy, consumed);
+//                    handleNestedScrollPull(mDirectionMove[0]);
+//                }
+//            } else
+            if (isReadyToPullEnd() && (!mLoadMode.isAutoLoadMore() || isAllLoaded())) {
                 //非加载中移动时,向上滑动,如果此时满足上拉加载更多的条件,则不滚动内容,吞掉dx/dy
                 setConsumed(dx, dy, consumed);
                 //设定当前加载模式
@@ -1336,7 +1338,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                     handleNestedScrollPull(mDirectionMove[0]);
                 } else {
                     //向上滑动足够距离,头部需要隐藏起来,开始滚动内容.
-                    mCurLoadMode = null;
+                    mCurLoadMode = isUpdating() ? mCurLoadMode : null;
                     if (mHeaderView.getVisibility() != View.INVISIBLE) {
                         mHeader.hide();
                     }

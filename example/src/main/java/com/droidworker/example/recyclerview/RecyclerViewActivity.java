@@ -45,8 +45,8 @@ public class RecyclerViewActivity extends BaseActivity {
                 if (mAdapter.getItemCount() >= 30) {
                     mPullToLoadVerticalRecyclerView.setAllLoaded(true);
                 } else {
-//                    mAdapter.updateCount();
-//                    mPullToLoadVerticalRecyclerView.getAdapter().notifyDataSetChanged();
+                    mAdapter.updateCount();
+                    mPullToLoadVerticalRecyclerView.getAdapter().notifyDataSetChanged();
                 }
             }
         }, 5000);
