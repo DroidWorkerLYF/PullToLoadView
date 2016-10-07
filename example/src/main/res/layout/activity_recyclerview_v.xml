@@ -12,7 +12,7 @@
         android:paddingTop="@dimen/item_divider"
         app:underBar="true"
         app:underbar_header_background="@color/page_background"
-        app:use_max_scroll="true"/>
+        app:use_max_scroll="false"/>
 
     <include layout="@layout/toolbar"/>
 

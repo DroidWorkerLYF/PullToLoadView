@@ -639,8 +639,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         if (mCurLoadMode == null) {
             return;
         }
-        if (isUpdating()) {
-            mHeader.onPull(State.UPDATING, -mHeader.getSize());
+        if (isUpdating() || isLoading()) {
             return;
         }
         switch (mCurLoadMode) {
@@ -701,6 +700,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             if (mStartY == 0) {
                 mEndY = mStartY = y - 1;
             }
+            //如果支持nested scroll并且是在加载中,则统一由nested scroll来处理
             if (mIsNestedScrollEnable && (isUpdating() || isLoading())) {
                 mIsIntercepted = false;
                 return false;
@@ -1001,7 +1001,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mIsIntercepted = false;
         mEndX = mStartX = 0;
         mEndY = mStartY = 0;
-        mPreScrollValue = 0;
         mNestedScrollOffset = 0;
         mState = State.RESET;
     }
@@ -1033,19 +1032,12 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         case START:
         default:
             scrollValue = Math.min(startValue - endValue, 0);
-            if (isUpdating() && scrollValue < mPreScrollValue
-                    && getInternalScrollOffset() == -mHeader.getSize()) {
-                scrollValue = 0;
-                mHeader.show();
-            }
             break;
         case END:
             scrollValue = Math.max(startValue - endValue, 0);
             break;
         }
-        if (!isUpdating() && !isLoading()) {
-            scrollValue = Math.round(scrollValue / FRICTION);
-        }
+        scrollValue = Math.round(scrollValue / FRICTION);
         if (scrollValue != 0) {
             scroll(scrollValue, scrollValue < mPreScrollValue);
             mPreScrollValue = scrollValue;
@@ -1270,7 +1262,18 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         final int offset = getScrollOrientation() == Orientation.HORIZONTAL ? dx : dy;
         getDirectionOffset(dx, dy);
         if (offset < 0) {
-            if (isReadyToPullStart()) {
+            if(isUpdating()){
+                if (mHeaderView.getVisibility() != View.VISIBLE
+                        && mLoadMode.shouldShowHeader()) {
+                    mHeader.show();
+                }
+                handleNestedScrollPull(mDirectionMove[0]);
+            } else if(isLoading()){
+                if (getInternalScrollOffset() > 0) {
+                    setConsumed(dx, dy, consumed);
+                    handleNestedScrollPull(mDirectionMove[0]);
+                }
+            } else if (isReadyToPullStart()) {
                 setConsumed(dx, dy, consumed);
 
                 if (mCurLoadMode == null) {
@@ -1297,9 +1300,24 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 }
             }
         } else if (offset > 0) {
-            if (isReadyToPullEnd() && (!mLoadMode.isAutoLoadMore() || isAllLoaded())) {
+            if(isUpdating()){
+                if (getInternalScrollOffset() < 0) {
+                    setConsumed(dx, dy, consumed);
+                    handleNestedScrollPull(mDirectionMove[0]);
+                } else {
+                    if (mHeaderView.getVisibility() != View.INVISIBLE) {
+                        mHeader.hide();
+                    }
+                }
+            } else if(isLoading()){
+                if(isReadyToPullEnd()){
+                    setConsumed(dx, dy, consumed);
+                    handleNestedScrollPull(mDirectionMove[0]);
+                }
+            } else if (isReadyToPullEnd() && (!mLoadMode.isAutoLoadMore() || isAllLoaded())) {
+                //非加载中移动时,向上滑动,如果此时满足上拉加载更多的条件,则不滚动内容,吞掉dx/dy
                 setConsumed(dx, dy, consumed);
-
+                //设定当前加载模式
                 if (mCurLoadMode == null) {
                     final float absMove = Math.abs(mDirectionMove[0]);
                     if (absMove > Math.abs(mDirectionMove[1])) {
@@ -1312,10 +1330,12 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                     handleNestedScrollPull(mDirectionMove[0]);
                 }
             } else if (mCurLoadMode == LoadMode.START) {
+                //如果是下拉,并且当前状态已经是START,即已经show了加载更新的头部,此时,改为向上滑动
                 if (getInternalScrollOffset() < 0) {
                     setConsumed(dx, dy, consumed);
                     handleNestedScrollPull(mDirectionMove[0]);
                 } else {
+                    //向上滑动足够距离,头部需要隐藏起来,开始滚动内容.
                     mCurLoadMode = null;
                     if (mHeaderView.getVisibility() != View.INVISIBLE) {
                         mHeader.hide();
@@ -1359,16 +1379,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             mNestedScrollOffset += Math.round(scrollValue / FRICTION);
         } else {
             mNestedScrollOffset += Math.round(scrollValue);
-            switch (mCurLoadMode) {
-            case START:
-            default:
-                if (scrollValue < 0 && mNestedScrollOffset <= -mHeader.getSize()) {
-                    mNestedScrollOffset = -mHeader.getSize();
-                }
-                break;
-            case END:
-                break;
-            }
         }
         if (mNestedScrollOffset != 0) {
             scroll(mNestedScrollOffset, scrollValue < 0);

@@ -33,7 +33,7 @@ public class RecyclerViewActivity extends BaseActivity {
                 mAdapter.restoreCount();
                 mPullToLoadVerticalRecyclerView.getAdapter().notifyDataSetChanged();
             }
-        }, 10000);
+        }, 5000);
     }
 
     @Override
@@ -45,8 +45,8 @@ public class RecyclerViewActivity extends BaseActivity {
                 if (mAdapter.getItemCount() >= 30) {
                     mPullToLoadVerticalRecyclerView.setAllLoaded(true);
                 } else {
-                    mAdapter.updateCount();
-                    mPullToLoadVerticalRecyclerView.getAdapter().notifyDataSetChanged();
+//                    mAdapter.updateCount();
+//                    mPullToLoadVerticalRecyclerView.getAdapter().notifyDataSetChanged();
                 }
             }
         }, 5000);
@@ -71,7 +71,7 @@ public class RecyclerViewActivity extends BaseActivity {
         mAdapter = new Adapter(getResources().getStringArray(R.array.title),
                 getResources().getStringArray(R.array.content), true);
         if (mPullToLoadVerticalRecyclerView != null) {
-            mPullToLoadVerticalRecyclerView.setMode(LoadMode.START_AUTO_LOAD_MORE_WITH_FOOTER);
+            mPullToLoadVerticalRecyclerView.setMode(LoadMode.END);
             mPullToLoadVerticalRecyclerView.setOnPullToLoadListener(this);
             mPullToLoadVerticalRecyclerView.setAdapter(mAdapter);
             mPullToLoadVerticalRecyclerView.addItemDecoration(new DividerItemDecoration(

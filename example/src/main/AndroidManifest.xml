@@ -20,7 +20,6 @@
             </intent-filter>
         </activity>
         <activity android:name="com.droidworker.example.recyclerview.RecyclerViewActivity"/>
-        <activity android:name="com.droidworker.example.abslistview.ListViewActivity"/>
         <activity android:name="com.droidworker.example.recyclerview.RecyclerViewHorizontalActivity"/>
         <activity android:name="com.droidworker.example.WebViewActivity"/>
         <activity android:name="com.droidworker.example.scrollview.ScrollViewActivity"/>
