@@ -1,5 +1,11 @@
 package com.droidworker.pulltoloadview;
 
+import com.droidworker.pulltoloadview.constant.Direction;
+import com.droidworker.pulltoloadview.constant.LoadMode;
+import com.droidworker.pulltoloadview.constant.Orientation;
+import com.droidworker.pulltoloadview.constant.State;
+import com.droidworker.pulltoloadview.impl.LoadingLayout;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -17,12 +23,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-import com.droidworker.pulltoloadview.constant.Direction;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.constant.Orientation;
-import com.droidworker.pulltoloadview.constant.State;
-import com.droidworker.pulltoloadview.impl.LoadingLayout;
 
 /**
  * BaseView,提供对于手势的处理,可以实现下拉加载更新,上拉加载更多,回弹,支持为指定Condition添加对应的视图,比如
@@ -683,7 +683,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             if (mStartY == 0) {
                 mEndY = mStartY = y - 1;
             }
-            //如果支持nested scroll并且是在加载中,则统一由nested scroll来处理
+            // 如果支持nested scroll并且是在加载中,则统一由nested scroll来处理
             if (mIsNestedScrollEnable && (isUpdating() || isLoading())) {
                 mIsIntercepted = false;
                 return false;
@@ -1051,7 +1051,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             mHeader.show();
             return;
         }
-        if(isLoading()){
+        if (isLoading()) {
             return;
         }
         final int size = getLoadingLayoutSize();
@@ -1132,15 +1132,15 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-//                scroll((int) animation.getAnimatedValue(), false);
+                // scroll((int) animation.getAnimatedValue(), false);
                 switch (getScrollOrientation()) {
-                    case VERTICAL:
-                    default:
-                        scrollTo(0, (int) animation.getAnimatedValue());
-                        break;
-                    case HORIZONTAL:
-                        scrollTo((int) animation.getAnimatedValue(), 0);
-                        break;
+                case VERTICAL:
+                default:
+                    scrollTo(0, (int) animation.getAnimatedValue());
+                    break;
+                case HORIZONTAL:
+                    scrollTo((int) animation.getAnimatedValue(), 0);
+                    break;
                 }
             }
         });
@@ -1268,9 +1268,9 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             }
         } else if (offset > 0) {
             if (isReadyToPullEnd() && (!mLoadMode.isAutoLoadMore() || isAllLoaded())) {
-                //非加载中移动时,向上滑动,如果此时满足上拉加载更多的条件,则不滚动内容,吞掉dx/dy
+                // 非加载中移动时,向上滑动,如果此时满足上拉加载更多的条件,则不滚动内容,吞掉dx/dy
                 setConsumed(dx, dy, consumed);
-                //设定当前加载模式
+                // 设定当前加载模式
                 if (mCurLoadMode == null) {
                     final float absMove = Math.abs(mDirectionMove[0]);
                     if (absMove > Math.abs(mDirectionMove[1])) {
@@ -1283,12 +1283,12 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                     handleNestedScrollPull(mDirectionMove[0]);
                 }
             } else if (mCurLoadMode == LoadMode.START) {
-                //如果是下拉,并且当前状态已经是START,即已经show了加载更新的头部,此时,改为向上滑动
+                // 如果是下拉,并且当前状态已经是START,即已经show了加载更新的头部,此时,改为向上滑动
                 if (getInternalScrollOffset() < 0) {
                     setConsumed(dx, dy, consumed);
                     handleNestedScrollPull(mDirectionMove[0]);
                 } else {
-                    //向上滑动足够距离,头部需要隐藏起来,开始滚动内容.
+                    // 向上滑动足够距离,头部需要隐藏起来,开始滚动内容.
                     mCurLoadMode = isUpdating() ? mCurLoadMode : null;
                     if (mHeaderView.getVisibility() != View.INVISIBLE) {
                         mHeader.hide();

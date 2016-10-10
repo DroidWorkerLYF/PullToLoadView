@@ -1,10 +1,10 @@
 package com.droidworker.pulltoloadview;
 
-import android.view.View;
-
 import com.droidworker.pulltoloadview.constant.Direction;
 import com.droidworker.pulltoloadview.constant.LoadMode;
 import com.droidworker.pulltoloadview.constant.State;
+
+import android.view.View;
 
 /**
  * @author https://github.com/DroidWorkerLYF
