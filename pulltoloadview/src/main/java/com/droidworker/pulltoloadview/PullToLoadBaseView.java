@@ -336,8 +336,12 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      * @param contentView 内容视图
      */
     private void addContentView(T contentView) {
-        addViewInternal(contentView,
-                new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        if (contentView.getLayoutParams() == null) {
+            addViewInternal(contentView, new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                    LayoutParams.MATCH_PARENT));
+        } else {
+            addViewInternal(contentView, contentView.getLayoutParams());
+        }
     }
 
     /**
