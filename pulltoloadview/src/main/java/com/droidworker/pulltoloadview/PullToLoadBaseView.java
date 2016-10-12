@@ -817,6 +817,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         case START_AUTO_LOAD_MORE_WITH_FOOTER:
             return isReadyToPullEnd() && mOverScrollEnd;
         case END:
+        case AUTO_LOAD_MORE_WITH_FOOTER:
             return isReadyToPullStart() && mOverScrollStart;
         case MANUAL_ONLY:
         case DISABLED:

@@ -32,18 +32,22 @@ public enum LoadMode {
     /**
      * 不支持手动
      */
-    MANUAL_ONLY;
+    MANUAL_ONLY,
+    /**
+     * 自动加载更多
+     */
+    AUTO_LOAD_MORE_WITH_FOOTER;
 
     public boolean isPullToLoad() {
         return !(this == DISABLED || this == MANUAL_ONLY);
     }
 
     public boolean isPullFromStart() {
-        return this == START || this == BOTH || this == START_AUTO_LOAD_MORE;
+        return this == START || this == BOTH || this == START_AUTO_LOAD_MORE || this == START_AUTO_LOAD_MORE_WITH_FOOTER;
     }
 
     public boolean isPullFromEnd() {
-        return this == END || this == BOTH || this == START_AUTO_LOAD_MORE;
+        return this == END || this == BOTH;
     }
 
     public boolean shouldShowHeader() {
@@ -55,18 +59,18 @@ public enum LoadMode {
     }
 
     public boolean canOverScrollStart() {
-        return this == MANUAL_ONLY || this == END || this == DISABLED;
+        return this == MANUAL_ONLY || this == END || this == DISABLED || this == AUTO_LOAD_MORE_WITH_FOOTER;
     }
 
     public boolean canOverScrollEnd() {
-        return this == START || this == MANUAL_ONLY || this == START_AUTO_LOAD_MORE || this == DISABLED;
+        return this == START || this == MANUAL_ONLY || this == DISABLED;
     }
 
     public boolean isAutoLoadMore(){
-        return this == START_AUTO_LOAD_MORE || this == START_AUTO_LOAD_MORE_WITH_FOOTER;
+        return this == START_AUTO_LOAD_MORE || this == START_AUTO_LOAD_MORE_WITH_FOOTER || this == AUTO_LOAD_MORE_WITH_FOOTER;
     }
 
     public boolean shouldShowAutoLoadMoreFooter(){
-        return this == START_AUTO_LOAD_MORE_WITH_FOOTER;
+        return this == START_AUTO_LOAD_MORE_WITH_FOOTER || this == AUTO_LOAD_MORE_WITH_FOOTER;
     }
 }

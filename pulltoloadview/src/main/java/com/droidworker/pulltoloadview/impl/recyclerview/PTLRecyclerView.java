@@ -85,7 +85,10 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
 
     @Override
     public boolean canScrollHorizontal(Direction direction) {
-        // 参照ViewCompat中的方法
+        return internalCanScrollHorizontal(direction, false);
+    }
+
+    private boolean internalCanScrollHorizontal(Direction direction, boolean earlyLoading){
         final int offset = mContentView.computeHorizontalScrollOffset();
         final int range = mContentView.computeHorizontalScrollRange()
                 - mContentView.computeHorizontalScrollExtent();
@@ -101,7 +104,7 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
                     return offset < range - mAutoLoadFooter.getWidth();
                 } else {
                     View view = findLastVisibleItem();
-                    if (view == null) {
+                    if (view == null || !earlyLoading) {
                         return offset < range - 1;
                     }
                     return offset + view.getWidth() < range ;
@@ -162,7 +165,17 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                loadMore = !internalCanScrollVertical(Direction.END, true) && getMode().isAutoLoadMore() &&
+                switch (getScrollOrientation()) {
+                    case VERTICAL:
+                    default:
+                        loadMore = !internalCanScrollVertical(Direction.END, true);
+                        break;
+                    case HORIZONTAL:
+                        loadMore = !internalCanScrollHorizontal(Direction.END, true);
+                        break;
+                }
+
+                loadMore = loadMore && getMode().isAutoLoadMore() &&
                         mWrapper.getWrappedItemCount() > 0;
 
                 if (mOnScrollListener != null) {
