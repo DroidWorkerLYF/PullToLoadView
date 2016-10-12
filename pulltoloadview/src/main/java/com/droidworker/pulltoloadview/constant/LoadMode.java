@@ -18,6 +18,10 @@ public enum LoadMode {
      */
     START_AUTO_LOAD_MORE_WITH_FOOTER,
     /**
+     * 自动加载更多
+     */
+    AUTO_LOAD_MORE_WITH_FOOTER,
+    /**
      * 从尾部拉动,加载更多
      */
     END,
@@ -32,18 +36,15 @@ public enum LoadMode {
     /**
      * 不支持手动
      */
-    MANUAL_ONLY,
-    /**
-     * 自动加载更多
-     */
-    AUTO_LOAD_MORE_WITH_FOOTER;
+    MANUAL_ONLY;
 
     public boolean isPullToLoad() {
         return !(this == DISABLED || this == MANUAL_ONLY);
     }
 
     public boolean isPullFromStart() {
-        return this == START || this == BOTH || this == START_AUTO_LOAD_MORE || this == START_AUTO_LOAD_MORE_WITH_FOOTER;
+        return this == START || this == BOTH || this == START_AUTO_LOAD_MORE
+                || this == START_AUTO_LOAD_MORE_WITH_FOOTER;
     }
 
     public boolean isPullFromEnd() {
@@ -59,18 +60,22 @@ public enum LoadMode {
     }
 
     public boolean canOverScrollStart() {
-        return this == MANUAL_ONLY || this == END || this == DISABLED || this == AUTO_LOAD_MORE_WITH_FOOTER;
+        return this == MANUAL_ONLY || this == END || this == DISABLED
+                || this == AUTO_LOAD_MORE_WITH_FOOTER;
     }
 
     public boolean canOverScrollEnd() {
-        return this == START || this == MANUAL_ONLY || this == DISABLED;
+        return this == START || this == MANUAL_ONLY || this == DISABLED
+                || this == START_AUTO_LOAD_MORE || this == START_AUTO_LOAD_MORE_WITH_FOOTER
+                || this == AUTO_LOAD_MORE_WITH_FOOTER;
     }
 
-    public boolean isAutoLoadMore(){
-        return this == START_AUTO_LOAD_MORE || this == START_AUTO_LOAD_MORE_WITH_FOOTER || this == AUTO_LOAD_MORE_WITH_FOOTER;
+    public boolean isAutoLoadMore() {
+        return this == START_AUTO_LOAD_MORE || this == START_AUTO_LOAD_MORE_WITH_FOOTER
+                || this == AUTO_LOAD_MORE_WITH_FOOTER;
     }
 
-    public boolean shouldShowAutoLoadMoreFooter(){
+    public boolean shouldShowAutoLoadMoreFooter() {
         return this == START_AUTO_LOAD_MORE_WITH_FOOTER || this == AUTO_LOAD_MORE_WITH_FOOTER;
     }
 }
