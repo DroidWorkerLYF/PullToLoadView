@@ -52,7 +52,8 @@ public enum LoadMode {
     }
 
     public boolean shouldShowHeader() {
-        return this == START || this == MANUAL_ONLY || this == START_AUTO_LOAD_MORE || this == BOTH;
+        return this == START || this == MANUAL_ONLY || this == START_AUTO_LOAD_MORE
+                || this == START_AUTO_LOAD_MORE_WITH_FOOTER || this == BOTH;
     }
 
     public boolean shouldShowFooter() {
