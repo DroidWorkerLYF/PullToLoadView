@@ -1247,7 +1247,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         final int offset = getScrollOrientation() == Orientation.HORIZONTAL ? dx : dy;
         getDirectionOffset(dx, dy);
         if (offset < 0) {
-            if (isReadyToPullStart()) {
+            if (mLoadMode.isPullFromStart() && isReadyToPullStart()) {
                 setConsumed(dx, dy, consumed);
 
                 if (mCurLoadMode == null) {
@@ -1274,7 +1274,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 }
             }
         } else if (offset > 0) {
-            if (isReadyToPullEnd() && (!mLoadMode.isAutoLoadMore() || isAllLoaded())) {
+            if (mLoadMode.isPullFromEnd() && isReadyToPullEnd()) {
                 // 非加载中移动时,向上滑动,如果此时满足上拉加载更多的条件,则不滚动内容,吞掉dx/dy
                 setConsumed(dx, dy, consumed);
                 // 设定当前加载模式

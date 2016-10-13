@@ -33,7 +33,7 @@ public class RecyclerViewActivity extends BaseActivity {
                 mAdapter.restoreCount();
                 mPullToLoadVerticalRecyclerView.getAdapter().notifyDataSetChanged();
             }
-        }, 5000);
+        }, 2000);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class RecyclerViewActivity extends BaseActivity {
                     mPullToLoadVerticalRecyclerView.getAdapter().notifyDataSetChanged();
                 }
             }
-        }, 5000);
+        }, 2000);
     }
 
     @Override
