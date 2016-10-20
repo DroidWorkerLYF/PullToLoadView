@@ -256,6 +256,14 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
     }
 
     @Override
+    public void onLoadComplete() {
+        if(isUpdating()){
+            mContentView.scrollToPosition(0);
+        }
+        super.onLoadComplete();
+    }
+    
+    @Override
     protected void reset() {
         super.reset();
         loadMore = false;
