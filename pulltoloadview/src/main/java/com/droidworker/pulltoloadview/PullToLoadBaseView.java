@@ -1,5 +1,11 @@
 package com.droidworker.pulltoloadview;
 
+import com.droidworker.pulltoloadview.constant.Direction;
+import com.droidworker.pulltoloadview.constant.LoadMode;
+import com.droidworker.pulltoloadview.constant.Orientation;
+import com.droidworker.pulltoloadview.constant.State;
+import com.droidworker.pulltoloadview.impl.LoadingLayout;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -17,12 +23,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-import com.droidworker.pulltoloadview.constant.Direction;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.constant.Orientation;
-import com.droidworker.pulltoloadview.constant.State;
-import com.droidworker.pulltoloadview.impl.LoadingLayout;
 
 /**
  * BaseView,提供对于手势的处理,可以实现下拉加载更新,上拉加载更多,回弹,支持为指定Condition添加对应的视图,比如
@@ -1088,14 +1088,14 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
             default:
                 if (isDown && scrollValue <= -mHeader.getSize()) {
                     scrollValue = -mHeader.getSize();
-                } else if(!isDown){
+                } else if(!isDown && isReadyToPullEnd()){
                     scrollValue = 0;
                 }
                 break;
             case END:
                 if (!isDown && scrollValue >= mFooter.getSize()) {
                     scrollValue = mFooter.getSize();
-                } else if(isDown){
+                } else if(isDown && isReadyToPullStart()){
                     scrollValue = 0;
                 }
                 break;
@@ -1256,7 +1256,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
                 if (mCurLoadMode == null) {
                     final float absMove = Math.abs(mDirectionMove[0]);
-                    if (absMove > Math.abs(mDirectionMove[1])) {
+                    if (absMove > mTouchSlop && absMove > Math.abs(mDirectionMove[1])) {
                         mCurLoadMode = LoadMode.START;
                         setState(State.PULL_FROM_START);
                         Log("onNestedScroll pull from start");
@@ -1284,7 +1284,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 // 设定当前加载模式
                 if (mCurLoadMode == null) {
                     final float absMove = Math.abs(mDirectionMove[0]);
-                    if (absMove > Math.abs(mDirectionMove[1])) {
+                    if (absMove > mTouchSlop && absMove > Math.abs(mDirectionMove[1])) {
                         mCurLoadMode = LoadMode.END;
                         setState(State.PULL_FROM_END);
                         Log("onNestedScroll pull from end");
