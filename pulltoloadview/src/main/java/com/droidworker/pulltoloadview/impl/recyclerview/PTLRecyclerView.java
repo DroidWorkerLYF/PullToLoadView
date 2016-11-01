@@ -1,5 +1,11 @@
 package com.droidworker.pulltoloadview.impl.recyclerview;
 
+import com.droidworker.pulltoloadview.PullToLoadBaseView;
+import com.droidworker.pulltoloadview.constant.Direction;
+import com.droidworker.pulltoloadview.constant.LoadMode;
+import com.droidworker.pulltoloadview.constant.State;
+import com.droidworker.pulltoloadview.impl.LoadingLayout;
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,12 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-
-import com.droidworker.pulltoloadview.PullToLoadBaseView;
-import com.droidworker.pulltoloadview.constant.Direction;
-import com.droidworker.pulltoloadview.constant.LoadMode;
-import com.droidworker.pulltoloadview.constant.State;
-import com.droidworker.pulltoloadview.impl.LoadingLayout;
 
 /**
  * 支持加载更新,加载更多的RecyclerView扩展.
@@ -36,6 +36,12 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
      */
     private RecyclerView.OnScrollListener mOnScrollListener;
     private InternalObserver mInternalObserver = new InternalObserver();
+    private Runnable mHideFooterRunnable = new Runnable() {
+        @Override
+        public void run() {
+            updateFooterHeight(false);
+        }
+    };
 
     public PTLRecyclerView(Context context) {
         super(context);
@@ -55,7 +61,7 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
      * @param direction 滚动方向
      * @param earlyLoading 是否提前加载
      */
-    private boolean internalCanScrollVertical(Direction direction, boolean earlyLoading){
+    private boolean internalCanScrollVertical(Direction direction, boolean earlyLoading) {
         // 参照ViewCompat中的方法
         final int offset = mContentView.computeVerticalScrollOffset();
         final int range = mContentView.computeVerticalScrollRange()
@@ -88,11 +94,11 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
         return internalCanScrollHorizontal(direction, false);
     }
 
-    private boolean internalCanScrollHorizontal(Direction direction, boolean earlyLoading){
+    private boolean internalCanScrollHorizontal(Direction direction, boolean earlyLoading) {
         final int offset = mContentView.computeHorizontalScrollOffset();
         final int range = mContentView.computeHorizontalScrollRange()
                 - mContentView.computeHorizontalScrollExtent();
-        if (range == 0){
+        if (range == 0) {
             return false;
         }
         if (direction.getIntValue() < 0) {
@@ -100,14 +106,14 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
         } else {
             LoadMode loadMode = getMode();
             if (loadMode.isAutoLoadMore()) {
-                if(loadMode.shouldShowAutoLoadMoreFooter()){
+                if (loadMode.shouldShowAutoLoadMoreFooter()) {
                     return offset < range - mAutoLoadFooter.getWidth();
                 } else {
                     View view = findLastVisibleItem();
                     if (view == null || !earlyLoading) {
                         return offset < range - 1;
                     }
-                    return offset + view.getWidth() < range ;
+                    return offset + view.getWidth() < range;
                 }
             } else {
                 return offset < range - 1;
@@ -149,7 +155,7 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && loadMore && !isAllLoaded()) {
                     if (getMode().isAutoLoadMore()) {
                         setCurLoadMode(LoadMode.END);
-                        if(mAutoLoadFooter != null){
+                        if (mAutoLoadFooter != null) {
                             mAutoLoadFooter.onPull(State.LOADING, 0);
                         }
                         setState(State.LOADING);
@@ -166,17 +172,17 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
                 super.onScrolled(recyclerView, dx, dy);
 
                 switch (getScrollOrientation()) {
-                    case VERTICAL:
-                    default:
-                        loadMore = !internalCanScrollVertical(Direction.END, true);
-                        break;
-                    case HORIZONTAL:
-                        loadMore = !internalCanScrollHorizontal(Direction.END, true);
-                        break;
+                case VERTICAL:
+                default:
+                    loadMore = !internalCanScrollVertical(Direction.END, true);
+                    break;
+                case HORIZONTAL:
+                    loadMore = !internalCanScrollHorizontal(Direction.END, true);
+                    break;
                 }
 
-                loadMore = loadMore && getMode().isAutoLoadMore() &&
-                        mWrapper.getWrappedItemCount() > 0;
+                loadMore = loadMore && getMode().isAutoLoadMore()
+                        && mWrapper.getWrappedItemCount() > 0;
 
                 if (mOnScrollListener != null) {
                     mOnScrollListener.onScrolled(recyclerView, dx, dy);
@@ -257,23 +263,23 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
 
     @Override
     public void onLoadComplete() {
-        if(isUpdating()){
+        if (isUpdating()) {
             mContentView.scrollToPosition(0);
         }
         super.onLoadComplete();
     }
-    
-    @Override
-    protected void reset() {
-        super.reset();
-        loadMore = false;
-    }
 
     @Override
     public void setAllLoaded(boolean isAllLoaded) {
-        super.setAllLoaded(isAllLoaded);
         // 需要根据是否是全部加载完毕,更新footer高度
-        updateFooterHeight(!isAllLoaded);
+        if (isAllLoaded != isAllLoaded()) {
+            if (isAllLoaded) {
+                postDelayed(mHideFooterRunnable, 100);
+            } else {
+                updateFooterHeight(true);
+            }
+        }
+        super.setAllLoaded(isAllLoaded);
     }
 
     /**
@@ -285,7 +291,7 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
             return;
         }
         RecyclerView.Adapter oldAdapter = getWrappedAdapter();
-        if(oldAdapter != null){
+        if (oldAdapter != null) {
             oldAdapter.unregisterAdapterDataObserver(mInternalObserver);
         }
         adapter.registerAdapterDataObserver(mInternalObserver);
@@ -325,15 +331,15 @@ public abstract class PTLRecyclerView extends PullToLoadBaseView<RecyclerView> {
         mContentView.addItemDecoration(decor);
     }
 
-    public void setEmptyView(View emptyView){
+    public void setEmptyView(View emptyView) {
         addConditionViewInternal(emptyView, EMPTY);
     }
 
-    private class InternalObserver extends RecyclerView.AdapterDataObserver{
+    private class InternalObserver extends RecyclerView.AdapterDataObserver {
         @Override
         public void onChanged() {
             super.onChanged();
-            if(mWrapper.getWrappedItemCount() == 0){
+            if (mWrapper.getWrappedItemCount() == 0) {
                 showConditionView(EMPTY);
             } else {
                 hideConditionView(EMPTY);
