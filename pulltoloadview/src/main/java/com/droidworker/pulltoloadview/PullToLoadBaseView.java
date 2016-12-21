@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.v4.view.NestedScrollingParent;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -22,6 +23,7 @@ import com.droidworker.pulltoloadview.constant.Direction;
 import com.droidworker.pulltoloadview.constant.LoadMode;
 import com.droidworker.pulltoloadview.constant.Orientation;
 import com.droidworker.pulltoloadview.constant.State;
+import com.droidworker.pulltoloadview.impl.EdgeEffectView;
 import com.droidworker.pulltoloadview.impl.LoadingLayout;
 
 /**
@@ -203,6 +205,8 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
      */
     private boolean mLoadNewInAll = true;
 
+    private EdgeEffectView mEdgeEffectView;
+
     public PullToLoadBaseView(Context context) {
         this(context, null);
     }
@@ -242,6 +246,13 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        mEdgeEffectView.setSize(getMeasuredWidth(), getMeasuredHeight());
+    }
+
+    @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
@@ -257,7 +268,6 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mContentView = createContentView(mContentLayoutId);
         mIsNestedScrollEnable = ViewCompat.isNestedScrollingEnabled(mContentView);
         addContentView(mContentView);
-        mContentView.setOverScrollMode(OVER_SCROLL_NEVER);
 
         mHeader = createHeader();
         mHeaderView = mHeader.getLoadingView();
@@ -266,6 +276,11 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         mFooter = createFooter();
         mFooterView = mFooter.getLoadingView();
         addViewInternal(mFooterView, getLoadingLayoutLayoutParams());
+
+        mEdgeEffectView = new EdgeEffectView(getContext());
+        int type = getScrollOrientation() == Orientation.VERTICAL? EdgeEffectView.TYPE_VERTICAL:EdgeEffectView.TYPE_HORIZONTAL;
+        mEdgeEffectView.setType(type);
+        addViewInternal(mEdgeEffectView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
         bringChildToFront(mHeaderView);
         if (mHeaderBgResId != 0) {
@@ -789,6 +804,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 || mOverScrollEnd && mCurLoadMode == LoadMode.END) {
             Log("touch action up | cancel over scroll");
             setState(State.OVER_SCROLL);
+            mEdgeEffectView.onRelease();
             return true;
         }
 
@@ -840,6 +856,27 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
         default:
             return false;
         }
+    }
+
+    /**
+     * 如果页面同时满足了{@link #isReadyToPullStart()}和{@link #isReadyToPullEnd()},需要结合滑动方向判断
+     * @param isDown 是否是向下滑动
+     * @return true则进行回弹
+     */
+    private boolean isOverScroll(boolean isDown) {
+        if (!canScroll()) {
+            switch (mLoadMode) {
+                case START:
+                case START_AUTO_LOAD_MORE:
+                case START_AUTO_LOAD_MORE_WITH_FOOTER:
+                    return !isDown && isOverScroll();
+                case END:
+                    return isDown && isOverScroll();
+                default:
+                    return isOverScroll();
+            }
+        }
+        return isOverScroll();
     }
 
     /**
@@ -1120,14 +1157,26 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 break;
             }
         }
-        switch (getScrollOrientation()) {
-        case VERTICAL:
-        default:
-            scrollTo(0, (int) scrollValue);
-            break;
-        case HORIZONTAL:
-            scrollTo((int) scrollValue, 0);
-            break;
+        if (isOverScroll(isDown)) {
+            Log("over scroll");
+            if(isDown){
+                mEdgeEffectView.onPullStart(scrollValue / getHeight(), 1.f - mEndX / getWidth());
+            } else {
+                mEdgeEffectView.onPullEnd(scrollValue / getHeight(), 1.f - mEndX / getWidth());
+            }
+            if (!mEdgeEffectView.isFinished()) {
+                mEdgeEffectView.postInvalidateOnAnimation();
+            }
+        } else {
+            switch (getScrollOrientation()) {
+                case VERTICAL:
+                default:
+                    scrollTo(0, (int) scrollValue);
+                    break;
+                case HORIZONTAL:
+                    scrollTo((int) scrollValue, 0);
+                    break;
+            }
         }
     }
 
@@ -1279,7 +1328,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
 
                 if (mCurLoadMode == null) {
                     final float absMove = Math.abs(mDirectionMove[0]);
-                    if (absMove > mTouchSlop && absMove > Math.abs(mDirectionMove[1])) {
+                    if (absMove > Math.abs(mDirectionMove[1])) {
                         mCurLoadMode = LoadMode.START;
                         setState(State.PULL_FROM_START);
                         mHandleByNestedScroll = true;
@@ -1308,7 +1357,7 @@ public abstract class PullToLoadBaseView<T extends ViewGroup> extends FrameLayou
                 // 设定当前加载模式
                 if (mCurLoadMode == null) {
                     final float absMove = Math.abs(mDirectionMove[0]);
-                    if (absMove > mTouchSlop && absMove > Math.abs(mDirectionMove[1])) {
+                    if (absMove > Math.abs(mDirectionMove[1])) {
                         mCurLoadMode = LoadMode.END;
                         setState(State.PULL_FROM_END);
                         mHandleByNestedScroll = true;
